@@ -4,7 +4,4 @@ description: |
   defined by conventions and no configuration.
 runs:
   using: 'docker'
-  image: 'docker://clojure:latest'
-  entrypoint: 'walter-ci.sh'
-  #env:
-  #  JAVA_HOME: /usr/local/openjdk-11/bin
+  image: 'Dockerfile'
