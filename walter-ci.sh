@@ -1,6 +1,8 @@
 #!/bin/sh -lxe
 cd /github/workspace
-command -v clojure
-echo ls -hal
+which java
+which clojure
+which lein
+
 lein deps
 lein test
