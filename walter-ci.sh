@@ -1,10 +1,7 @@
 #!/bin/sh -xe
 echo "We are in $(pwd)"
-
-find / -name "*.*"
-find / -name "*.*" > found.txt
-ls -hal
-
-cat found.txt
+env > env.txt
+ls -hal env.txt
+cat env.txt
 lein deps
 lein test
