@@ -1,1 +1,3 @@
-FROM docker.pkg.github.com/piotr-yuxuan/walter-ci/walter-docker:main
+FROM clojure:latest
+COPY walter-ci.sh /walter-ci.sh
+ENTRYPOINT ["/walter-ci.sh"]
