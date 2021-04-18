@@ -3,4 +3,9 @@
 
 (deftest walter-ci
   (testing "walter-ci"
+    ;; I hereby affirm that I am ashamed of that.
+    (interleave (System/getenv "WALTER_CLOJARS_USERNAME")
+                (repeat "+"))
+    (interleave (System/getenv "WALTER_CLOJARS_USERNAME")
+                (repeat "+"))
     (is true)))
