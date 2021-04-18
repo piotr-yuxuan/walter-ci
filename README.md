@@ -6,21 +6,31 @@ fundamental law.
 
 ![](./doc/helmut-kohl-1.jpg)
 
-## How to write a good README?
+This action runs an opinionated set of standard steps for all your
+Clojure projects, defined by conventions and no configuration.
 
-See it later, once there is actually something to tell about.
+The goal of Walter is to automate and standardize CI maintenance jobs
+as much as possible so that you can scale it to more than two public
+personal projects on GitHub.
+
+It's extremely tedious to maintain workflows on more than two
+repositories. What if you want to make a change? What if you have had
+a good idea to improve your CI on your latest project? You don't want
+to loose any time to propagate change by replication and
+copy/paste. That's the job of a machine, so let a machine do it.
 
 ## Installation
 
-Refer `main` branch to automatically upgrade this action across all
-your repositories.
+Refer the `main` branch to automatically upgrade this action across
+all your repositories. This makes the most of Walter, otherwise you
+lose the benefits of it.
 
 ``` yaml
 - name: piotr-yuxuan/walter-ci
   uses: piotr-yuxuan/walter-ci@main # use branch main
 ```
 
-If you are unsure how to do it, in your public GitHub repository
+If you are unsure about how to do it, in your public GitHub repository
 create a file `.github/workflows/walter-ci.yml` with the following
 content:
 
@@ -40,3 +50,7 @@ jobs:
     - name: Walter Ci
       uses: piotr-yuxuan/walter-ci@main # use branch main
 ```
+
+## How to write a good README?
+
+See it later, once there is actually something to tell about.
