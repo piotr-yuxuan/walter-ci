@@ -14,3 +14,7 @@ logic in this jar.
 
 We keep the checkout as an external action to be explicit, but
 anything else will be handled inside Walter.
+
+Use `profiles.clj`, `deps.edn`, and the great tooling from
+[practicalli](https://github.com/practicalli/clojure-deps-edn) so that
+`project.clj` or equivalent `deps.edn` can be reduced to the minimum.
