@@ -30,11 +30,11 @@
              :kaocha [:test {:dependencies [[lambdaisland/kaocha "1.0.829"]]}]}
   :deploy-repositories [["clojars" {:sign-releases false
                                     :url "https://clojars.org/repo"
-                                    :username :env/CLOJARS_USERNAME
-                                    :password :env/CLOJARS_TOKEN}]
+                                    :username :env/WALTER_CLOJARS_USERNAME
+                                    :password :env/WALTER_CLOJARS_PASSWORD}]
                         ["github" {:url "https://maven.pkg.github.com/piotr-yuxuan/walter-ci"
-                                   :username :env/GH_PACKAGES_USR
-                                   :password :env/GH_PACKAGES_PSW
+                                   :username :env/WALTER_GITHUB_USERNAME
+                                   :password :env/WALTER_GITHUB_PASSWORD
                                    :sign-releases false}]]
   :plugins [[lein-ancient "0.7.1-SNAPSHOT"]] ; should be within tool, but don't accept it
   :aliases {"file-lint" ["with-profile" "tool" "bikeshed"] ; long lines, EOF, docstrings…

@@ -4,8 +4,8 @@
     <servers>
         <server>
             <id>github</id>
-            <username>${env.GH_PACKAGES_USR}</username>
-            <password>${env.GH_PACKAGES_PSW}</password>
+            <username>${env.WALTER_GITHUB_USERNAME}</username>
+            <password>${env.WALTER_GITHUB_PASSWORD}</password>
         </server>
     </servers>
 </settings>
