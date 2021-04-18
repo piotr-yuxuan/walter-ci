@@ -1,8 +1,6 @@
 #!/bin/sh -xe
 cd /github/workspace
-
-which java
-
-lein --help
+pwd
+ls -hal
 lein deps
 lein test
