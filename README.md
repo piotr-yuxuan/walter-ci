@@ -1,3 +1,6 @@
+👋 You can't use version `0.0.0` of this action. See
+[Installation](#installation).
+
 # `piotr-yuxuan/walter-ci`
 
 Walter Kohl is the younger son of Helmut Kohl. Like his father he
