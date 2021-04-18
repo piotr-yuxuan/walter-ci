@@ -5,8 +5,3 @@ description: |
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  env:
-    WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
-    WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
-    WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}"
-    WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}"
