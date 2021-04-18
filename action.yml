@@ -1,17 +1,7 @@
 name: 'piotr-yuxuan/walter-ci'
 description: |
-  Opinionated set of standard steps for all your Clojure projects, defined by conventions and no configuration.
-outputs:
-  see_installation:
-    description: 'See installation in the README'
-    value: |
-      Refer the `main` branch to automatically upgrade this action across
-      all your repositories. This makes the most of Walter, otherwise you
-      lose the benefits of it.
+  Opinionated set of standard steps for all your Clojure projects,
+  defined by conventions and no configuration.
 runs:
-  using: "composite"
-  steps:
-    - run: echo 'See installation in the README'.
-      shell: bash
-    - run: exit 1
-      shell: bash
+  using: 'docker'
+  image: 'Dockerfile'
