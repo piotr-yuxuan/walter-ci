@@ -38,6 +38,8 @@ It is able to perform certain actions on repositories:
 - Create and deploy new release
 - Upgrade dependencies
 - Report vulnerabilities
+- Enforce and fix reverse-domain-based project group name if deploying
+  to Clojars (mandatory)
 - Generate list of licenses
 - Run quality scan
 - Lint files
