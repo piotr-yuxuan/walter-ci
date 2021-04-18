@@ -26,7 +26,7 @@ all your repositories. This makes the most of Walter, otherwise you
 lose the benefits of it.
 
 ``` yaml
-- name: piotr-yuxuan/walter-ci
+- name: Walter CI
   uses: piotr-yuxuan/walter-ci@main # use branch main
 ```
 
@@ -47,8 +47,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-    - name: Walter Ci
-      uses: piotr-yuxuan/walter-ci@main # use branch main
+    - uses: piotr-yuxuan/walter-ci@main # use branch main
 ```
 
 ## How to write a good README?
