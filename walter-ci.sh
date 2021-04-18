@@ -1,22 +1,5 @@
 #!/bin/sh -xe
-pwd
-ls -hal
-
-cd /
-pwd
-ls -hal
-
-cd /github
-pwd
-ls -hal
-
-cd /github/home
-pwd
-ls -hal
-
-cd /github/workspace
-pwd
-ls -hal
-
+echo "We are in $(pwd)"
+find / -name "*.clj"
 lein deps
 lein test
