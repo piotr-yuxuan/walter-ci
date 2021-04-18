@@ -47,7 +47,7 @@ on:
   schedule:
     - cron: "0 0 1 * *"
 jobs:
-  version:
+  piotr-yuxuan/walter-ci:
     runs-on: ubuntu-latest
     steps:
     - uses: piotr-yuxuan/walter-ci@main # use branch main
