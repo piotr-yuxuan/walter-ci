@@ -1,7 +1,9 @@
-#!/bin/zsh -xe
+#!/bin/sh -xe
 cd /github/workspace
 
-where java
+which java
+apt-get install java
+which java
 
 lein --help
 lein deps
