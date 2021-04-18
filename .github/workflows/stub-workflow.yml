@@ -1,0 +1,9 @@
+name: Stub workflow
+on:
+  push:
+    branches: '*'
+jobs:
+  walter-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
