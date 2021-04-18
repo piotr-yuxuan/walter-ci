@@ -1,8 +1,5 @@
 #!/bin/sh -lxe
 cd /github/workspace
-which java
-which clojure
-which lein
-
+lein --help
 lein deps
 lein test
