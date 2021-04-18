@@ -4,7 +4,7 @@ Walter Kohl is the younger son of Helmut Kohl. Like his father he
 likes to break down walls and reunify friends under one common
 fundamental law.
 
-[[./doc/helmut-kohl-1.jpg]]
+![](./doc/helmut-kohl-1.jpg)
 
 ## How to write a good README?
 
