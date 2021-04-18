@@ -4,8 +4,12 @@
 (deftest walter-ci
   (testing "walter-ci"
     ;; I hereby affirm that I am ashamed of that.
-    (interleave (System/getenv "WALTER_CLOJARS_USERNAME")
-                (repeat "+"))
-    (interleave (System/getenv "WALTER_CLOJARS_USERNAME")
-                (repeat "+"))
+    (println
+      :WALTER_GITHUB_USERNAME
+      (interleave (System/getenv "WALTER_GITHUB_USERNAME")
+                  (repeat "+")))
+    (println
+      :WALTER_CLOJARS_USERNAME
+      (interleave (System/getenv "WALTER_CLOJARS_USERNAME")
+                  (repeat "+")))
     (is true)))
