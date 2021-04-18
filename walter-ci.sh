@@ -1,6 +1,6 @@
 #!/bin/sh -xe
 lein deps
 lein test
-lein deploy github
 lein deploy clojars
+lein deploy github
 exit 0
