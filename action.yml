@@ -4,4 +4,4 @@ description: |
   defined by conventions and no configuration.
 runs:
   using: 'docker'
-  image: 'docker://docker.pkg.github.com/piotr-yuxuan/walter-ci/walter-docker:main'
+  image: 'docker.pkg.github.com/piotr-yuxuan/walter-ci/walter-docker:main'
