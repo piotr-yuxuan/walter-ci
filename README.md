@@ -50,7 +50,8 @@ jobs:
   walter-ci:
     runs-on: ubuntu-latest
     steps:
-    - uses: piotr-yuxuan/walter-ci@main # use branch main
+      - uses: actions/checkout@v2
+      - uses: piotr-yuxuan/walter-ci@main # use branch main
 ```
 
 ## How to write a good README?
