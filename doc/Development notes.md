@@ -2,7 +2,9 @@
 
 It takes time to build the image every time. On walter-ci, every push
 should create a new Docker image and push it somewhere so that we can
-prepare the entrypoint.
+prepare the entrypoint. Because of
+https://github.community/t/docker-pull-from-public-github-package-registry-fail-with-no-basic-auth-credentials-error/16358/58
+we can't use Github Package Registry for that. Too bad.
 
 We can run a (private) action to update the Docker image version every
 month.
