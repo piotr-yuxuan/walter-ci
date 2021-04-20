@@ -56,29 +56,17 @@ lose the benefits of it.
 
 ``` yaml
 - name: Walter CI
-  uses: piotr-yuxuan/walter-ci@main # use branch main
+  uses: piotr-yuxuan/walter-ci@main # will download and use Docker image
 ```
-
-If you are unsure about how to do it, in your public GitHub repository
-create a file `.github/workflows/walter-ci.yml` with the following
-content:
 
 ``` yaml
-name: Walter CI
-on:
-  push:
-    branches: '*'
-  pull_request:
-    branches: '*'
-  schedule:
-    - cron: "0 0 1 * *"
-jobs:
-  walter-ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: piotr-yuxuan/walter-ci@main # use branch main
+- name: Walter CI
+  uses: docker://piotryuxuan/walter-ci:latest # Directly use the Docker image
 ```
+
+If you are unsure about how to do it, see how Walter is self-hosted
+here:
+[.github/workflows/walter-ci.yml](.github/workflows/walter-ci.yml).
 
 ## How to write a good README?
 
