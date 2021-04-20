@@ -18,3 +18,11 @@ anything else will be handled inside Walter.
 Use `profiles.clj`, `deps.edn`, and the great tooling from
 [practicalli](https://github.com/practicalli/clojure-deps-edn) so that
 `project.clj` or equivalent `deps.edn` can be reduced to the minimum.
+
+Nice to see https://github.com/nektos/act
+
+The way Docker layers work is a strong incentive to only append
+changes at the end of the file
+
+We should be able to use either the action, either directly the Docker
+image in the workflow. But that's only syntactic sugar.
