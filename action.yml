@@ -3,7 +3,5 @@ description: |
   Opinionated set of standard steps for all your Clojure projects,
   defined by conventions and no configuration.
 runs:
-  using: 'composite'
-  steps:
-    - run: ${{ github.action_path }}/walter-ci.sh
-      shell: bash
+  using: 'docker'
+  image: 'Dockerfile'
