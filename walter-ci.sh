@@ -1,3 +1,4 @@
+#!/bin/bash
 echo foobar
 env $(env)
 echo foobar
