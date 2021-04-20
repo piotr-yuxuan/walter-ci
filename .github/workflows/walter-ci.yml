@@ -18,4 +18,4 @@ jobs:
           WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}"
         uses: docker://piotryuxuan/walter-ci:latest
         with:
-          args: "1 2 3"
+          args:
