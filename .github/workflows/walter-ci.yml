@@ -16,4 +16,6 @@ jobs:
           WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
           WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}"
           WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}"
-        uses: piotr-yuxuan/walter-ci@main # use branch main
+        uses: docker://piotryuxuan/walter-ci:latest
+        with:
+          args: 1 2 3
