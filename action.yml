@@ -4,4 +4,4 @@ description: |
   defined by conventions and no configuration.
 runs:
   using: 'docker'
-  image: 'docker://piotryuxuan/walter-ci:0.0.1'
+  image: 'docker://piotryuxuan/walter-ci:latest'
