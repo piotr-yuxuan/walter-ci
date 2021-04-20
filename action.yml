@@ -5,7 +5,5 @@ description: |
 runs:
   using: 'composite'
   steps:
-    - run: sudo apt-get install clojure
-      shell: bash
-    - run: "clojure -Sdeps '{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version \"LATEST\"}}}}}' -M:walter-ci -m com.piotr-yuxuan.walter-ci.main"
+    - run: ${{ github.action_path }}/walter-ci.sh
       shell: bash
