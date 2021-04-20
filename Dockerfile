@@ -30,4 +30,6 @@ RUN apt-get install -y $(apt-cache search openjdk-..+-jdk$ | sort -r | head -n1 
 # Prepare runtime execution
 COPY ./target/*-standalone.jar /opt/walter-ci.jar
 USER nobody
+# This is not a standard GitHub Action path
+WORKDIR /walter-ci
 CMD exec $JAVA_HOME/bin/java $JAVA_OPTS -jar /opt/walter-ci.jar
