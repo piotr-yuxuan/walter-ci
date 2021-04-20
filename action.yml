@@ -3,5 +3,16 @@ description: |
   Opinionated set of standard steps for all your Clojure projects,
   defined by conventions and no configuration.
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'composite'
+  steps:
+    - run: |
+      clojure
+        -Sdeps '{:aliases
+                  {:walter-ci
+                    {:replace-deps
+                      {
+                         com.github.piotr-yuxuan/walter-ci {:mvn/version "LATEST"
+                       }}}}}'
+        -M:walter-ci
+        -m com.piotr-yuxuan.walter-ci.main
+      shell: bash
