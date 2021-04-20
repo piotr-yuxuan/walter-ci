@@ -9,13 +9,13 @@
   :pom-addition [:developers [:developer
                               [:name "胡雨軒 Петр"]
                               [:url "https://github.com/piotr-yuxuan"]]]
-  :dependencies []
+  :dependencies [[org.clojure/clojure "1.10.3"]]
   :global-vars {*warn-on-reflection* true}
   :aot :all
+  :main com.piotr-yuxuan.walter-ci.main
   :profiles {:dev {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"]}
-             :jar {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
-                              "-Dclojure.compiler.direct-linking=true"]}
-             :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
+             :uberjar {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
+                                  "-Dclojure.compiler.direct-linking=true"]}
              :tool {:global-vars {*warn-on-reflection* false} ; we don't care reflection in tooling code
                     :plugins [[lein-nomis-ns-graph "0.14.6"] ; must stay the first, see https://github.com/simon-katz/lein-nomis-ns-graph#troubleshooting
                               [jonase/eastwood "0.4.0"]
