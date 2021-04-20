@@ -1,2 +1,4 @@
-FROM clojure:latest
-CMD /bin/bash -c 'clojure -Sdeps \'{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version "LATEST"}}}}}\' -M:walter-ci -m com.piotr-yuxuan.walter-ci.main'
+FROM openjdk:jdk
+COPY ./target/*-standalone.jar /opt/walter-ci.jar
+USER nobody
+CMD exec $JAVA_HOME/bin/java $JAVA_OPTS -jar /opt/walter-ci.jar
