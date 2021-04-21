@@ -6,30 +6,46 @@ ARG DEBIAN_FRONTEND="noninteractive"
 
 # Fundations
 RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y gnupg
+RUN apt-get install  -y curl
+RUN apt-get install  -y gnupg
+RUN apt-get install  -y lsb-release
 
-# Install some recent Docker
-RUN apt-get install -y lsb-release
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
-RUN apt-get update
-RUN apt-get install -y docker-ce docker-ce-cli
-# Docker daemon must be started at runtime, and user added to group
-
-# Tools used by Walter
-RUN apt-get install -y git
-RUN apt-get install -y clojure
+# Docker in unprivileged Docker seems difficult.
+### # Install some recent Docker
+### RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+### RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
+### RUN apt-get update
+### RUN apt-get install  -y docker-ce docker-ce-cli
 
 # Installing some recent Java
 RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptopenjdk-keyring.gpg
 RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/adoptopenjdk-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update
-RUN apt-get install -y $(apt-cache search openjdk-..+-jdk$ | sort -r | head -n1 | cut -d " " -f1)
+RUN apt-get install  -y $(apt-cache search openjdk-..+-jdk$ | sort -r | head -n1 | cut -d " " -f1)
 
-# Prepare runtime execution
+# Install some recent Leiningen
+RUN curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/local/bin/lein
+RUN chmod a+x /usr/local/bin/lein
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG /home/walter-ci/.m2
+
+# Configure user
+RUN adduser --disabled-password --gecos '' walter-ci
+COPY ./resources/settings.xml /home/walter-ci/.m2/
+COPY ./resources/profiles.clj /home/walter-ci/.lein/
+RUN chown -R walter-ci:walter-ci /home/walter-ci
+RUN chmod -R 755 /home/walter-ci
+
+# Tools used by Walter
+RUN apt-get install -y git
+RUN apt-get install -y clojure
+
+USER walter-ci
+
+# Update embedded profile jars
+RUN lein ancient upgrade-profiles
+
+# Runtime execution
+WORKDIR /home/walter-ci
 COPY ./target/*-standalone.jar /opt/walter-ci.jar
-USER nobody
-# This is not a standard GitHub Action path
-WORKDIR /walter-ci
-CMD exec $JAVA_HOME/bin/java $JAVA_OPTS -jar /opt/walter-ci.jar
+CMD exec /bin/java -jar /opt/walter-ci.jar
