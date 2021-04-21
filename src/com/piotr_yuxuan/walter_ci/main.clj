@@ -14,6 +14,7 @@
 (defn -main
   [& args]
   (println "I am the first command run completely from a bootstrapped Walter :-)")
-  (shell/sh "lein" "deps" (System/getenv "GITHUB_WORKSPACE"))
-  (shell/sh "lein" "test" (System/getenv "GITHUB_WORKSPACE"))
-  (shell/sh "lein" "uberjar" (System/getenv "GITHUB_WORKSPACE")))
+  (println ::deps) (shell/sh "lein" "deps" (System/getenv "GITHUB_WORKSPACE"))
+  (println ::test) (shell/sh "lein" "test" (System/getenv "GITHUB_WORKSPACE"))
+  (println ::uberjar) (shell/sh "lein" "uberjar" (System/getenv "GITHUB_WORKSPACE"))
+  (println :deploy/clojars) (shell/sh "lein" "deploy" "clojars" (System/getenv "GITHUB_WORKSPACE")))
