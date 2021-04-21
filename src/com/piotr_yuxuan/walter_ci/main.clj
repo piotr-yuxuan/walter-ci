@@ -14,60 +14,65 @@
   (:gen-class))
 
 (defn pprint-or-sh-exit
-  [{:keys [exit err] :as ret}]
+  [{:keys [exit out err] :as ret}]
   (when-not (zero? exit)
     (throw (ex-info (str (first (str/split-lines err)))
                     ret)))
-  (pprint/pprint ret))
+  (pprint/pprint out))
 
 (defn -main
   [& args]
   (println "Environment")
   (pprint/pprint (System/getenv))
 
+  (println "Implicit environment")
+  (pprint-or-sh-exit
+    (shell/sh
+      "id"))
+
+  (println "Explicit environment")
+  (pprint-or-sh-exit
+    (shell/sh
+      "id"
+      :env (System/getenv)))
+
   (println "Identify user")
   (pprint-or-sh-exit
     (shell/sh
-      "who"
-      :env {"HOME" "/home/walter-ci"}))
+      "id"))
 
   (println "Access rights")
   (pprint-or-sh-exit
     (shell/sh
-      "ls" "-hal" (str (System/getenv "GITHUB_WORKSPACE"))
-      :dir (System/getenv "GITHUB_WORKSPACE")
+      "ls" "-hal"
       :env {"HOME" "/home/walter-ci"}))
 
-  ;(println "Retrieve dependencies")
-  ;(pprint-or-sh-exit
-  ;  (shell/sh
-  ;    "lein" "deps"
-  ;    :dir "/home/walter-ci"
-  ;    :env {"HOME" "/home/walter-ci"}))
-  ;
-  ;(println ::test)
-  ;(println
-  ;  (pr-str
-  ;    (shell/sh
-  ;      "lein" "test"
-  ;      :dir "/home/walter-ci"
-  ;      :env {"HOME" "/home/walter-ci"})))
-  ;
-  ;(println ::uberjar)
-  ;(println
-  ;  (pr-str
-  ;    (shell/sh
-  ;      "lein" "uberjar"
-  ;      :dir "/home/walter-ci"
-  ;      :env {"HOME" "/home/walter-ci"})))
-  ;
-  ;(println ::deploy :clojars)
-  ;(println
-  ;  (pr-str
-  ;    (shell/sh
-  ;      "lein" "deploy" "clojars"
-  ;      :dir (System/getenv "GITHUB_WORKSPACE")
-  ;      :env {"HOME" "/home/walter-ci"
-  ;            "WALTER_CLOJARS_USERNAME" (System/getenv "WALTER_CLOJARS_USERNAME")
-  ;            "WALTER_CLOJARS_PASSWORD" (System/getenv "WALTER_CLOJARS_PASSWORD")})))
-  )
+  (println "Retrieve dependencies")
+  (pprint-or-sh-exit
+    (shell/sh
+      "lein" "deps"
+      :env {"HOME" "/home/walter-ci"}))
+
+  (println ::test)
+  (println
+    (pr-str
+      (shell/sh
+        "lein" "test"
+        :env {"HOME" "/home/walter-ci"})))
+
+  (println ::uberjar)
+  (println
+    (pr-str
+      (shell/sh
+        "lein" "uberjar"
+        :env {"HOME" "/home/walter-ci"})))
+
+  (println ::deploy :clojars)
+  (println
+    (pr-str
+      (shell/sh
+        "lein" "deploy" "clojars"
+        :env (merge (System/getenv)
+                    {"HOME" "/home/walter-ci"
+                     "WALTER_CLOJARS_USERNAME" (System/getenv "WALTER_CLOJARS_USERNAME")
+                     "WALTER_CLOJARS_PASSWORD" (System/getenv "WALTER_CLOJARS_PASSWORD")})))))
