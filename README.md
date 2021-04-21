@@ -46,7 +46,7 @@ It is able to perform certain actions on repositories:
 - Sort namespaces
 
 It doesn't require any addition to the project code, except the
-installation step.
+installation step. It doesn't involve configuration.
 
 ## Installation
 
