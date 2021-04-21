@@ -2,20 +2,14 @@ name: Walter CI
 on:
   push:
     branches: '*'
-  pull_request:
-    branches: '*'
   schedule:
     - cron: "0 0 1 * *"
 jobs:
   walter-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - env:
           WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
           WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
-          WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}"
-          WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}"
         uses: docker://piotryuxuan/walter-ci:latest
-        with:
-          args:
