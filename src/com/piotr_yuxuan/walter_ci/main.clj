@@ -13,7 +13,6 @@
 
 (defn -main
   [& args]
-  (println "I am the first command run completely from a bootstrapped Walter :-)")
 
   (println ::deps)
   (println
