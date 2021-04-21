@@ -46,5 +46,7 @@ USER walter-ci
 RUN lein ancient upgrade-profiles
 
 # Runtime execution
+ENV HOME=/home/walter-ci
+WORKDIR /home/walter-ci
 COPY ./target/*-standalone.jar /opt/walter-ci.jar
 CMD exec /bin/java -jar /opt/walter-ci.jar
