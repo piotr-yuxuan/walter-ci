@@ -17,22 +17,33 @@
   (println ::deps)
   (println
     (pr-str
-      (shell/sh "lein" "deps" :dir (System/getenv "GITHUB_WORKSPACE"))))
+      (shell/sh
+        "lein" "deps"
+        :dir (System/getenv "GITHUB_WORKSPACE")
+        :env {"HOME" "/home/walter-ci"})))
 
   (println ::test)
   (println
     (pr-str
-      (shell/sh "lein" "test" :dir (System/getenv "GITHUB_WORKSPACE"))))
+      (shell/sh
+        "lein" "test"
+        :dir (System/getenv "GITHUB_WORKSPACE")
+        :env {"HOME" "/home/walter-ci"})))
 
   (println ::uberjar)
   (println
     (pr-str
-      (shell/sh "lein" "uberjar" :dir (System/getenv "GITHUB_WORKSPACE"))))
+      (shell/sh
+        "lein" "uberjar"
+        :dir (System/getenv "GITHUB_WORKSPACE")
+        :env {"HOME" "/home/walter-ci"})))
 
   (println ::deploy :clojars)
   (println
     (pr-str
-      (shell/sh "lein" "deploy" "clojars"
-                :dir (System/getenv "GITHUB_WORKSPACE")
-                :env {:WALTER_CLOJARS_USERNAME (System/getenv "WALTER_CLOJARS_USERNAME")
-                      :WALTER_CLOJARS_PASSWORD (System/getenv "WALTER_CLOJARS_PASSWORD")}))))
+      (shell/sh
+        "lein" "deploy" "clojars"
+        :dir (System/getenv "GITHUB_WORKSPACE")
+        :env {"HOME" "/home/walter-ci"
+              "WALTER_CLOJARS_USERNAME" (System/getenv "WALTER_CLOJARS_USERNAME")
+              "WALTER_CLOJARS_PASSWORD" (System/getenv "WALTER_CLOJARS_PASSWORD")}))))
