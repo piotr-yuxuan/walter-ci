@@ -28,13 +28,13 @@
   (println "Implicit environment")
   (pprint-or-sh-exit
     (shell/sh
-      "id"))
+      "env"))
 
   (println "Explicit environment")
   (pprint-or-sh-exit
     (shell/sh
-      "id"
-      :env (System/getenv)))
+      "env"
+      :env (into {} (System/getenv))))
 
   (println "Identify user")
   (pprint-or-sh-exit
@@ -72,7 +72,7 @@
     (pr-str
       (shell/sh
         "lein" "deploy" "clojars"
-        :env (merge (System/getenv)
+        :env (merge (into {} (System/getenv))
                     {"HOME" "/home/walter-ci"
                      "WALTER_CLOJARS_USERNAME" (System/getenv "WALTER_CLOJARS_USERNAME")
                      "WALTER_CLOJARS_PASSWORD" (System/getenv "WALTER_CLOJARS_PASSWORD")})))))
