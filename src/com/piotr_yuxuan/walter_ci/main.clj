@@ -38,6 +38,19 @@
       "env"
       :env (into {} (System/getenv))))
 
+  (println "Controlled environment")
+  (pprint-or-sh-exit
+    (shell/sh
+      "env"
+      :env {"HOME" "/home/walter-ci"}))
+
+  (println "Try to create a directory")
+  (pprint-or-sh-exit
+    (shell/sh
+      "mkdir" "test-directory"
+      :dir "/home/walter-ci"
+      :env {"HOME" "/home/walter-ci"}))
+
   (println "Identify user")
   (pprint-or-sh-exit
     (shell/sh
@@ -49,10 +62,24 @@
       "ls" "-hal"
       :env {"HOME" "/home/walter-ci"}))
 
+  (println "Copy project")
+  (pprint-or-sh-exit
+    (shell/sh
+      "cp" "-R" "/github/workspace" "/home/walter-ci/workspace"
+      :env {"HOME" "/home/walter-ci"}))
+
+  (println "Try to change permissions")
+  (pprint-or-sh-exit
+    (shell/sh
+      "chmod" "-R" "755" "/home/walter-ci/workspace"
+      :dir "/home/walter-ci/workspace"
+      :env {"HOME" "/home/walter-ci"}))
+
   (println "Retrieve dependencies")
   (pprint-or-sh-exit
     (shell/sh
       "lein" "deps"
+      :dir "/home/walter-ci/workspace"
       :env {"HOME" "/home/walter-ci"}))
 
   (println ::test)
@@ -60,6 +87,7 @@
     (pr-str
       (shell/sh
         "lein" "test"
+        :dir "/home/walter-ci/workspace"
         :env {"HOME" "/home/walter-ci"})))
 
   (println ::uberjar)
@@ -67,6 +95,7 @@
     (pr-str
       (shell/sh
         "lein" "uberjar"
+        :dir "/home/walter-ci/workspace"
         :env {"HOME" "/home/walter-ci"})))
 
   (println ::deploy :clojars)
@@ -74,6 +103,7 @@
     (pr-str
       (shell/sh
         "lein" "deploy" "clojars"
+        :dir "/home/walter-ci/workspace"
         :env (merge (into {} (System/getenv))
                     {"HOME" "/home/walter-ci"
                      "WALTER_CLOJARS_USERNAME" (System/getenv "WALTER_CLOJARS_USERNAME")
