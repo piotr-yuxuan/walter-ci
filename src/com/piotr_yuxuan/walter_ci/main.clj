@@ -20,6 +20,8 @@
                     ret)))
   (pprint/pprint out))
 
+(println "I'm in the code, not the jar.")
+
 (defn -main
   [& args]
   (println "Environment")
