@@ -16,6 +16,7 @@
 (defn pprint-or-sh-exit
   [{:keys [exit out err] :as ret}]
   (when-not (zero? exit)
+    (run! println (str/split-lines err))
     (throw (ex-info (str (first (str/split-lines err)))
                     ret)))
   (pprint/pprint out))
