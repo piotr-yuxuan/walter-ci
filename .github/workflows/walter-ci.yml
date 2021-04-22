@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: env
-      - run: lein deploy clojars
-        env:
+      - env:
           DEBUG: true
-          WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
-          WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
+          CLOJARS_USER: ${{ secrets.CLOJARS_USER }}"
+          CLOJARS_TOKEN: ${{ secrets.CLOJARS_TOKEN }}"
+        run: lein deploy clojars

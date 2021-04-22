@@ -18,9 +18,5 @@
                                   "-Dclojure.compiler.direct-linking=true"]}}
   :deploy-repositories [["clojars" {:sign-releases false
                                     :url "https://clojars.org/repo"
-                                    :username :env/CLOJARS_USERNAME
-                                    :password :env/CLOJARS_TOKEN}]
-                        ["github" {:url "https://maven.pkg.github.com/piotr-yuxuan/walter-ci"
-                                   :username :env/WALTER_GITHUB_USERNAME
-                                   :password :env/WALTER_GITHUB_PASSWORD
-                                   :sign-releases false}]])
+                                    :username :env/CLOJARS_USER
+                                    :password :env/CLOJARS_TOKEN}]])
