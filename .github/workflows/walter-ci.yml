@@ -18,3 +18,6 @@ jobs:
           cli: latest
           lein: latest
       - run: clojure -Sdeps '{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version "LATEST"}}}}}' -M:walter-ci -m com.piotr-yuxuan.walter-ci.main
+        env:
+          WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
+          WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
