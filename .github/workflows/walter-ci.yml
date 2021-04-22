@@ -16,4 +16,5 @@ jobs:
       - uses: DeLaGuardo/setup-clojure@3.2
         with:
           cli: latest
+          lein: latest
       - run: clojure -Sdeps '{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version "LATEST"}}}}}' -M:walter-ci -m com.piotr-yuxuan.walter-ci.main
