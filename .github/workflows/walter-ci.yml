@@ -13,3 +13,5 @@ jobs:
       - run: lein deploy clojars
         env:
           DEBUG: true
+          WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
+          WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}"
