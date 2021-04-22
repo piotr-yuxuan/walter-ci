@@ -12,5 +12,4 @@ jobs:
       - run: env
       - run: lein deploy clojars
         env:
-          - DEBUG: true
-      
+          DEBUG: true
