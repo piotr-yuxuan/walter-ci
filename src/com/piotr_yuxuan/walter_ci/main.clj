@@ -20,7 +20,7 @@
                     ret)))
   (pprint/pprint out))
 
-(println "I'm in the code, not the jar.")
+(println "I'm in the code, not the jar trololo.")
 
 (defn -main
   [& args]
