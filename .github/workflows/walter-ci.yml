@@ -19,7 +19,8 @@ jobs:
           lein: latest
       - run: env
       - run: lein deploy clojars
-        env: DEBUG=true
+        env:
+          DEBUG: true
       - run: clojure -Sdeps '{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version "LATEST"}}}}}' -M:walter-ci -m com.piotr-yuxuan.walter-ci.main
         env:
           WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}"
