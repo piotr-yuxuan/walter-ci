@@ -41,8 +41,7 @@
   (println "Controlled environment")
   (pprint-or-sh-exit
     (shell/sh
-      "env"
-      :env {"HOME" "/home/walter-ci"}))
+      "env"))
 
   (println "Identify user")
   (pprint-or-sh-exit
@@ -52,15 +51,12 @@
   (println "Access rights")
   (pprint-or-sh-exit
     (shell/sh
-      "ls" "-hal"
-      :env {"HOME" "/home/walter-ci"}))
+      "ls" "-hal"))
 
   (println "Retrieve dependencies")
   (pprint-or-sh-exit
     (shell/sh
-      "lein" "deps"
-      :dir "/home/walter-ci/workspace"
-      :env {"HOME" "/home/walter-ci"}))
+      "lein" "deps"))
 
   (println ::test)
   (pprint-or-sh-exit
