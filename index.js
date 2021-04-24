@@ -2,13 +2,6 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const {exec} = require("child_process");
 
-try {
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
-} catch (error) {
-    core.setFailed(error.message);
-}
-
 function loggedExec(commandString) {
     exec(commandString, (error, stdout, stderr) => {
         console.log(`::group::$ ${commandString}`)
@@ -28,6 +21,10 @@ function loggedExec(commandString) {
 loggedExec("pwd")
 loggedExec("id")
 loggedExec("ls -hal")
+loggedExec("mkdir target")
 //loggedExec("lein uberjar")
 loggedExec("ls -hal target")
+loggedExec("echo 'blah blah' > blah.txt")
+loggedExec("cat blah.txt")
+loggedExec("rm blah.txt")
 //loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
