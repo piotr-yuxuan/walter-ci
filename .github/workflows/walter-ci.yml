@@ -1,3 +1,5 @@
+# This file is updated on each run by Walter CI.
+# There is no need to update it manually.
 name: Walter CI
 on:
   push:
@@ -15,6 +17,7 @@ jobs:
       - uses: DeLaGuardo/setup-clojure@master
         with:
           cli: latest
+          lein: latest
       - uses: piotr-yuxuan/walter-ci@main
         env:
           WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}
