@@ -3,19 +3,18 @@ const github = require('@actions/github');
 const {execSync} = require("child_process");
 
 function loggedExecSync(commandString) {
-    console.log(`::group::$ ${commandString}`)
     try {
         execSync(commandString)
     } catch (error) {
         console.log(`error: ${error.message}`);
     }
-    console.log('::endgroup::')
 }
 
 loggedExecSync("pwd")
 loggedExecSync("id")
+loggedExecSync("lein deps")
 loggedExecSync("ls -hal")
-loggedExecSync("lein uberjar")
+loggedExecSync("DEBUG=true lein uberjar")
 loggedExecSync("ls -hal target")
 loggedExecSync("echo 'blah blah' > blah.txt")
 loggedExecSync("cat blah.txt")
