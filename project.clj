@@ -18,13 +18,11 @@
                  [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.4.0"]
                  [metosin/jsonista "0.3.2"]]
-  :global-vars {*warn-on-reflection* true}
   :main piotr-yuxuan.walter-ci.main
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
              :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
-             :dev {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"]}
-             :uberjar {:global-vars {*warn-on-reflection* false}
-                       :aot [piotr-yuxuan.walter-ci.main]
+             :dev {:global-vars {*warn-on-reflection* true}}
+             :uberjar {:aot [piotr-yuxuan.walter-ci.main]
                        :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
                                   "-Dclojure.compiler.direct-linking=true"]}}
   :deploy-repositories [["clojars" {:sign-releases false
