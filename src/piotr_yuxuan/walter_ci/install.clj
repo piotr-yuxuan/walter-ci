@@ -18,7 +18,7 @@
                                             "GIT_AUTHOR_NAME" github-actor
                                             "GIT_AUTHOR_EMAIL" walter-git-email})]
           (println (pr-str :commit-output commit-output)))
-        (let [push-output (shell/sh "git" "push" "HEAD"
+        (let [push-output (shell/sh "git" "push"
                                     :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))})]
           (println (pr-str :push-output push-output)))))))
 
