@@ -10,8 +10,8 @@ try {
 }
 
 function loggedExec(commandString) {
-    console.log(`$ ${commandString}`)
     exec(commandString, (error, stdout, stderr) => {
+        console.log(`$ ${commandString}`)
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -30,4 +30,4 @@ loggedExec("ls -hal")
 loggedExec("which docker")
 loggedExec("docker --help")
 loggedExec("docker --version")
-//loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
+loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
