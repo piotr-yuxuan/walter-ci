@@ -9,14 +9,21 @@ try {
     core.setFailed(error.message);
 }
 
-exec("ls -la", (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
+function loggedExec(commandString) {
+    exec(commandString, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
+}
+
+loggedExec("id")
+loggedExec("env")
+loggedExec("ls -hal")
+loggedExec("which docker")
