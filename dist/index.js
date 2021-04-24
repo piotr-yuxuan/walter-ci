@@ -6052,9 +6052,9 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(864);
 const github = __nccwpck_require__(366);
-const {execFile} = __nccwpck_require__(129);
+const {execFileSync} = __nccwpck_require__(129);
 
-execFile('./resources/walter-ci.sh')
+execFileSync('./resources/walter-ci.sh')
 
 })();
 
