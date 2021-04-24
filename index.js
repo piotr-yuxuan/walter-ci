@@ -4,4 +4,4 @@ const {execSync, execFileSync} = require("child_process");
 
 execSync('pwd')
 execSync('ls -hal')
-execFileSync('./resources/walter-ci.sh')
+

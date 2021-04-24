@@ -6056,7 +6056,7 @@ const {execSync, execFileSync} = __nccwpck_require__(129);
 
 execSync('pwd')
 execSync('ls -hal')
-execFileSync('./resources/walter-ci.sh')
+
 
 })();
 
