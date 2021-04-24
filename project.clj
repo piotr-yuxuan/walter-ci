@@ -18,12 +18,12 @@
                  [metosin/malli "0.4.0"]
                  [metosin/jsonista "0.3.2"]]
   :global-vars {*warn-on-reflection* true}
-  :aot [piotr-yuxuan.walter-ci.main]
-  :main com.piotr-yuxuan.walter-ci.main
+  :main piotr-yuxuan.walter-ci.main
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
              :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
              :dev {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"]}
-             :uberjar {:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
+             :uberjar {:aot [piotr-yuxuan.walter-ci.main]
+                       :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
                                   "-Dclojure.compiler.direct-linking=true"]}}
   :deploy-repositories [["clojars" {:sign-releases false
                                     :url "https://clojars.org/repo"
