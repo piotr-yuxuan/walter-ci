@@ -29,13 +29,6 @@
      [:github/delete-branch-on-merge? [boolean? {:request-key "delete_branch_on_merge" :default true :description "Allow automatically deleting head branches when pull requests are merged."}]]
      [:github/archived? [boolean? {:request-key "archived" :default false :description "Mark the GitHub repository as archived. Note: You cannot unarchive repositories through the API."}]]]))
 
-(defn map-val-schemas
-  [schema]
-  (map (comp first
-             m/-children
-             second)
-       (m/-entries schema)))
-
 (def request-key-transformer
   (-> {}
       (assoc-in [:encoders :map :compile]
