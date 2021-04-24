@@ -1,0 +1,28 @@
+{
+  "name": "walter-ci",
+  "version": "1.0.0",
+  "description": "👋 You can't use version `0.0.0` of this action. See [Installation](#installation).",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piotr-yuxuan/walter-ci.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piotr-yuxuan/walter-ci/issues"
+  },
+  "homepage": "https://github.com/piotr-yuxuan/walter-ci#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@actions/github": "^4.0.0"
+  }
+}

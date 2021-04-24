@@ -3,5 +3,5 @@ description: |
   Opinionated set of standard steps for all your Clojure projects,
   defined by conventions and no configuration.
 runs:
-  using: 'docker'
-  image: 'docker://piotryuxuan/walter-ci:latest'
+  using: 'node12'
+  main: 'dist/index.js'
