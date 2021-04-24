@@ -12,6 +12,7 @@
     (let [diff (:out (shell/sh "git" "diff" "--staged"))]
       (println :empty-diff? (empty? diff))
       (println :git/config (shell/sh "git" "config" "--list"))
+      (println :git/local-config (shell/sh "cat" ".git/config"))
       (when-not (empty? diff)
         (let [commit-output (shell/sh "git" "commit" "-m" commit-message
                                       :env {"GIT_COMMITTER_NAME" github-actor
