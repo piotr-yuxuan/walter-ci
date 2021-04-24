@@ -3,5 +3,7 @@ description: |
   Opinionated set of standard steps for all your Clojure projects,
   defined by conventions and no configuration.
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/resources/walter-ci.sh
+      shell: bash

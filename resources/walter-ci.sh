@@ -1,3 +1,6 @@
+set -x
+
+env
 pwd
 id
 lein deps
