@@ -6,28 +6,22 @@
 
 (defn git-commit-and-push
   [{{:keys [walter-github-password github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
-  (shell/with-sh-dir (.getAbsolutePath (io/file github-workspace))
-    (println "add" (.getAbsolutePath file-path))
-    (shell/sh "git" "add" (.getAbsolutePath file-path))
-    (let [diff (:out (shell/sh "git" "diff" "--staged"))]
-      (println :empty-diff? (empty? diff))
-      (println :git/config (shell/sh "git" "config" "--list"))
-      (println :git/local-config (shell/sh "cat" ".git/config"))
-      (when-not (empty? diff)
-        (let [commit-output (shell/sh "git" "commit" "-m" commit-message
-                                      :env {"GIT_COMMITTER_NAME" github-actor
-                                            "GIT_COMMITTER_EMAIL" walter-git-email
-                                            "GIT_AUTHOR_NAME" github-actor
-                                            "GIT_AUTHOR_EMAIL" walter-git-email})]
-          (println (pr-str :commit-output commit-output)))
-        (let [push-output (shell/sh "git"
-                                    ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
-                                    "-c" "http.https://github.com/.extraheader="
-                                    "push"
-                                    :env {"WALTER_GITHUB_PASSWORD" walter-github-password
-                                          "GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
-                                          "GIT_TRACE" "1"})]
-          (println (pr-str :push-output push-output)))))))
+  (let [commit-exit (shell/sh "git" "commit" "-m" commit-message
+                              :dir (io/file github-workspace)
+                              :env {"GIT_COMMITTER_NAME" github-actor
+                                    "GIT_COMMITTER_EMAIL" walter-git-email
+                                    "GIT_AUTHOR_NAME" github-actor
+                                    "GIT_AUTHOR_EMAIL" walter-git-email})
+        push-exit (shell/sh "git"
+                            ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                            "-c" "http.https://github.com/.extraheader="
+                            "push"
+                            :dir (io/file github-workspace)
+                            :env {"WALTER_GITHUB_PASSWORD" walter-github-password
+                                  "GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
+                                  "GIT_TRACE" "1"})]
+    (assert (zero? (:exit commit-exit)) "Install commit failed")
+    (assert (zero? (:exit push-exit)) "Install push failed")))
 
 (def Config
   [:map
@@ -45,7 +39,8 @@
     (throw (ex-info "Config invalid" {})))
   (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
         target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
-    (println :copy)
     (io/copy source-yml target-yml)
-    (println :git-commit-and-push)
-    (git-commit-and-push config "Update walter-ci.yml" target-yml)))
+    (shell/sh "git" "add" (.getAbsolutePath target-yml))
+    (let [diff (:out (shell/sh "git" "diff" "--staged"))]
+      (cond (empty? diff) :already-installed
+            (git-commit-and-push config "Update walter-ci.yml" target-yml) :just-installed))))

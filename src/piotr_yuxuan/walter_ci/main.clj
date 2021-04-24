@@ -27,6 +27,8 @@
 (defn -main
   [& args]
   (let [config (load-config)]
+    (when (= :just-installed (install/step config))
+      (println "Just installed, this has triggered another build.")
+      (System/exit 0))
     (github/step config)
-    (install/step config)
     (println :all-done)))
