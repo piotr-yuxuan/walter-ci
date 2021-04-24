@@ -43,7 +43,8 @@
     (assert (zero? (:exit (shell/sh "git" "add" (.getAbsolutePath target-yml)
                                     :dir (io/file github-workspace))))
             "Adding updated file to index failed")
-    (let [diff (:out (shell/sh "git" "diff" "--staged"))]
+    (let [diff (:out (shell/sh "git" "diff" "--staged"
+                               :dir (io/file github-workspace)))]
       (println "(empty? diff)" (empty? diff))
       (cond (empty? diff)
             :already-installed
