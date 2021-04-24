@@ -35,9 +35,10 @@
   (when-not (m/validate Config config)
     (println (pr-str (m/explain Config config)))
     (throw (ex-info "Config invalid" {})))
-  (let [source (.getAbsolutePath (io/file github-action-path "resources" "walter-ci.standard.yml"))
-        target (.getAbsolutePath (io/file github-workspace ".github" "workflows" "walter-ci.yml"))]
+  (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
+        target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
     (println :copy)
-    (io/copy (io/file source) (io/file target))
-    (git-commit-and-push config "Update walter-ci.yml" target)))
+    (io/copy source-yml target-yml)
+    (println :git-commit-and-push)
+    (git-commit-and-push config "Update walter-ci.yml" target-yml)))
 
