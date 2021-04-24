@@ -6052,8 +6052,10 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(864);
 const github = __nccwpck_require__(366);
-const {execFileSync} = __nccwpck_require__(129);
+const {execSync, execFileSync} = __nccwpck_require__(129);
 
+execSync('pwd')
+execSync('ls -hal')
 execFileSync('./resources/walter-ci.sh')
 
 })();
