@@ -31,5 +31,5 @@
                                     :password :env/WALTER_CLOJARS_PASSWORD}]
                         ["github" {:sign-releases false
                                    :url "https://maven.pkg.github.com/piotr-yuxuan/walter-ci"
-                                   :username :env/WALTER_GITHUB_USERNAME
+                                   :username :env/GITHUB_ACTOR
                                    :password :env/WALTER_GITHUB_PASSWORD}]])
