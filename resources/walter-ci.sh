@@ -3,10 +3,7 @@ set -x
 env
 pwd
 id
-lein deps
+lein deps 1> /dev/null
 ls -hal
 export DEBUG=true
-
-cd "${GITHUB_ACTION_PATH}" || exit 1
-pwd
-lein run
+lein deploy clojars

@@ -29,5 +29,5 @@
                                   "-Dclojure.compiler.direct-linking=true"]}}
   :deploy-repositories [["clojars" {:sign-releases false
                                     :url "https://clojars.org/repo"
-                                    :username :env/CLOJARS_USER
-                                    :password :env/CLOJARS_TOKEN}]])
+                                    :username :env/WALTER_CLOJARS_PASSWORD
+                                    :password :env/WALTER_CLOJARS_USERNAME}]])
