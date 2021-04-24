@@ -9,17 +9,18 @@
   (shell/with-sh-dir (.getAbsolutePath (io/file github-workspace))
     (println "add" (.getAbsolutePath file-path))
     (shell/sh "git" "add" (.getAbsolutePath file-path))
-    (println :empty-diff? (seq (:out (shell/sh "git" "diff" "--staged"))))
-    (when (seq (:out (shell/sh "git" "diff" "--porcelain")))
-      (let [commit-output (shell/sh "git" "commit" "-m" commit-message
-                                    :env {"GIT_COMMITTER_NAME" github-actor
-                                          "GIT_COMMITTER_EMAIL" walter-git-email
-                                          "GIT_AUTHOR_NAME" github-actor
-                                          "GIT_AUTHOR_EMAIL" walter-git-email})]
-        (println (pr-str :commit-output commit-output)))
-      (let [push-output (shell/sh "git" "push" "HEAD"
-                                  :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))})]
-        (println (pr-str :push-output push-output))))))
+    (let [diff (:out (shell/sh "git" "diff" "--staged"))]
+      (println :empty-diff? (empty? diff))
+      (when (empty? diff)
+        (let [commit-output (shell/sh "git" "commit" "-m" commit-message
+                                      :env {"GIT_COMMITTER_NAME" github-actor
+                                            "GIT_COMMITTER_EMAIL" walter-git-email
+                                            "GIT_AUTHOR_NAME" github-actor
+                                            "GIT_AUTHOR_EMAIL" walter-git-email})]
+          (println (pr-str :commit-output commit-output)))
+        (let [push-output (shell/sh "git" "push" "HEAD"
+                                    :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))})]
+          (println (pr-str :push-output push-output)))))))
 
 (def Config
   [:map
@@ -41,4 +42,3 @@
     (io/copy source-yml target-yml)
     (println :git-commit-and-push)
     (git-commit-and-push config "Update walter-ci.yml" target-yml)))
-
