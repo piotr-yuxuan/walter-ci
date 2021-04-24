@@ -1,5 +1,5 @@
 (defproject com.github.piotr-yuxuan/walter-ci (-> "./resources/walter-ci.version" slurp .trim)
-  :description "Walter is the younger son of Helmut"
+  :description "Test Walter is the younger son of Helmut"
   :url "https://github.com/piotr-yuxuan/walter-ci"
   :license {:name "European Union Public License 1.2 or later"
             :url "https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12"
