@@ -1,2 +1,2 @@
 #!/bin/sh
-exec echo "${WALTER_GITHUB_PASSWORD}"
+echo "${WALTER_GITHUB_PASSWORD}"
