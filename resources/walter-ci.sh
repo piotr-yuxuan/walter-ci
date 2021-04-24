@@ -1,4 +1,8 @@
 set -xe
-cd "${GITHUB_ACTION_PATH}" || exit 1
+cd "${GITHUB_ACTION_PATH}"
 # Shockingly bad. See history for better attempts.
-lein run
+WALTER_CI_VERSION=$(awk '{$1=$1};1' < "./resources/walter-ci.version")
+lein install
+
+cd "${GITHUB_WORKSPACE}"
+clojure -Sdeps "{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version \"${WALTER_CI_VERSION}\"}}}}}" -M:walter-ci -m piotr-yuxuan.walter-ci.main
