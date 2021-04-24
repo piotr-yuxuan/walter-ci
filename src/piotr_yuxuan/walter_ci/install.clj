@@ -1,18 +1,8 @@
 (ns piotr-yuxuan.walter-ci.install
   (:require [clojure.java.shell :as shell]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [malli.core :as m])
   (:import (java.io File)))
-
-(def Config
-  [:map
-   [:env [:map
-          [:github-workspace string?]
-          [:github-action-path string?]]]])
-
-(def env
-  {:github-workspace "/Users/p2b/src/github.com/piotr-yuxuan/walter-ci"
-   :github-action-path "/Users/p2b/src/github.com/piotr-yuxuan/walter-ci"
-   :walter-git-email "piotr-yuxuan@users.noreply.github.com"})
 
 (defn git-commit-and-push
   [{{:keys [github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
@@ -32,8 +22,19 @@
           (shell/sh "git" "push" "HEAD"
                     :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))}))))))
 
+(def Config
+  [:map
+   [:env [:map
+          [:github-action-path string?]
+          [:github-workspace string?]
+          [:walter-git-email string?]
+          [:github-actor string?]]]])
+
 (defn step
   [{{:keys [github-workspace github-action-path]} :env :as config}]
+  (when-not (m/validate Config config)
+    (println (pr-str (m/explain Config config)))
+    (throw (ex-info "Config invalid" {})))
   (let [source (.getAbsolutePath (io/file github-action-path "resources" "walter-ci.standard.yml"))
         target (.getAbsolutePath (io/file github-workspace ".github" "workflows" "walter-ci.yml"))]
     (println :copy)
