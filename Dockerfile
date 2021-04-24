@@ -10,13 +10,6 @@ RUN apt-get install  -y curl
 RUN apt-get install  -y gnupg
 RUN apt-get install  -y lsb-release
 
-# Docker in unprivileged Docker seems difficult.
-### # Install some recent Docker
-### RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-### RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
-### RUN apt-get update
-### RUN apt-get install  -y docker-ce docker-ce-cli
-
 # Installing some recent Java
 RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptopenjdk-keyring.gpg
 RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/adoptopenjdk-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/adoptopenjdk.list
