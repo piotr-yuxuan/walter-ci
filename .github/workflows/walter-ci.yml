@@ -16,4 +16,4 @@ jobs:
       - run: pwd
       - run: id
       - run: ls -hal
-      - run: ./resources/walter-ci.sh
+      - run: sh ./resources/walter-ci.sh
