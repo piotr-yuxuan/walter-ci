@@ -13,4 +13,7 @@ jobs:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - run: env
-      - uses: piotr-yuxuan/walter-ci@main
+      - run: pwd
+      - run: id
+      - run: ls -hal
+      - run: ./resources/walter-ci.sh
