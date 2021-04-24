@@ -28,4 +28,4 @@ function loggedExec(commandString) {
 loggedExec("pwd")
 loggedExec("lein uberjar")
 loggedExec("ls -hal target")
-loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
+//loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
