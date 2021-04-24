@@ -1,6 +1,8 @@
 (ns piotr-yuxuan.walter-ci.main
   (:require [piotr-yuxuan.walter-ci.github :as github]
-            [piotr-yuxuan.walter-ci.install :as install])
+            [piotr-yuxuan.walter-ci.install :as install]
+            [camel-snake-kebab.core :as csk]
+            [medley.core :as medley])
   (:gen-class))
 
 (declare run-tests
@@ -18,7 +20,9 @@
 
 (defn load-config
   []
-  {:env (into {} (System/getenv))})
+  {:env (->> (System/getenv)
+             (into {})
+             (medley/map-keys csk/->kebab-case-keyword))})
 
 (defn -main
   [& args]
