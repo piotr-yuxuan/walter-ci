@@ -6070,15 +6070,26 @@ function loggedExec(commandString) {
     });
 }
 
+// Ugly but does what I want right now
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 loggedExec("pwd")
 loggedExec("id")
+delay(5000)
 loggedExec("ls -hal")
+delay(5000)
 loggedExec("mkdir target")
-//loggedExec("lein uberjar")
+delay(5000)
+loggedExec("lein uberjar")
+delay(5000)
 loggedExec("ls -hal target")
+delay(5000)
 loggedExec("echo 'blah blah' > blah.txt")
+delay(5000)
 loggedExec("cat blah.txt")
+delay(5000)
 loggedExec("rm blah.txt")
+delay(5000)
 //loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
 
 })();
