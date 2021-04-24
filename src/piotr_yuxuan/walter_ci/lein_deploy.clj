@@ -19,6 +19,7 @@
     (doseq [deploy-repository deploy-repositories]
       (let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
                                              {:out :inherit
+                                              :err :inherit
                                               :dir (io/file github-workspace)})]
         (when-not (zero? exit)
           (println "Deployment failed to" deploy-repository))))))
