@@ -11,7 +11,7 @@
     (shell/sh "git" "add" (.getAbsolutePath file-path))
     (let [diff (:out (shell/sh "git" "diff" "--staged"))]
       (println :empty-diff? (empty? diff))
-      (when (empty? diff)
+      (when-not (empty? diff)
         (let [commit-output (shell/sh "git" "commit" "-m" commit-message
                                       :env {"GIT_COMMITTER_NAME" github-actor
                                             "GIT_COMMITTER_EMAIL" walter-git-email
