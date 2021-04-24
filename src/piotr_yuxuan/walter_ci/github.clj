@@ -2,6 +2,7 @@
   "GitHub repository"
   (:require [leiningen.core.project :as leiningen]
             [clojure.java.io :as io]
+            [medley.core :as medley]
             [clojure.data]
             [clojure.set]
             [clj-http.client :as http]
@@ -33,7 +34,7 @@
   (-> {}
       (assoc-in [:encoders :map :compile]
         (fn [schema _]
-          (partial medley.core/map-keys
+          (partial medley/map-keys
                    (comp :request-key
                          m/properties
                          (partial mu/get schema)))))
