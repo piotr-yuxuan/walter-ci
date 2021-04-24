@@ -8,3 +8,5 @@
 /.nrepl-port
 /*.asc
 /pom.xml
+/package-lock.json
+/node_modules/
