@@ -6056,6 +6056,7 @@ const {execSync} = __nccwpck_require__(129);
 
 function loggedExecSync(commandString) {
     try {
+        console.log(`$ ${commandString}`)
         execSync(commandString)
     } catch (error) {
         console.log(`error: ${error.message}`);

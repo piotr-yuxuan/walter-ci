@@ -4,6 +4,7 @@ const {execSync} = require("child_process");
 
 function loggedExecSync(commandString) {
     try {
+        console.log(`$ ${commandString}`)
         execSync(commandString)
     } catch (error) {
         console.log(`error: ${error.message}`);
