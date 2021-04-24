@@ -6080,7 +6080,9 @@ loggedExec("id")
 loggedExec("env")
 loggedExec("ls -hal")
 loggedExec("which docker")
-loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
+loggedExec("docker --help")
+loggedExec("docker --version")
+//loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
 
 })();
 
