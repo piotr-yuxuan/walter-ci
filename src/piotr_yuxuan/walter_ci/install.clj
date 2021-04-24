@@ -20,7 +20,8 @@
                                             "GIT_AUTHOR_EMAIL" walter-git-email})]
           (println (pr-str :commit-output commit-output)))
         (let [push-output (shell/sh "git" "push"
-                                    :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))})]
+                                    :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
+                                          "GIT_TRACE" "1"})]
           (println (pr-str :push-output push-output)))))))
 
 (def Config
