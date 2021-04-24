@@ -40,15 +40,13 @@
   (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
         target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
     (io/copy source-yml target-yml)
-    (assert (zero? (:out (shell/sh "git" "add" (.getAbsolutePath target-yml)
-                                   :dir (io/file github-workspace))))
+    (assert (zero? (:exit (shell/sh "git" "add" (.getAbsolutePath target-yml)
+                                    :dir (io/file github-workspace))))
             "Adding updated file to index failed")
     (let [diff (:out (shell/sh "git" "diff" "--staged"))]
       (println "(empty? diff)" (empty? diff))
       (cond (empty? diff)
             :already-installed
 
-            (git-commit-and-push config
-                                 (io/file github-workspace)
-                                 "Update walter-ci.yml")
+            (git-commit-and-push config (io/file github-workspace) "Update walter-ci.yml")
             :just-installed))))
