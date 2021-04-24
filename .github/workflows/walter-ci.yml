@@ -20,7 +20,6 @@ jobs:
           lein: latest
       - uses: piotr-yuxuan/walter-ci@main
         env:
-          WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}
           WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
           WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}
           WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}
