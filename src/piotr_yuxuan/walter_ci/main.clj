@@ -1,6 +1,8 @@
 (ns piotr-yuxuan.walter-ci.main
   (:require [leiningen.core.project :as leiningen]
             [medley.core :as medley]
+            [camel-snake-kebab.core :as csk]
+            [piotr-yuxuan.walter-ci.github :as github]
             [jsonista.core :as json])
   (:gen-class))
 
@@ -44,6 +46,14 @@
       (new-github-release)
       (deploy-to-clojars)))
 
+(defn load-config
+  []
+  {:env (->> (System/getenv)
+             (into {})
+             (medley/map-keys csk/->kebab-case-keyword))})
+
 (defn -main
   [& args]
-  )
+  (let [config (load-config)]
+    (github/step config)
+    (println :all-done)))

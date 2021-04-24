@@ -15,6 +15,7 @@
                  [clj-http "3.12.1"]
                  [com.arohner/uri "0.1.2"]
                  [metosin/muuntaja "0.6.8"]
+                 [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.4.0"]
                  [metosin/jsonista "0.3.2"]]
   :global-vars {*warn-on-reflection* true}

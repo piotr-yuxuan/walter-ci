@@ -73,29 +73,49 @@
                 mt/strip-extra-keys-transformer))))
 
 (defn apply-settings
-  [{:keys [owner repo]} {:github/keys [topics] :as settings}]
-  ;; Setting topics through the API is still in preview.
-  (http/request {:request-method :put
-                 :url (str/join "/" ["https://api.github.com/repos" owner repo "topics"])
-                 :body (json/write-value-as-string {:names topics})
-                 :basic-auth ["piotr-yuxuan" (System/getenv "GH_PACKAGES_PSW")]
-                 :headers {"Content-Type" "application/json"
-                           "Accept" "application/vnd.github.mercy-preview+json"}})
-  (let [json-settings (m/encode Defaults (dissoc settings :github/topics)
-                                (mt/transformer
-                                  mt/strip-extra-keys-transformer
-                                  request-key-transformer))]
-    (http/request {:request-method :patch
-                   :url (str/join "/" ["https://api.github.com/repos" owner repo])
-                   :body (json/write-value-as-string json-settings)
-                   :basic-auth ["piotr-yuxuan" (System/getenv "GH_PACKAGES_PSW")]
+  [config {:github/keys [topics] :as settings}]
+  (let [{:keys [github-api-url github-actor github-repository walter-github-password]} (:env config)]
+    ;; Setting topics through the API is still in preview.
+    (http/request {:request-method :put
+                   :url (str/join "/" [github-api-url "repos" github-repository "topics"])
+                   :body (json/write-value-as-string {:names topics})
+                   :basic-auth [github-actor walter-github-password]
                    :headers {"Content-Type" "application/json"
-                             "Accept" "application/vnd.github.v3+json"}}))
-  :ok)
+                             "Accept" "application/vnd.github.mercy-preview+json"}})
+    (let [json-settings (m/encode Defaults (dissoc settings :github/topics)
+                                  (mt/transformer
+                                    mt/strip-extra-keys-transformer
+                                    request-key-transformer))]
+      (http/request {:request-method :patch
+                     :url (str/join "/" [github-api-url "repos" github-repository])
+                     :body (json/write-value-as-string json-settings)
+                     :basic-auth [github-actor walter-github-password]
+                     :headers {"Content-Type" "application/json"
+                               "Accept" "application/vnd.github.v3+json"}}))))
+
+(def Config
+  [:map
+   [:env [:map
+          [:github-workspace string?]
+          [:github-api-url string?]
+          [:github-actor string?]
+          [:github-repository string?]
+          [:walter-github-password string?]]]])
+
+(defn step
+  [config]
+  (if (m/validate Config config)
+    (let [expected-settings (expected-settings config)]
+      (apply-settings config expected-settings)
+      :ok)
+    (m/explain Config config)))
 
 (comment
-  (let [project {:owner "piotr-yuxuan"
-                 :repo "walter-ci"
-                 :project-root "/Users/p2b/src/github.com/piotr-yuxuan/walter-ci"}]
-    (->> (expected-settings project)
-         (apply-settings project))))
+  (try
+    (step {:env {:github-workspace "/Users/p2b/src/github.com/piotr-yuxuan/walter-ci"
+                 :github-api-url "https://api.github.com"
+                 :github-actor "piotr-yuxuan"
+                 :github-repository "piotr-yuxuan/walter-ci"
+                 :walter-github-password (System/getenv "WALTER_GITHUB_PASSWORD")}})
+    (catch Exception ex
+      (ex-data ex))))
