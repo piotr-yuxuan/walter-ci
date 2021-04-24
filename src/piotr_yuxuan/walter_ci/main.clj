@@ -1,7 +1,5 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:require [medley.core :as medley]
-            [camel-snake-kebab.core :as csk]
-            [piotr-yuxuan.walter-ci.github :as github]
+  (:require [piotr-yuxuan.walter-ci.github :as github]
             [piotr-yuxuan.walter-ci.install :as install])
   (:gen-class))
 
