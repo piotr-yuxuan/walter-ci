@@ -63,8 +63,8 @@
       mt/transformer))
 
 (defn expected-settings
-  [{:keys [project-root]}]
-  (let [project (leiningen/read (.getAbsolutePath (io/file project-root "project.clj")) [:github])]
+  [{:keys [github-workspace]}]
+  (let [project (leiningen/read (.getAbsolutePath (io/file github-workspace "project.clj")) [:github])]
     (m/encode Defaults (-> project
                            (assoc :github/homepage (or (:github/homepage project) (:url project) (:scm (:url project))))
                            (assoc :github/description (or (:github/description project) (:description project))))
