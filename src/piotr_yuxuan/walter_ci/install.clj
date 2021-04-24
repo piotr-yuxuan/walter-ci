@@ -5,7 +5,7 @@
   (:import (java.io File)))
 
 (defn git-commit-and-push
-  [{{:keys [github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
+  [{{:keys [walter-github-password github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
   (shell/with-sh-dir (.getAbsolutePath (io/file github-workspace))
     (println "add" (.getAbsolutePath file-path))
     (shell/sh "git" "add" (.getAbsolutePath file-path))
@@ -24,7 +24,8 @@
                                     ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
                                     "-c" "http.https://github.com/.extraheader="
                                     "push"
-                                    :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
+                                    :env {"WALTER_GITHUB_PASSWORD" walter-github-password
+                                          "GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
                                           "GIT_TRACE" "1"})]
           (println (pr-str :push-output push-output)))))))
 
