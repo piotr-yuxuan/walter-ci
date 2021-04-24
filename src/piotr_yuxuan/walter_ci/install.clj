@@ -1,13 +1,12 @@
 (ns piotr-yuxuan.walter-ci.install
   (:require [clojure.java.shell :as shell]
             [clojure.java.io :as io]
-            [malli.core :as m])
-  (:import (java.io File)))
+            [malli.core :as m]))
 
 (defn git-commit-and-push
-  [{{:keys [walter-github-password github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
+  [{{:keys [walter-github-password github-action-path walter-git-email github-actor]} :env} dir commit-message]
   (let [commit-exit (shell/sh "git" "commit" "-m" commit-message
-                              :dir (io/file github-workspace)
+                              :dir dir
                               :env {"GIT_COMMITTER_NAME" github-actor
                                     "GIT_COMMITTER_EMAIL" walter-git-email
                                     "GIT_AUTHOR_NAME" github-actor
@@ -16,7 +15,7 @@
                             ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
                             "-c" "http.https://github.com/.extraheader="
                             "push"
-                            :dir (io/file github-workspace)
+                            :dir dir
                             :env {"WALTER_GITHUB_PASSWORD" walter-github-password
                                   "GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
                                   "GIT_TRACE" "1"})]
@@ -41,8 +40,15 @@
   (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
         target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
     (io/copy source-yml target-yml)
-    (shell/sh "git" "add" (.getAbsolutePath target-yml))
+    (assert (zero? (:out (shell/sh "git" "add" (.getAbsolutePath target-yml)
+                                   :dir (io/file github-workspace))))
+            "Adding updated file to index failed")
     (let [diff (:out (shell/sh "git" "diff" "--staged"))]
       (println "(empty? diff)" (empty? diff))
-      (cond (empty? diff) :already-installed
-            (git-commit-and-push config "Update walter-ci.yml" target-yml) :just-installed))))
+      (cond (empty? diff)
+            :already-installed
+
+            (git-commit-and-push config
+                                 (io/file github-workspace)
+                                 "Update walter-ci.yml")
+            :just-installed))))
