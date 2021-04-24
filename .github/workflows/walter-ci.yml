@@ -13,3 +13,5 @@ jobs:
           access_token: ${{ github.token }}
       - uses: actions/checkout@main
       - uses: piotr-yuxuan/walter-ci@main
+        env:
+          WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
