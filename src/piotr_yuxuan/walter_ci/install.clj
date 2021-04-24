@@ -9,7 +9,7 @@
   (shell/with-sh-dir (.getAbsolutePath (io/file github-workspace))
     (println "add" (.getAbsolutePath file-path))
     (shell/sh "git" "add" (.getAbsolutePath file-path))
-    (println :empty-diff? (seq (:out (shell/sh "git" "diff" "--porcelain"))))
+    (println :empty-diff? (seq (:out (shell/sh "git" "diff" "--staged"))))
     (when (seq (:out (shell/sh "git" "diff" "--porcelain")))
       (let [commit-output (shell/sh "git" "commit" "-m" commit-message
                                     :env {"GIT_COMMITTER_NAME" github-actor
@@ -25,6 +25,7 @@
   [:map
    [:env [:map
           [:github-action-path string?]
+          [:walter-github-password string?]
           [:github-workspace string?]
           [:walter-git-email string?]
           [:github-actor string?]]]])
