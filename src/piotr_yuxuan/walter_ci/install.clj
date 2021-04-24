@@ -20,7 +20,10 @@
                                             "GIT_AUTHOR_NAME" github-actor
                                             "GIT_AUTHOR_EMAIL" walter-git-email})]
           (println (pr-str :commit-output commit-output)))
-        (let [push-output (shell/sh "git" "push"
+        (let [push-output (shell/sh "git"
+                                    ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                    "-c" "http.https://github.com/.extraheader="
+                                    "push"
                                     :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
                                           "GIT_TRACE" "1"})]
           (println (pr-str :push-output push-output)))))))
