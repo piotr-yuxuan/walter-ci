@@ -21,7 +21,8 @@
                                   "GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))
                                   "GIT_TRACE" "1"})]
     (assert (zero? (:exit commit-exit)) "Install commit failed")
-    (assert (zero? (:exit push-exit)) "Install push failed")))
+    (assert (zero? (:exit push-exit)) "Install push failed")
+    true))
 
 (def Config
   [:map
@@ -42,5 +43,6 @@
     (io/copy source-yml target-yml)
     (shell/sh "git" "add" (.getAbsolutePath target-yml))
     (let [diff (:out (shell/sh "git" "diff" "--staged"))]
+      (println "(empty? diff)" (empty? diff))
       (cond (empty? diff) :already-installed
             (git-commit-and-push config "Update walter-ci.yml" target-yml) :just-installed))))
