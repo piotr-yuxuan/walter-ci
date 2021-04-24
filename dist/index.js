@@ -6078,7 +6078,9 @@ function loggedExec(commandString) {
 }
 
 loggedExec("pwd")
-loggedExec("lein uberjar")
+loggedExec("id")
+loggedExec("ls -hal")
+//loggedExec("lein uberjar")
 loggedExec("ls -hal target")
 //loggedExec("docker build -t piotryuxuan/walter-ci:latest .")
 
