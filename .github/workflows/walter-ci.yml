@@ -12,9 +12,9 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@main
-      - uses: DeLaGuardo/setup-clojure@3.2
-          with:
-            cli: latest
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          cli: latest
       - uses: piotr-yuxuan/walter-ci@main
         env:
           WALTER_GITHUB_USERNAME: ${{ secrets.WALTER_GITHUB_USERNAME }}
