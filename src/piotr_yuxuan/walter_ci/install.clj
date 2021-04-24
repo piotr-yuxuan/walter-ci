@@ -7,20 +7,19 @@
 (defn git-commit-and-push
   [{{:keys [github-action-path github-workspace walter-git-email github-actor]} :env} commit-message ^File file-path]
   (shell/with-sh-dir (.getAbsolutePath (io/file github-workspace))
+    (println "add" (.getAbsolutePath file-path))
     (shell/sh "git" "add" (.getAbsolutePath file-path))
     (println :empty-diff? (seq (:out (shell/sh "git" "diff" "--porcelain"))))
     (when (seq (:out (shell/sh "git" "diff" "--porcelain")))
-      (println
-        (pr-str
-          (shell/sh "git" "commit" "-m" commit-message
-                    :env {"GIT_COMMITTER_NAME" github-actor
-                          "GIT_COMMITTER_EMAIL" walter-git-email
-                          "GIT_AUTHOR_NAME" github-actor
-                          "GIT_AUTHOR_EMAIL" walter-git-email})))
-      (println
-        (pr-str
-          (shell/sh "git" "push" "HEAD"
-                    :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))}))))))
+      (let [commit-output (shell/sh "git" "commit" "-m" commit-message
+                                    :env {"GIT_COMMITTER_NAME" github-actor
+                                          "GIT_COMMITTER_EMAIL" walter-git-email
+                                          "GIT_AUTHOR_NAME" github-actor
+                                          "GIT_AUTHOR_EMAIL" walter-git-email})]
+        (println (pr-str :commit-output commit-output)))
+      (let [push-output (shell/sh "git" "push" "HEAD"
+                                  :env {"GIT_ASKPASS" (.getAbsolutePath (io/file github-action-path "resources" "git-askpass.sh"))})]
+        (println (pr-str :push-output push-output))))))
 
 (def Config
   [:map
