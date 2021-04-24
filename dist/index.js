@@ -6063,7 +6063,7 @@ try {
 
 function loggedExec(commandString) {
     exec(commandString, (error, stdout, stderr) => {
-        console.log(`$ ${commandString}`)
+        console.log(`::group::$ ${commandString}`)
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -6073,6 +6073,7 @@ function loggedExec(commandString) {
             return;
         }
         console.log(`stdout: ${stdout}`);
+        console.log('::endgroup::')
     });
 }
 
