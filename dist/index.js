@@ -5907,6 +5907,14 @@ module.exports = require("assert");;
 
 /***/ }),
 
+/***/ 129:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");;
+
+/***/ }),
+
 /***/ 614:
 /***/ ((module) => {
 
@@ -6044,6 +6052,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(864);
 const github = __nccwpck_require__(366);
+const {exec} = __nccwpck_require__(129);
 
 try {
     const payload = JSON.stringify(github.context.payload, undefined, 2)
@@ -6051,6 +6060,18 @@ try {
 } catch (error) {
     core.setFailed(error.message);
 }
+
+exec("ls -la", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+});
 
 })();
 
