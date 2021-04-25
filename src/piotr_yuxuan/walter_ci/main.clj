@@ -4,8 +4,8 @@
             [babashka.process :as process]
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
-            [leiningen.core.project :as leiningen]
             [leiningen.change]
+            [leiningen.core.project :as leiningen]
             [malli.core :as m]
             [medley.core :as medley])
   (:gen-class))
