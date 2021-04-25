@@ -51,3 +51,6 @@ Doc and dev experience should be massively scaled up (now it's below
 terrible), but first code should works reasonably fine. Also, an
 action on my profile README.md and to show the most recently active
 projects and display a link, the description, and the number of stars.
+
+Cross-repo secret access are planned, but not released yet:
+https://github.com/github/roadmap/issues/74
