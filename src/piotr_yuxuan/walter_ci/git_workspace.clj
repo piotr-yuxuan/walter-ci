@@ -13,7 +13,6 @@
                                              {:out :slurp
                                               :err :inherit
                                               :dir github-workspace})]
-    (println "Stage length:" (count out))
     (assert (zero? exit) "Failed to get staged changes in git.")
     (seq out)))
 
