@@ -46,3 +46,8 @@ the end should make life more comfortable.
 
 Before deploying anything, rigorous checks should be made. If the
 repository is private, something is probably wrong.
+
+Doc and dev experience should be massively scaled up (now it's below
+terrible), but first code should works reasonably fine. Also, an
+action on my profile README.md and to show the most recently active
+projects and display a link, the description, and the number of stars.
