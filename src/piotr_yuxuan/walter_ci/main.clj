@@ -133,7 +133,8 @@
   [{{:keys [github-event-path]} :env}]
   (some-> github-event-path
           io/file
-          .exists))
+          .exists
+          not))
 
 (defn -main
   [& args]
