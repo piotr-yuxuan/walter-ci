@@ -7,3 +7,5 @@ runs:
   steps:
     - run: ${{ github.action_path }}/resources/walter-ci.sh
       shell: bash
+      env:
+        WALTER_CONTEXT: ${{ github }}
