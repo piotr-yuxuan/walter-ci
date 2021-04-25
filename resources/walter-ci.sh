@@ -1,4 +1,5 @@
 set -xe
+env
 cd "${GITHUB_ACTION_PATH}"
 # Shockingly bad. See history for better attempts.
 WALTER_CI_VERSION=$(awk '{$1=$1};1' < "./resources/walter-ci.version")
