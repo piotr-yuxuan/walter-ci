@@ -5,22 +5,17 @@
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
             [leiningen.core.project :as leiningen]
+            [leiningen.change]
             [malli.core :as m]
             [medley.core :as medley])
   (:gen-class))
 
-(declare run-tests
-         increment-version!
-         upgrade-dependencies!
-         report-vulnerabilities
+(declare increment-version!
          reverse-domain-based-project-group!
          check-license!
-         list-licenses
          quality-scan
          lint-files!
-         sort-namespaces!
-         new-github-release
-         deploy-to-clojars)
+         new-github-release)
 
 (defn load-config
   []
@@ -40,20 +35,40 @@
   (let [{:keys [exit]} @(process/process "lein ns-sort"
                                          {:out :inherit
                                           :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to sort namespaces.")
-    (when (git-workspace/stage!-and-need-commit? config)
-      (assert (zero? (:exit (git-workspace/commit config "Sort namespaces")))
-              "Failed to commit sorted namespaces."))))
+    (assert (zero? exit) "Failed to sort namespaces."))
+  (when (git-workspace/stage!-and-need-commit? config)
+    (assert (zero? (:exit (git-workspace/commit config "Sort namespaces")))
+            "Failed to commit sorted namespaces.")))
 
 (defn lein-update-versions
   [{{:keys [github-workspace]} :env :as config}]
   (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
                                          {:out :inherit
                                           :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to update versions.")
-    (when (git-workspace/stage!-and-need-commit? config)
-      (assert (zero? (:exit (git-workspace/commit config "Update versions")))
-              "Failed to commit updated dependencies."))))
+    (assert (zero? exit) "Failed to update versions."))
+  (when (git-workspace/stage!-and-need-commit? config)
+    (assert (zero? (:exit (git-workspace/commit config "Update versions")))
+            "Failed to commit updated dependencies.")))
+
+(defn lein-report-vulnerabilities
+  [{{:keys [github-workspace]} :env :as config}]
+  (let [{:keys [exit]} @(process/process "lein nvd check > ./doc/Known vulnerabilities.md"
+                                         {:out :inherit
+                                          :dir (io/file github-workspace)})]
+    (assert (zero? exit) "Failed to report vulnerabilities."))
+  (when (git-workspace/stage!-and-need-commit? config)
+    (assert (zero? (:exit (git-workspace/commit config "Report vulnerabilities")))
+            "Failed to commit vulnerability report.")))
+
+(defn lein-list-licenses
+  [{{:keys [github-workspace]} :env :as config}]
+  (let [{:keys [exit]} @(process/process "lein licenses :csv > './doc/Licenses.csv"
+                                         {:out :inherit
+                                          :dir (io/file github-workspace)})]
+    (assert (zero? exit) "Failed to list licenses."))
+  (when (git-workspace/stage!-and-need-commit? config)
+    (assert (zero? (:exit (git-workspace/commit config "List licenses")))
+            "Failed to commit license list.")))
 
 (defn lein-deploy
   [{{:keys [github-workspace]} :env}]
@@ -106,10 +121,12 @@
     (when (= :just-installed (walter-install config))
       (println "Just installed, this has triggered another build.")
       (System/exit 0))
-    (github/step config)
+    (github/conform-repository config)
     (lein-test config)
     (lein-ns-sort config)
     (lein-update-versions config)
+    (lein-list-licenses config)
+    (lein-report-vulnerabilities config)
     (git-workspace/push config)
     (lein-deploy config)
     (println :all-done)))
