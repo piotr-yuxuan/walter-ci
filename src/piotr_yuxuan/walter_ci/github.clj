@@ -1,16 +1,16 @@
 (ns piotr-yuxuan.walter-ci.github
   "GitHub repository"
-  (:require [leiningen.core.project :as leiningen]
-            [clojure.java.io :as io]
-            [medley.core :as medley]
+  (:require [clj-http.client :as http]
             [clojure.data]
+            [clojure.java.io :as io]
             [clojure.set]
-            [clj-http.client :as http]
-            [jsonista.core :as json]
             [clojure.string :as str]
+            [jsonista.core :as json]
+            [leiningen.core.project :as leiningen]
             [malli.core :as m]
             [malli.transform :as mt]
-            [malli.util :as mu]))
+            [malli.util :as mu]
+            [medley.core :as medley]))
 
 (def Defaults
   (m/schema

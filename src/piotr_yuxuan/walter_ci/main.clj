@@ -1,12 +1,12 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:require [piotr-yuxuan.walter-ci.github :as github]
-            [piotr-yuxuan.walter-ci.git-workspace :as git-workspace]
-            [camel-snake-kebab.core :as csk]
-            [medley.core :as medley]
+  (:require [piotr-yuxuan.walter-ci.git-workspace :as git-workspace]
+            [piotr-yuxuan.walter-ci.github :as github]
             [babashka.process :as process]
+            [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
             [leiningen.core.project :as leiningen]
-            [malli.core :as m])
+            [malli.core :as m]
+            [medley.core :as medley])
   (:gen-class))
 
 (declare run-tests
