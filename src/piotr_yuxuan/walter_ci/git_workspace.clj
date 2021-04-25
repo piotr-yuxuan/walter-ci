@@ -14,7 +14,7 @@
                                               :err :inherit
                                               :dir github-workspace})]
     (assert (zero? exit) "Failed to get staged changes in git.")
-    (empty? out)))
+    (not (seq out))))
 
 (defn commit
   "Simple `git commit` and nothing else."
