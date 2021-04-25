@@ -13,8 +13,9 @@
                                              {:out :slurp
                                               :err :inherit
                                               :dir github-workspace})]
+    (println "Stage length:" (count out))
     (assert (zero? exit) "Failed to get staged changes in git.")
-    (not (seq out))))
+    (seq out)))
 
 (defn commit
   "Simple `git commit` and nothing else."
