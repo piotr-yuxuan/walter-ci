@@ -58,3 +58,6 @@ https://github.com/github/roadmap/issues/74
 Shall we try to use #!/usr/bin/env bb as a shebang?
 
 To push tags, commits, and so on, see: git push --atomic
+
+Some real work should be undertaken to find the precise meaning of
+work, task, run, job, step.
