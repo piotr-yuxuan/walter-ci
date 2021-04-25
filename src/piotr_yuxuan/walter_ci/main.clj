@@ -52,20 +52,22 @@
 
 (defn lein-report-vulnerabilities
   [{{:keys [github-workspace]} :env :as config}]
-  (let [{:keys [exit]} @(process/process "lein nvd check > ./doc/Known vulnerabilities.md"
-                                         {:out :inherit
-                                          :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to report vulnerabilities."))
+  (with-open [vulnerabilities (io/writer (io/file "./doc/Known vulnerabilities.md"))]
+    (let [{:keys [exit]} @(process/process "lein nvd check"
+                                           {:out vulnerabilities
+                                            :dir (io/file github-workspace)})]
+      (assert (zero? exit) "Failed to report vulnerabilities.")))
   (when (git-workspace/stage!-and-need-commit? config)
     (assert (zero? (:exit (git-workspace/commit config "Report vulnerabilities")))
             "Failed to commit vulnerability report.")))
 
 (defn lein-list-licenses
   [{{:keys [github-workspace]} :env :as config}]
-  (let [{:keys [exit]} @(process/process "lein licenses :csv > './doc/Licenses.csv"
-                                         {:out :inherit
-                                          :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to list licenses."))
+  (with-open [licenses (io/writer (io/file "./doc/Licenses.csv"))]
+    (let [{:keys [exit]} @(process/process "lein licenses :csv"
+                                           {:out licenses
+                                            :dir (io/file github-workspace)})]
+      (assert (zero? exit) "Failed to list licenses.")))
   (when (git-workspace/stage!-and-need-commit? config)
     (assert (zero? (:exit (git-workspace/commit config "List licenses")))
             "Failed to commit license list.")))
@@ -125,8 +127,8 @@
     (lein-test config)
     (lein-ns-sort config)
     (lein-update-versions config)
-    (lein-list-licenses config)
     (lein-report-vulnerabilities config)
+    (lein-list-licenses config)
     (git-workspace/push config)
     (lein-deploy config)
     (println :all-done)))
