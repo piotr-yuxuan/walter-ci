@@ -96,20 +96,10 @@
           [:github-repository string?]
           [:walter-github-password string?]]]])
 
-(defn step
+(defn conform-repository
   [config]
   (if (m/validate Config config)
     (let [expected-settings (expected-settings config)]
       (apply-settings config expected-settings)
       :ok)
     (m/explain Config config)))
-
-(comment
-  (try
-    (step {:env {:github-workspace "/Users/p2b/src/github.com/piotr-yuxuan/walter-ci"
-                 :github-api-url "https://api.github.com"
-                 :github-actor "piotr-yuxuan"
-                 :github-repository "piotr-yuxuan/walter-ci"
-                 :walter-github-password (System/getenv "WALTER_GITHUB_PASSWORD")}})
-    (catch Exception ex
-      (ex-data ex))))
