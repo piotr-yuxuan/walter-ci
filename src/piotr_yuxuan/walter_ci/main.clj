@@ -127,7 +127,9 @@
     (lein-test config)
     (lein-ns-sort config)
     (lein-update-versions config)
-    (lein-report-vulnerabilities config)
+    (comment
+      ;; Should be on a scheduled, monthly basis
+      (lein-report-vulnerabilities config))
     (lein-list-licenses config)
     (git-workspace/push config)
     (lein-deploy config)
