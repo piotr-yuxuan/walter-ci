@@ -5,8 +5,10 @@ name: Walter CI
 on:
   push:
     branches: '*'
+  # Scheduled run can perform heavier tasks like vulnerability check.
   schedule:
-    - cron: "30 6 * * 1"
+    # This cron expression means a run every Monday at 6.28 am.
+    - cron: "28 6 * * 1"
 jobs:
   walter-ci:
     runs-on: ubuntu-latest
