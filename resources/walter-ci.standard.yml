@@ -5,7 +5,7 @@ on:
   push:
     branches: '*'
   schedule:
-    - cron: "0 0 1 * *"
+    - cron: "30 6 * * 1"
 jobs:
   walter-ci:
     runs-on: ubuntu-latest
