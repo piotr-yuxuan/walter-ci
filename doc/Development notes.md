@@ -56,3 +56,5 @@ Cross-repo secret access are planned, but not released yet:
 https://github.com/github/roadmap/issues/74
 
 Shall we try to use #!/usr/bin/env bb as a shebang?
+
+To push tags, commits, and so on, see: git push --atomic
