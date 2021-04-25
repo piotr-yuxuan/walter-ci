@@ -8,7 +8,16 @@
             [leiningen.core.project :as leiningen]
             [malli.core :as m]
             [medley.core :as medley])
-  (:gen-class))
+  (:gen-class)
+  (:import (com.amihaiemil.eoyaml Yaml)))
+
+#_(.value
+    (.comment
+      (.readYamlMapping
+        (Yaml/createYamlInput
+          (io/file
+            "./resources/walter-ci.standard.yml")))))
+
 
 (declare increment-version!
          reverse-domain-based-project-group!

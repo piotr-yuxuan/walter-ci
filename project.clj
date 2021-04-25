@@ -18,6 +18,7 @@
                  [metosin/muuntaja "0.6.8"]
                  [babashka/process "0.0.2"]
                  [camel-snake-kebab "0.4.2"]
+                 [com.amihaiemil.web/eo-yaml "5.1.9"]
                  [metosin/malli "0.4.0"]
                  [metosin/jsonista "0.3.2"]]
   :main piotr-yuxuan.walter-ci.main
