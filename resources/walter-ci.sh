@@ -2,6 +2,7 @@ set -xe
 WALTER_CI_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
 
 mkdir "${HOME}/.lein"
+mkdir -p /etc/leiningen
 cp "${GITHUB_ACTION_PATH}/profiles.clj" "/etc/leiningen/profiles.clj"
 
 # Shockingly bad. See history for better attempts.
