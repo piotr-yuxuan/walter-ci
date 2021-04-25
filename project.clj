@@ -12,7 +12,7 @@
   :dependencies [[leiningen "2.9.6"]
                  [leiningen-core "2.9.6"]
                  [medley "1.3.0"]
-                 [clj-http "3.12.1"]
+                 [clj-http "3.12.0"]
                  [com.arohner/uri "0.1.2"]
                  [io.forward/semver "0.1.0"]
                  [metosin/muuntaja "0.6.8"]
