@@ -124,13 +124,13 @@
       (println "Just installed, this has triggered another build.")
       (System/exit 0))
     (github/conform-repository config)
-    (lein-test config)
     (lein-ns-sort config)
     (lein-update-versions config)
     (comment
       ;; Should be on a scheduled, monthly basis
       (lein-report-vulnerabilities config))
     (lein-list-licenses config)
+    (lein-test config)
     (git-workspace/push config)
     (lein-deploy config)
     (println :all-done)))
