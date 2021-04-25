@@ -124,6 +124,12 @@
       (assert (zero? (:exit (git-workspace/push config)))
               "Install push failed"))))
 
+(defn schedule-run?
+  [{{:keys [github-event-path]} :env}]
+  (some-> github-event-path
+          io/file
+          .exists))
+
 (defn -main
   [& args]
   (let [config (load-config)]
@@ -133,8 +139,7 @@
     (github/conform-repository config)
     (lein-ns-sort config)
     (lein-update-versions config)
-    (comment
-      ;; Should be on a scheduled, monthly basis
+    (when (schedule-run? config)
       (lein-report-vulnerabilities config))
     (lein-list-licenses config)
     (lein-test config)
