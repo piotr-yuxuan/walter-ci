@@ -36,6 +36,7 @@
   [{{:keys [github-workspace]} :env}]
   (let [{:keys [exit]} @(process/process "lein test"
                                          {:out :inherit
+                                          :err :inherit
                                           :dir (io/file github-workspace)})]
     (assert (zero? exit) "Tests failed.")))
 
@@ -43,6 +44,7 @@
   [{{:keys [github-workspace]} :env :as config}]
   (let [{:keys [exit]} @(process/process "lein ns-sort"
                                          {:out :inherit
+                                          :err :inherit
                                           :dir (io/file github-workspace)})]
     (assert (zero? exit) "Failed to sort namespaces."))
   (when (git-workspace/stage!-and-need-commit? config)
@@ -53,6 +55,7 @@
   [{{:keys [github-workspace]} :env :as config}]
   (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
                                          {:out :inherit
+                                          :err :inherit
                                           :dir (io/file github-workspace)})]
     (assert (zero? exit) "Failed to update versions."))
   (when (git-workspace/stage!-and-need-commit? config)
@@ -64,6 +67,7 @@
   (with-open [vulnerabilities (io/writer (io/file "./doc/Known vulnerabilities.md"))]
     (let [{:keys [exit]} @(process/process "lein nvd check"
                                            {:out vulnerabilities
+                                            :err :inherit
                                             :dir (io/file github-workspace)})]
       (assert (zero? exit) "Failed to report vulnerabilities.")))
   (when (git-workspace/stage!-and-need-commit? config)
@@ -75,6 +79,7 @@
   (with-open [licenses (io/writer (io/file "./doc/Licenses.csv"))]
     (let [{:keys [exit]} @(process/process "lein licenses :csv"
                                            {:out licenses
+                                            :err :inherit
                                             :dir (io/file github-workspace)})]
       (assert (zero? exit) "Failed to list licenses.")))
   (when (git-workspace/stage!-and-need-commit? config)
