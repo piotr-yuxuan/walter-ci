@@ -61,3 +61,7 @@ To push tags, commits, and so on, see: git push --atomic
 
 Some real work should be undertaken to find the precise meaning of
 work, task, run, job, step.
+
+Put a safeguard at the beginning. Walter should not be responsible for
+more than three commits in a row, or it would risk infinite loops – we
+currently have max two commits
