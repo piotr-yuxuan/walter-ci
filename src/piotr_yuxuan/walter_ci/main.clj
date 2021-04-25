@@ -41,11 +41,19 @@
                                          {:out :inherit
                                           :dir (io/file github-workspace)})]
     (assert (zero? exit) "Failed to sort namespaces.")
-    (if (git-workspace/stage!-and-need-commit? config)
-      (do (assert (zero? (:exit (git-workspace/commit config "Sort namespaces")))
-                  "Failed to commit sorted namespaces.")
-          :just-installed)
-      :already-installed)))
+    (when (git-workspace/stage!-and-need-commit? config)
+      (assert (zero? (:exit (git-workspace/commit config "Sort namespaces")))
+              "Failed to commit sorted namespaces."))))
+
+(defn lein-update-versions
+  [{{:keys [github-workspace]} :env :as config}]
+  (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
+                                         {:out :inherit
+                                          :dir (io/file github-workspace)})]
+    (assert (zero? exit) "Failed to update versions.")
+    (when (git-workspace/stage!-and-need-commit? config)
+      (assert (zero? (:exit (git-workspace/commit config "Update versions")))
+              "Failed to commit updated dependencies."))))
 
 (defn lein-deploy
   [{{:keys [github-workspace]} :env}]
@@ -101,6 +109,7 @@
     (github/step config)
     (lein-test config)
     (lein-ns-sort config)
+    (lein-update-versions config)
     (git-workspace/push config)
     (lein-deploy config)
     (println :all-done)))
