@@ -118,18 +118,16 @@
   (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
         target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
     (io/copy source-yml target-yml)
-    (if (git-workspace/stage!-and-need-commit? config)
-      (do (assert (zero? (:exit (git-workspace/commit config "Update walter-ci.yml")))
-                  "Install commit failed")
-          (assert (zero? (:exit (git-workspace/push config)))
-                  "Install push failed")
-          :just-installed)
-      :already-installed)))
+    (when (git-workspace/stage!-and-need-commit? config)
+      (assert (zero? (:exit (git-workspace/commit config "Update walter-ci.yml")))
+              "Install commit failed")
+      (assert (zero? (:exit (git-workspace/push config)))
+              "Install push failed"))))
 
 (defn -main
   [& args]
   (let [config (load-config)]
-    (when (= :just-installed (walter-install config))
+    (when (walter-install config)
       (println "Just installed, this has triggered another build.")
       (System/exit 0))
     (github/conform-repository config)
