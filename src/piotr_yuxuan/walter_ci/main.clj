@@ -127,7 +127,8 @@
       (assert (zero? (:exit (git-workspace/commit config "Update walter-ci.yml")))
               "Install commit failed")
       (assert (zero? (:exit (git-workspace/push config)))
-              "Install push failed"))))
+              "Install push failed")
+      :installed)))
 
 (defn schedule-run?
   [{{:keys [github-event-path]} :env}]
