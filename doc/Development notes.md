@@ -65,3 +65,46 @@ work, task, run, job, step.
 Put a safeguard at the beginning. Walter should not be responsible for
 more than three commits in a row, or it would risk infinite loops – we
 currently have max two commits
+
+Cache all the things to avoid boil the oceans:
+https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows
+If we use dependency caching use parallel jobs honestly it would
+probably be faster to push to GH than to run manually steps like lint,
+and so on.
+
+Also, I should create an action to replicate and sync Walter config
+across different repos. This would be more elegant and more efficient
+since it would run on each Walter update, and no longer needs to be
+triggered by the managed repos. Also, it would allow to duplicate
+Walter secrets to the manage repository. Once I can download a binary
+of Walter then I can use way better the Action GUI, workflows, jobs,
+and so on. That would be better :-)
+
+As a result, just the install step could be merely:
+
+``` yaml
+name: Install Walter CI
+on:
+  push:
+    branches: '*'
+jobs:
+  install-walter-ci:
+    steps:
+      - name: Install Walter CI
+        uses: piotr-yuxuan/walter-ci@main
+```
+
+or just use the command line tool to do something like in the new
+repository to manage:
+
+``` zsh
+walter-ci install
+```
+
+We should have a command
+
+``` zsh
+walter-ci --local --auto-pilot
+```
+
+to do everything locally, possibly in parallel :-)
