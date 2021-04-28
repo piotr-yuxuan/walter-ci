@@ -9,6 +9,7 @@ jobs:
   # Setup jobs, run in parallel and joined on setup-completed
   #############################################################################
   clojure:
+    runs-on: ubuntu-latest
     name: Install Clojure on the worker
     steps:
       - uses: DeLaGuardo/setup-clojure@master
@@ -16,20 +17,24 @@ jobs:
           cli: latest
           lein: latest
   walter:
+    runs-on: ubuntu-latest
     name: Install Walter on the worker
     steps:
       - run: echo
   checkout:
+    runs-on: ubuntu-latest
     name: Checkout project code
     steps:
       - uses: actions/checkout@main
         with:
-          - clean: false
+          clean: false
   print-env:
+    runs-on: ubuntu-latest
     name: Print environment variables
     steps:
       - run: env
   setup-completed:
+    runs-on: ubuntu-latest
     name: All setup jobs successful
     needs: [clojure, walter, checkout, print-env]
     steps:
@@ -40,6 +45,7 @@ jobs:
   # Jobs for Walter grooming
   #############################################################################
   code-style:
+    runs-on: ubuntu-latest
     name: Fix and report code style
     needs: setup-completed
     continue-on-error: true
@@ -50,11 +56,13 @@ jobs:
           clj-kondo-args: --lint dev src test
           github_token: ${{ secrets.GITHUB_TOKEN }}
   coverage:
+    runs-on: ubuntu-latest
     name: Report code coverage of test
     needs: setup-completed
     steps:
       - run: echo
   conform-gh:
+    runs-on: ubuntu-latest
     name: Conform GitHub repository
     needs: setup-completed
     env:
@@ -62,43 +70,50 @@ jobs:
     steps:
       - run: echo
   ns-sort:
+    runs-on: ubuntu-latest
     name: Sort namespace forms
     needs: setup-completed
     steps:
       - run: echo
   update:
+    runs-on: ubuntu-latest
     name: Update dependency versions
     needs: setup-completed
     steps:
       - if: ${{ github.event_name == 'schedule' }}
         run: echo
   licenses:
+    runs-on: ubuntu-latest
     name: List dependency licences
     needs: setup-completed
     steps:
       - if: ${{ github.event_name == 'schedule' }}
         run: echo
   vulnerabilities:
+    runs-on: ubuntu-latest
     name: Report known dependency vulnerabilities
     needs: setup-completed
     steps:
       - if: ${{ github.event_name == 'schedule' }}
         run: echo
   documentation:
+    runs-on: ubuntu-latest
     name: Update documentation
     needs: setup-completed
     steps:
       - run: echo
   funding:
+    runs-on: ubuntu-latest
     name: Ensure FUNDING.yml is present
     needs: setup-completed
     steps:
       - if: ${{ github.event_name == 'schedule' }}
         run: echo
   grooming-completed:
+    runs-on: ubuntu-latest
     name: All setup jobs successful
     needs: [code-style, coverage, conform-gh, ns-sort, update, licenses,
-            vulnerabilities, documentation, funding, grooming-completed]
+            vulnerabilities, documentation, funding]
     steps:
       - name: Success
         run: echo
@@ -107,6 +122,7 @@ jobs:
   # Deploy job, run after grooming jobs if all successful
   #############################################################################
   deploy:
+    runs-on: ubuntu-latest
     env:
       WALTER_GITHUB_TOKEN: ${{ secrets.WALTER_GITHUB_TOKEN }}
       WALTER_CLOJARS_TOKEN: ${{ secrets.WALTER_CLOJARS_TOKEN }}
