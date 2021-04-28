@@ -131,11 +131,8 @@
       :installed)))
 
 (defn schedule-run?
-  [{{:keys [github-event-path]} :env}]
-  (some-> github-event-path
-          io/file
-          .exists
-          not))
+  [{{:keys [github-event-name]} :env}]
+  (= "schedule" github-event-name))
 
 (defn -main
   [& args]
