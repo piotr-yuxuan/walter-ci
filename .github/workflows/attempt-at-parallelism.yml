@@ -52,7 +52,6 @@ jobs:
   update:
     runs-on: ubuntu-latest
     name: Update dependency versions
-    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
@@ -63,7 +62,6 @@ jobs:
   licenses:
     runs-on: ubuntu-latest
     name: List dependency licences
-    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
@@ -74,7 +72,6 @@ jobs:
   vulnerabilities:
     runs-on: ubuntu-latest
     name: Report known dependency vulnerabilities
-    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
@@ -95,7 +92,6 @@ jobs:
   funding:
     runs-on: ubuntu-latest
     name: Ensure FUNDING.yml is present
-    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@main
       - run: sleep 1
@@ -110,8 +106,7 @@ jobs:
       WALTER_CLOJARS_TOKEN: ${{ secrets.WALTER_CLOJARS_TOKEN }}
       WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}
     name: Run tests, push git references, and finally deploy artifacts
-    needs: [code-style, coverage, conform-gh, ns-sort, update, licenses,
-            vulnerabilities, documentation, funding]
+    needs: [code-style, coverage, conform-gh, ns-sort, update]
     steps:
       - uses: actions/checkout@main
       - uses: DeLaGuardo/setup-clojure@master
