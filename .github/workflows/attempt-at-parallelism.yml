@@ -5,34 +5,6 @@ on:
 env:
   WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
 jobs:
-  #############################################################################
-  # Setup jobs, run in parallel and joined on setup-completed
-  #############################################################################
-  clojure:
-    runs-on: ubuntu-latest
-    name: Install Clojure on the worker
-    steps:
-      - uses: DeLaGuardo/setup-clojure@master
-        with:
-          cli: latest
-          lein: latest
-  walter:
-    runs-on: ubuntu-latest
-    name: Install Walter on the worker
-    steps:
-      - run: echo
-  checkout:
-    runs-on: ubuntu-latest
-    name: Checkout project code
-    steps:
-      - uses: actions/checkout@main
-        with:
-          clean: false
-  print-env:
-    runs-on: ubuntu-latest
-    name: Print environment variables
-    steps:
-      - run: env
 
   #############################################################################
   # Jobs for Walter grooming
@@ -40,10 +12,10 @@ jobs:
   code-style:
     runs-on: ubuntu-latest
     name: Fix and report code style
-    needs: [clojure, walter, checkout, print-env]
     continue-on-error: true
     steps:
-      - run: echo
+      - uses: actions/checkout@main
+      - run: env
       - uses: DeLaGuardo/clojure-lint-action@master
         with:
           clj-kondo-args: --lint dev src test
@@ -51,57 +23,82 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     name: Report code coverage of test
-    needs: [clojure, walter, checkout, print-env]
     steps:
-      - run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: lein cloverage
   conform-gh:
     runs-on: ubuntu-latest
     name: Conform GitHub repository
-    needs: [clojure, walter, checkout, print-env]
     env:
       WALTER_GITHUB_TOKEN: ${{ secrets.WALTER_GITHUB_TOKEN }}
     steps:
-      - run: echo
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 1
   ns-sort:
     runs-on: ubuntu-latest
     name: Sort namespace forms
-    needs: [clojure, walter, checkout, print-env]
     steps:
-      - run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 1
   update:
     runs-on: ubuntu-latest
     name: Update dependency versions
-    needs: [clojure, walter, checkout, print-env]
+    if: ${{ github.event_name == 'schedule' }}
     steps:
-      - if: ${{ github.event_name == 'schedule' }}
-        run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 10
   licenses:
     runs-on: ubuntu-latest
     name: List dependency licences
-    needs: [clojure, walter, checkout, print-env]
+    if: ${{ github.event_name == 'schedule' }}
     steps:
-      - if: ${{ github.event_name == 'schedule' }}
-        run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 10
   vulnerabilities:
     runs-on: ubuntu-latest
     name: Report known dependency vulnerabilities
-    needs: [clojure, walter, checkout, print-env]
+    if: ${{ github.event_name == 'schedule' }}
     steps:
-      - if: ${{ github.event_name == 'schedule' }}
-        run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 300
   documentation:
     runs-on: ubuntu-latest
     name: Update documentation
-    needs: [clojure, walter, checkout, print-env]
     steps:
-      - run: echo
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
+      - uses: actions/checkout@main
+      - run: env
+      - run: sleep 30
   funding:
     runs-on: ubuntu-latest
     name: Ensure FUNDING.yml is present
-    needs: [clojure, walter, checkout, print-env]
+    if: ${{ github.event_name == 'schedule' }}
     steps:
-      - if: ${{ github.event_name == 'schedule' }}
-        run: echo
+      - uses: actions/checkout@main
+      - run: sleep 1
 
   #############################################################################
   # Deploy job, run after grooming jobs if all successful
@@ -116,8 +113,13 @@ jobs:
     needs: [code-style, coverage, conform-gh, ns-sort, update, licenses,
             vulnerabilities, documentation, funding]
     steps:
+      - uses: actions/checkout@main
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          lein: latest
       - name: Run tests
-        run: echo
+        run: sleep 30
       - name: Push Walter commits and tags to GitHub
-        run: echo
-      - run: echo
+        run: sleep 30
+      - name: Deploy
+        run: sleep 30
