@@ -22,6 +22,14 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - run: env
       - uses: DeLaGuardo/clojure-lint-action@master
         with:
@@ -31,10 +39,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Report code coverage of test
     steps:
+      - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
-      - uses: actions/checkout@main
       - run: env
       - run: lein cloverage
   conform-gh:
@@ -50,44 +66,76 @@ jobs:
     runs-on: ubuntu-latest
     name: Sort namespace forms
     steps:
+      - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
-      - uses: actions/checkout@main
       - run: env
-      - run: sleep 1
+      - run: lein ns-sort
   update:
     runs-on: ubuntu-latest
     name: Update dependency versions
     steps:
+      - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
-      - uses: actions/checkout@main
       - run: env
-      - run: sleep 10
+      - run: lein ancient upgrade :all :check-clojure
   licenses:
     runs-on: ubuntu-latest
     name: List dependency licences
     needs: [update]
     steps:
+      - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
-      - uses: actions/checkout@main
       - run: env
-      - run: sleep 10
+      - run: lein licenses
   vulnerabilities:
     runs-on: ubuntu-latest
     name: Report known dependency vulnerabilities
     needs: [update]
     steps:
+      - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
-      - uses: actions/checkout@main
       - run: env
-      - run: sleep 300
+      - run: lein nvd check
   documentation:
     runs-on: ubuntu-latest
     name: Update documentation
@@ -118,6 +166,14 @@ jobs:
     needs: [code-style, coverage, conform-gh, ns-sort, documentation]
     steps:
       - uses: actions/checkout@main
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            /opt/hostedtoolcache/Leiningen/
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
