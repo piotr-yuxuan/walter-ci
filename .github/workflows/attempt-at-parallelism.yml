@@ -25,7 +25,7 @@ jobs:
       - run: env
       - uses: DeLaGuardo/clojure-lint-action@master
         with:
-          clj-kondo-args: --lint dev src test
+          clj-kondo-args: --lint src test
           github_token: ${{ secrets.GITHUB_TOKEN }}
   coverage:
     runs-on: ubuntu-latest
