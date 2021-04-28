@@ -27,10 +27,12 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - run: env
+      - run: lein deps
       - uses: DeLaGuardo/clojure-lint-action@master
         with:
           clj-kondo-args: --lint src test
@@ -45,13 +47,15 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
       - run: env
+      - run: lein deps
       - run: lein cloverage
   conform-gh:
     runs-on: ubuntu-latest
@@ -61,6 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: env
+      - run: lein deps
       - run: sleep 1
   ns-sort:
     runs-on: ubuntu-latest
@@ -72,13 +77,15 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
       - run: env
+      - run: lein deps
       - run: lein ns-sort
   update:
     runs-on: ubuntu-latest
@@ -90,13 +97,15 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
       - run: env
+      - run: lein deps
       - run: lein ancient upgrade :all :check-clojure
   licenses:
     runs-on: ubuntu-latest
@@ -109,13 +118,15 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
       - run: env
+      - run: lein deps
       - run: lein licenses
   vulnerabilities:
     runs-on: ubuntu-latest
@@ -128,13 +139,15 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
       - run: env
+      - run: lein deps
       - run: lein nvd check
   documentation:
     runs-on: ubuntu-latest
@@ -145,6 +158,7 @@ jobs:
           lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
+      - run: lein deps
       - run: sleep 30
   funding:
     runs-on: ubuntu-latest
@@ -171,12 +185,14 @@ jobs:
           path: |
             ~/.m2/repository
             /opt/hostedtoolcache/Leiningen/
-          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}
+            ~/.lein
+          key: ${{ runner.os }}-leiningen-${{ hashFiles('**/project.clj') }}-2
           restore-keys: |
             ${{ runner.os }}-leiningen-
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: 2.9.6
+      - run: lein deps
       - name: Run tests
         run: sleep 30
       - name: Push Walter commits and tags to GitHub
