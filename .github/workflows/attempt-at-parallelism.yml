@@ -90,6 +90,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     name: Update dependency versions
+    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@main
       - uses: actions/cache@v2
@@ -172,6 +173,7 @@ jobs:
   funding:
     runs-on: ubuntu-latest
     name: Ensure FUNDING.yml is present
+    if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@main
       - run: sleep 1
