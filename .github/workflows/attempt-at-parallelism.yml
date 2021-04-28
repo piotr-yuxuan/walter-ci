@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: lein cloverage
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: sleep 1
@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: sleep 10
@@ -73,7 +73,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: sleep 10
@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: sleep 300
@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - uses: actions/checkout@main
       - run: env
       - run: sleep 30
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@main
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: latest
+          lein: 2.9.6
       - name: Run tests
         run: sleep 30
       - name: Push Walter commits and tags to GitHub
