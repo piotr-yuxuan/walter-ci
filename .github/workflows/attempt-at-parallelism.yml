@@ -5,7 +5,13 @@ on:
 env:
   WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
 jobs:
-
+  cancel-previous:
+    runs-on: ubuntu-latest
+    name: Cancel Previous Runs
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
   #############################################################################
   # Jobs for Walter grooming
   #############################################################################
@@ -62,6 +68,7 @@ jobs:
   licenses:
     runs-on: ubuntu-latest
     name: List dependency licences
+    needs: [update]
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
@@ -72,6 +79,7 @@ jobs:
   vulnerabilities:
     runs-on: ubuntu-latest
     name: Report known dependency vulnerabilities
+    needs: [update]
     steps:
       - uses: DeLaGuardo/setup-clojure@master
         with:
@@ -106,7 +114,7 @@ jobs:
       WALTER_CLOJARS_TOKEN: ${{ secrets.WALTER_CLOJARS_TOKEN }}
       WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}
     name: Run tests, push git references, and finally deploy artifacts
-    needs: [code-style, coverage, conform-gh, ns-sort, update]
+    needs: [code-style, coverage, conform-gh, ns-sort, documentation]
     steps:
       - uses: actions/checkout@main
       - uses: DeLaGuardo/setup-clojure@master
