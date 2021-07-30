@@ -11,6 +11,7 @@
                               [:url "https://github.com/piotr-yuxuan"]]]
   :dependencies [[leiningen "2.9.6"]
                  [leiningen-core "2.9.6"]
+                 [com.github.piotr-yuxuan/malli-cli "0.0.4"]
                  [medley "1.3.0"]
                  [clj-http "3.12.0"]
                  [com.arohner/uri "0.1.2"]

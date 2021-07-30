@@ -1,23 +1,16 @@
 (ns piotr-yuxuan.walter-ci.main
   (:require [piotr-yuxuan.walter-ci.git-workspace :as git-workspace]
-            [piotr-yuxuan.walter-ci.github :as github]
+            [piotr-yuxuan.malli-cli :as malli-cli]
             [babashka.process :as process]
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
             [leiningen.change]
             [leiningen.core.project :as leiningen]
             [malli.core :as m]
-            [medley.core :as medley])
-  (:gen-class)
-  (:import (com.amihaiemil.eoyaml Yaml)))
-
-#_(.value
-    (.comment
-      (.readYamlMapping
-        (Yaml/createYamlInput
-          (io/file
-            "./resources/walter-ci.standard.yml")))))
-
+            [malli.transform :as mt]
+            [clojure.pprint :as pp]
+            [clojure.string :as str])
+  (:gen-class))
 
 (declare increment-version!
          reverse-domain-based-project-group!
@@ -26,11 +19,38 @@
          lint-files!
          new-github-release)
 
+(def Config
+  [:map
+   [:options
+    [:map {:decode/cli-args-transformer malli-cli/cli-args-transformer}
+     [:commands [:vector {:long-option "--command"
+                          :update-fn (fn [options {:keys [in]} [command]]
+                                       (update-in options in (fnil conj []) command))}
+                 keyword?]]]]
+   [:env
+    [:map
+     [:user string?]
+     [:pwd string?]]]])
+
 (defn load-config
-  []
-  {:env (->> (System/getenv)
-             (into {})
-             (medley/map-keys csk/->kebab-case-keyword))})
+  [env args]
+  (m/decode Config
+            {:options args
+             :env (into {} env)}
+            (mt/transformer
+              (mt/key-transformer {:decode csk/->kebab-case-keyword})
+              malli-cli/cli-args-transformer
+              mt/strip-extra-keys-transformer
+              mt/default-value-transformer
+              mt/string-transformer)))
+
+(load-config
+  (System/getenv)
+  ["--command" "init-db" "--command" "conform-repo"])
+
+{:options {:commands [:init-db :conform-repo]},
+ :env {:pwd "~",
+       :user "piotr-yuxuan"}}
 
 (defn lein-test
   [{{:keys [github-workspace]} :env}]
@@ -134,9 +154,40 @@
   [{{:keys [github-event-name]} :env}]
   (= "schedule" github-event-name))
 
+"--code-coverage"
+;; Run a code coverage and post it as a comment to the commit.
+
+"--conform-github-repository"
+
+"--list-licenses"
+
+"--vulnerabilities"
+
+"--documentation"
+
+"--funding"
+
+"--test"
+
+"--push-commits-tags"
+
+"--deploy"
+;; Deploy a jar to Clojars or GitHub
+(let [config (load-config
+               (System/getenv)
+               args)]
+  (when-not (m/validate Config config)
+    (pp/pprint (m/explain m/validate Config config))
+    (System/exit 1)))
+
 (defn -main
   [& args]
-  (let [config (load-config)]
+  (let [config (load-config (System/getenv) args)]
+    (when-not (m/validate Config config)
+      (pp/pprint (m/explain m/validate Config config))
+      (System/exit 1))
+
+
     (when (walter-install config)
       (println "Just installed, this has triggered another build.")
       (System/exit 0))
@@ -150,3 +201,9 @@
     (git-workspace/push config)
     (lein-deploy config)
     (println :all-done)))
+
+;; Trigger documentation build:
+;; curl --verbose 'https://cljdoc.org/api/request-build2' \
+;;   --header 'Content-Type: application/x-www-form-urlencoded' \
+;;   --header 'Origin: https://cljdoc.org' \
+;;   --data-raw 'project=com.github.piotr-yuxuan%2Fmalli-cli&version=0.0.6'

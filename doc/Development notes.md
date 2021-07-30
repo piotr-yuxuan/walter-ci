@@ -1,4 +1,4 @@
-* Development notes
+# Development notes
 
 It takes time to build the image every time. On walter-ci, every push
 should create a new Docker image and push it somewhere so that we can
@@ -108,3 +108,56 @@ walter-ci --local --auto-pilot
 ```
 
 to do everything locally, possibly in parallel :-)
+
+This kind of reports really is cool!
+https://app.codecov.io/gh/sicmutils/sicmutils/compare/350/changes
+
+For projects that produce a binary, use `pandoc md roff` to generate documentation. 
+
+## Rethink
+
+- To add a project to Walter, add the project coordinates to a list in
+  Walter repo. This triggers Walter itself. It can access its own
+  token values, and set them in managed repositories. The installation
+  adds `walter-ci.yml` to the target repo and when project is publis
+  also adds a hook to fix commit times. This will trigger an action.
+
+- One could also imagine to use a GitHub action that would use
+  GITHUB_TOKEN to update Walter list, but in such case it wouldn't
+  scale to more than one user. Opening a pull request looks the
+  simplest and most direct.
+
+- There should be separate use cases:
+  1. The fastet possible path to release: build, test,
+     compile/uberjar, new tag, atomic-push, reploy artifacts,
+     trigger-doc
+  2. Release: when commit first line is consistently named « Released
+     x.y.x: abc » then draft a release with this name and description
+     below, (or default to tag name) and publish it on Github. It is
+     only specific to GitHub as Clojars only knows about tags. Add
+     social media integrations (Twitter, Reddit) so that each released
+     is advertised and there is an opportunity to get feedback.
+  3. Personnal user grooming: early every day launch parallel workflow
+     to update dependencies, sort namespaces, analyse vulnerabilities,
+     list licenses, update-versions, conform repository, upload
+     social-media preview, add sponsors, run some mutation testing
+     (export result as a message under relevant commit), run code
+     coverage and post it as a comment to the commit. If no README.md
+     then generate a good-enough skeleton. If a fork try to rebase
+     over latest upstream and open a PR if not straightforward. If
+     performance tests are available (are GH workers suitable for
+     that?) then run them and commit report in relevant folder. When
+     running for personal README repo take latest public
+     contributions, sort them by stars, commit the updated list if any
+     change, and show updated timestamp.
+  4. From walter-ci repo itself, upon any release, forcibly update the
+     managed in-repo `walter-ci.yml`.
+  5. Whenever a new file is added to
+     `piotr-yuxuan/piotr-yuxuan.github.io` consider it as a blog
+     article and publish a GitHub release so that the news feed is
+     shown a preview. I don't really write blog articles, but I think
+     perhaps it could be helpful or fun to others. Obviously as such
+     blog would be advertised and hosted on GitHub, the content should
+     be focus on technical matters only, otherwise substack or
+     anything else would be a better medium. Also, social media
+     integration would allow to publish a link on Twitter.
