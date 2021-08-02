@@ -1,5 +1,5 @@
 name: Walter
-on:
+'on':
   push:
     branches: '*'
   schedule:
