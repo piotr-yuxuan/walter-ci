@@ -4,5 +4,6 @@ on:
     branches: '*'
 jobs:
   job:
+    runs-on: ubuntu-latest
     steps:
       - run: echo 'I am from Workflow B.'
