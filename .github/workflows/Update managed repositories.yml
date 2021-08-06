@@ -1,0 +1,10 @@
+name: Update managed repositories
+on:
+  push:
+    paths:
+      - './resources/managed-repositories.edn'
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Update managed repositories.'
