@@ -102,6 +102,7 @@
         (spit-workflow-yaml
           (str/join "/" [github-action-path "workflows" input-file])
           (str/join "/" [github-workspace ".github" "workflows" output-file])))
+    (println :config config)
     (try
       (doseq [github-repository (-> (io/resource "state.edn")
                                     slurp
