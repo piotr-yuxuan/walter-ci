@@ -78,12 +78,16 @@
                                (:body
                                  (safely/safely
                                    (println :github-repository github-repository)
-                                   (http/request
-                                     {:request-method :get
-                                      :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
-                                      :basic-auth [github-actor walter-github-password]
-                                      :headers {"Content-Type" "application/json"
-                                                "Accept" "application/vnd.github.v3+json"}})
+                                   (try
+                                     (http/request
+                                       {:request-method :get
+                                        :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
+                                        :basic-auth [github-actor walter-github-password]
+                                        :headers {"Content-Type" "application/json"
+                                                  "Accept" "application/vnd.github.v3+json"}})
+                                     (catch Exception ex
+                                       (println (pr-str (ex-data ex)))
+                                       (throw ex)))
                                    :on-error
                                    :message (format "Can't retrieve public key for repository %s" github-repository)
                                    :max-retries 1)))]
