@@ -3,6 +3,6 @@
  :jobs {:clojure-kondo {:name "Clojure Kondo"
                         :runs-on "ubuntu-latest"
                         :steps [{:uses "actions/checkout@main"}
-                                {:uses "DeLaGuardo/clojure-lint-action@f712330e03eec4daa36da7045213190083aca4dd"
+                                {:uses "DeLaGuardo/clojure-lint-action@06fdc0816fabc27f1e05208b68c7a59d9ab2d5d1"
                                  :with {:clj-kondo-args "--lint src test"
                                         :github_token "${{ secrets.GITHUB_TOKEN }}"}}]}}}
