@@ -20,28 +20,24 @@
    {:keys [public-key public-key-id]}
    secret-name]
   (let [secret-value ^String (get config secret-name)]
-    (safely/safely
-      (println (format "Forwarding secret %s for %s."
-                       secret-name
-                       github-repository)
-               :type (type secret-value)
-               :count (count secret-value))
-      (println :github-actor
-               (type github-actor)
-               (count github-actor))
-      (println :walter-github-password
-               (type walter-github-password)
-               (count walter-github-password))
-      (http/request
-        {:request-method :put
-         :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
-         :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes secret-value))
-                                            :key_id public-key-id})
-         :basic-auth [github-actor walter-github-password]
-         :headers {"Content-Type" "application/json"
-                   "Accept" "application/vnd.github.v3+json"}})
-      :on-error
-      :max-retries 1)))
+    (try (safely/safely
+           (println (format "Forwarding secret %s for %s."
+                            secret-name
+                            github-repository)
+                    :type (type secret-value)
+                    :count (count secret-value))
+           (http/request
+             {:request-method :put
+              :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
+              :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes secret-value))
+                                                 :key_id public-key-id})
+              :basic-auth [github-actor walter-github-password]
+              :headers {"Content-Type" "application/json"
+                        "Accept" "application/vnd.github.v3+json"}})
+           :on-error
+           :max-retries 1)
+         (catch Exception ex
+           (println (pr-str (ex-data ex)))))))
 
 (defn expand-env
   [workflow]
