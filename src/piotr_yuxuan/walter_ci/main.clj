@@ -80,8 +80,7 @@
 
     (doseq [{:keys [github-repository]} (-> (io/resource "state.edn")
                                             slurp
-                                            clojure.edn/read-string
-                                            :managed-repositories)
+                                            clojure.edn/read-string)
             secret-name [:walter-clojars-username
                          :walter-clojars-password
                          :walter-github-password
