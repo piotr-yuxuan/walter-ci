@@ -77,16 +77,19 @@
   (let [{:strs [key key_id]} (json/read-value
                                (:body
                                  (safely/safely
-                                   (http/request {:request-method :get
-                                                  :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
-                                                  :basic-auth [github-actor walter-github-password]
-                                                  :headers {"Content-Type" "application/json"
-                                                            "Accept" "application/vnd.github.v3+json"}})
+                                   (println :github-repository github-repository)
+                                   (http/request
+                                     {:request-method :get
+                                      :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
+                                      :basic-auth [github-actor walter-github-password]
+                                      :headers {"Content-Type" "application/json"
+                                                "Accept" "application/vnd.github.v3+json"}})
                                    :on-error
                                    :message (format "Can't retrieve public key for repository %s" github-repository)
                                    :max-retries 1)))]
     {:public-key key
      :public-key-id key_id}))
+
 (defn -main
   [& _]
   (let [{:keys [github-action-path github-workspace] :as config} (load-config)]
