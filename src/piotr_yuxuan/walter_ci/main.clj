@@ -78,9 +78,10 @@
           (str/join "/" [github-action-path "workflows" input-file])
           (str/join "/" [github-workspace ".github" "workflows" output-file])))
 
-    (doseq [{:keys [github-repository]} (-> (io/resource "state.edn")
-                                            slurp
-                                            clojure.edn/read-string)
+    (doseq [github-repository (-> (io/resource "state.edn")
+                                  slurp
+                                  clojure.edn/read-string
+                                  :github-repositories)
             secret-name [:walter-clojars-username
                          :walter-clojars-password
                          :walter-github-password
