@@ -26,7 +26,7 @@
     (http/request
       {:request-method :put
        :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
-       :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes ^String (get config secret-name)))
+       :body (json/write-value-as-string {:encrypted_value (slurp (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes ^String (get config secret-name))))
                                           :key_id public-key-id})
        :basic-auth [github-actor walter-github-password]
        :headers {"Content-Type" "application/json"
