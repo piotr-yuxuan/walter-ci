@@ -30,7 +30,7 @@
          :headers {"Content-Type" "application/json"
                    "Accept" "application/vnd.github.v3+json"}})
       :on-error
-      :max-retries 5)))
+      :max-retries 1)))
 
 (defn expand-env
   [workflow]
