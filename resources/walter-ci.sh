@@ -1,8 +1,7 @@
 set -xe
 # Shockingly bad. See history for better attempts. Instead of
 # downloading and installing dependencies every time, we should
-# downlowd the uberjar and run it directly. However, currently the
-# deploy tasks only deploy thin jars. Could we bend that?
+# download a small, compact binary and run it directly.
 cd "${GITHUB_ACTION_PATH}"
 lein install
 
