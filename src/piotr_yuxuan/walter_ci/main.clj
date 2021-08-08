@@ -33,7 +33,7 @@
                  "Accept" "application/vnd.github.v3+json"}})
     :on-error
     :message (format "Can't forward action secret %s to repository %s using public key %s" secret-name github-repository public-key-id)
-    :max-retries 5))
+    :max-retries 1))
 
 (defn expand-env
   [workflow]
@@ -83,7 +83,8 @@
                                                   :headers {"Content-Type" "application/json"
                                                             "Accept" "application/vnd.github.v3+json"}})
                                    :on-error
-                                   :max-retries 5)))]
+                                   :message (format "Can't retrieve public key for repository %s" github-repository)
+                                   :max-retries 1)))]
     {:public-key key
      :public-key-id key_id}))
 (defn -main
