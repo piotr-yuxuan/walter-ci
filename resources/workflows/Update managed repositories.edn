@@ -1,5 +1,5 @@
 {:name "Update managed repositories"
- :on {:push {:paths ["./resources/state.edn"]}}
+ :on {:push {:paths ["resources/state.edn"]}}
  :jobs {:job {:runs-on "ubuntu-latest"
               :steps [{;:run "echo 'Update managed repositories.'"
                        :uses "piotr-yuxuan/walter-ci@main"
