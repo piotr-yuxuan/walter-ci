@@ -105,10 +105,13 @@
                          :walter-clojars-password
                          :walter-github-password
                          :walter-git-email]]
-      (forward-action-secret config
-                             github-repository
-                             public-key
-                             secret-name))
+      (try
+        (forward-action-secret config
+                               github-repository
+                               public-key
+                               secret-name)
+        (catch Exception ex
+          (println (pr-str (ex-data ex))))))
     (println :all-done)))
 
 ;;; Trigger documentation build:
