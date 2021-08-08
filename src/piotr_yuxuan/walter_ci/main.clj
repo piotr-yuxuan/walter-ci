@@ -15,9 +15,11 @@
   (:gen-class))
 
 (defn forward-action-secret
-  [{:keys [github-api-url github-repository github-actor walter-github-password] :as config}
+  [{:keys [github-api-url github-actor walter-github-password] :as config}
+   github-repository
+   {:keys [public-key public-key-id]}
    secret-name]
-  (let [secret-value (get config secret-name)]
+  (let [secret-value ^String (get config secret-name)]
     (safely/safely
       (println (format "Forwarding secret %s for %s."
                        secret-name
@@ -33,7 +35,8 @@
       (http/request
         {:request-method :put
          :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
-         :body (json/write-value-as-string {:encrypted_value secret-value})
+         :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes secret-value))
+                                            :key_id public-key-id})
          :basic-auth [github-actor walter-github-password]
          :headers {"Content-Type" "application/json"
                    "Accept" "application/vnd.github.v3+json"}})
@@ -77,6 +80,20 @@
        (into {})
        (medley/map-keys csk/->kebab-case-keyword)))
 
+(defn repo-public-key
+  [{:keys [github-api-url github-actor walter-github-password]} github-repository]
+  (let [{:strs [key key_id]} (json/read-value
+                               (:body
+                                 (safely/safely
+                                   (http/request {:request-method :get
+                                                  :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
+                                                  :basic-auth [github-actor walter-github-password]
+                                                  :headers {"Content-Type" "application/json"
+                                                            "Accept" "application/vnd.github.v3+json"}})
+                                   :on-error
+                                   :max-retries 5)))]
+    {:public-key key
+     :public-key-id key_id}))
 (defn -main
   [& _]
   (let [{:keys [github-action-path github-workspace] :as config} (load-config)]
@@ -90,11 +107,14 @@
                                   slurp
                                   clojure.edn/read-string
                                   :github-repositories)
+            :let [public-key (repo-public-key config github-repository)]
             secret-name [:walter-clojars-username
                          :walter-clojars-password
                          :walter-github-password
                          :walter-git-email]]
-      (forward-action-secret (assoc config :github-repository github-repository)
+      (forward-action-secret config
+                             github-repository
+                             public-key
                              secret-name))
     (println :all-done)))
 
