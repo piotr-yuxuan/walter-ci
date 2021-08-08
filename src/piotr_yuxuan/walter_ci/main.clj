@@ -95,23 +95,22 @@
         (spit-workflow-yaml
           (str/join "/" [github-action-path "workflows" input-file])
           (str/join "/" [github-workspace ".github" "workflows" output-file])))
-
-    (doseq [github-repository (-> (io/resource "state.edn")
-                                  slurp
-                                  clojure.edn/read-string
-                                  :github-repositories)
-            :let [public-key (repo-public-key config github-repository)]
-            secret-name [:walter-clojars-username
-                         :walter-clojars-password
-                         :walter-github-password
-                         :walter-git-email]]
-      (try
+    (try
+      (doseq [github-repository (-> (io/resource "state.edn")
+                                    slurp
+                                    clojure.edn/read-string
+                                    :github-repositories)
+              :let [public-key (repo-public-key config github-repository)]
+              secret-name [:walter-clojars-username
+                           :walter-clojars-password
+                           :walter-github-password
+                           :walter-git-email]]
         (forward-action-secret config
                                github-repository
                                public-key
-                               secret-name)
-        (catch Exception ex
-          (println (pr-str (ex-data ex))))))
+                               secret-name))
+      (catch Exception ex
+        (println (pr-str (ex-data ex)))))
     (println :all-done)))
 
 ;;; Trigger documentation build:
