@@ -19,25 +19,18 @@
    github-repository
    {:keys [public-key public-key-id]}
    secret-name]
-  (let [secret-value ^String (get config secret-name)]
-    (try (safely/safely
-           (println (format "Forwarding secret %s for %s."
-                            secret-name
-                            github-repository)
-                    :type (type secret-value)
-                    :count (count secret-value))
-           (http/request
-             {:request-method :put
-              :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
-              :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes secret-value))
-                                                 :key_id public-key-id})
-              :basic-auth [github-actor walter-github-password]
-              :headers {"Content-Type" "application/json"
-                        "Accept" "application/vnd.github.v3+json"}})
-           :on-error
-           :max-retries 1)
-         (catch Exception ex
-           (println (pr-str (ex-data ex)))))))
+  (safely/safely
+    (http/request
+      {:request-method :put
+       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
+       :body (json/write-value-as-string {:encrypted_value (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes ^String (get config secret-name)))
+                                          :key_id public-key-id})
+       :basic-auth [github-actor walter-github-password]
+       :headers {"Content-Type" "application/json"
+                 "Accept" "application/vnd.github.v3+json"}})
+    :on-error
+    :message (format "Can't forward action secret %s to repository %s using public key %s" secret-name github-repository public-key-id)
+    :max-retries 5))
 
 (defn expand-env
   [workflow]
