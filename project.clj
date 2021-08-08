@@ -26,6 +26,7 @@
                  [metosin/malli "0.4.0"]
                  [metosin/jsonista "0.3.2"]]
   :main piotr-yuxuan.walter-ci.main
+  :plugins [[lein-deploy-uberjar "2.0.0"]]
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
              :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
              :dev {:global-vars {*warn-on-reflection* true}}
