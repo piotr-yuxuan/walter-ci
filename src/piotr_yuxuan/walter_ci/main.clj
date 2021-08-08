@@ -1,4 +1,5 @@
 (ns piotr-yuxuan.walter-ci.main
+  "Hint: caesium appears to run on Java SDK 14, but not 17."
   (:require [clj-yaml.core :as yaml]
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
@@ -9,7 +10,8 @@
             [safely.core :as safely]
             [clojurewerkz.balagan.core :as balagan]
             [jsonista.core :as json]
-            [medley.core :as medley])
+            [medley.core :as medley]
+            [caesium.crypto.secretbox :as crypto])
   (:gen-class))
 
 (defn forward-action-secret

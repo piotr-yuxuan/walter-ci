@@ -24,6 +24,7 @@
                  [babashka/process "0.0.2"]
                  [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.4.0"]
+                 [caesium "0.14.0"]
                  [metosin/jsonista "0.3.2"]]
   :main piotr-yuxuan.walter-ci.main
   :plugins [[lein-deploy-uberjar "2.0.0"]]
