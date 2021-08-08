@@ -1,10 +1,17 @@
+# This file is maintained by Walter CI, and may be rewritten.
+# https://github.com/piotr-yuxuan/walter-ci
 name: Update managed repositories
-on:
+'on':
   push:
     paths:
-      - './resources/managed-repositories.edn'
+    - ./resources/state.edn
 jobs:
   job:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Update managed repositories.'
+    - uses: piotr-yuxuan/walter-ci@main
+      env:
+        WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}
+        WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}
+        WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+        WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}

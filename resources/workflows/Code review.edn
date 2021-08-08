@@ -1,0 +1,8 @@
+{:name "Code review"
+ :on {:push {:branches "*"}}
+ :jobs {:clojure-kondo {:name "Clojure Kondo"
+                        :runs-on "ubuntu-latest"
+                        :steps [{:uses "actions/checkout@main"}
+                                {:uses "DeLaGuardo/clojure-lint-action@f712330e03eec4daa36da7045213190083aca4dd"
+                                 :with {:clj-kondo-args "--lint src test"
+                                        :github_token "${{ secrets.GITHUB_TOKEN }}"}}]}}}

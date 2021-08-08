@@ -1,209 +1,98 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:require [piotr-yuxuan.walter-ci.git-workspace :as git-workspace]
-            [piotr-yuxuan.malli-cli :as malli-cli]
-            [babashka.process :as process]
+  (:require [clj-yaml.core :as yaml]
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
             [leiningen.change]
-            [leiningen.core.project :as leiningen]
-            [malli.core :as m]
-            [malli.transform :as mt]
-            [clojure.pprint :as pp]
-            [clojure.string :as str])
+            [clojure.edn :as edn]
+            [clojure.string :as str]
+            [clj-http.client :as http]
+            [safely.core :as safely]
+            [clojurewerkz.balagan.core :as balagan]
+            [jsonista.core :as json]
+            [medley.core :as medley])
   (:gen-class))
 
-(declare increment-version!
-         reverse-domain-based-project-group!
-         check-license!
-         quality-scan
-         lint-files!
-         new-github-release)
+(defn forward-action-secret
+  [{:keys [github-api-url github-repository github-actor walter-github-password] :as config}
+   secret-name]
+  (safely/safely
+    (println (format "Forwarding secret %s for %s."
+                     secret-name
+                     github-repository)
+             :type (type (get config secret-name))
+             :count (count (get config secret-name)))
+    (http/request
+      {:request-method :put
+       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
+       :body (json/write-value-as-string {:encrypted_value (get config secret-name)})
+       :basic-auth [github-actor walter-github-password]
+       :headers {"Content-Type" "application/json"
+                 "Accept" "application/vnd.github.v3+json"}})
+    :on-error
+    :max-retries 5))
 
-(def Config
-  [:map
-   [:options
-    [:map {:decode/cli-args-transformer malli-cli/cli-args-transformer}
-     [:commands [:vector {:long-option "--command"
-                          :update-fn (fn [options {:keys [in]} [command]]
-                                       (update-in options in (fnil conj []) command))}
-                 keyword?]]]]
-   [:env
-    [:map
-     [:user string?]
-     [:pwd string?]]]])
+(defn expand-env
+  [workflow]
+  (balagan/update
+    workflow
+    ;; Workflow env
+    [:env] vec
+    [:env :*] (juxt identity #(format "${{ secrets.%s }}" %))
+    [:env] #(into {} %)
+    ;; Jobs env
+    [:jobs :* :env] vec
+    [:jobs :* :env :*] (juxt identity #(format "${{ secrets.%s }}" %))
+    [:jobs :* :env] #(into {} %)
+    ;; Steps env
+    [:jobs :* :steps :* :env] vec
+    [:jobs :* :steps :* :env :*] (juxt identity #(format "${{ secrets.%s }}" %))
+    [:jobs :* :steps :* :env] #(into {} %)))
+
+(defn spit-workflow-yaml
+  "Did you know that the alpha2 country code of Norway is `false`, and
+  `on` is `true`? I just refuse to touch a file format so corrupted by
+  syntactic sugar. Read edn data in `input-file` and write yaml
+  equivalent in `output-file`. Prepend a header."
+  [input-file output-file]
+  (as-> input-file $
+    (io/resource $)
+    (slurp $)
+    (edn/read-string $)
+    (yaml/generate-string $ :dumper-options {:flow-style :block})
+    (str (slurp (io/resource "header.yaml")) $)
+    (spit output-file $ :append false)))
 
 (defn load-config
-  [env args]
-  (m/decode Config
-            {:options args
-             :env (into {} env)}
-            (mt/transformer
-              (mt/key-transformer {:decode csk/->kebab-case-keyword})
-              malli-cli/cli-args-transformer
-              mt/strip-extra-keys-transformer
-              mt/default-value-transformer
-              mt/string-transformer)))
-
-(load-config
-  (System/getenv)
-  ["--command" "init-db" "--command" "conform-repo"])
-
-{:options {:commands [:init-db :conform-repo]},
- :env {:pwd "~",
-       :user "piotr-yuxuan"}}
-
-(defn lein-test
-  [{{:keys [github-workspace]} :env}]
-  (let [{:keys [exit]} @(process/process "lein test"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Tests failed.")))
-
-(defn lein-ns-sort
-  [{{:keys [github-workspace]} :env :as config}]
-  (let [{:keys [exit]} @(process/process "lein ns-sort"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to sort namespaces."))
-  (when (git-workspace/stage!-and-need-commit? config)
-    (assert (zero? (:exit (git-workspace/commit config "Sort namespaces")))
-            "Failed to commit sorted namespaces.")))
-
-(defn lein-update-versions
-  [{{:keys [github-workspace]} :env :as config}]
-  (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (io/file github-workspace)})]
-    (assert (zero? exit) "Failed to update versions."))
-  (when (git-workspace/stage!-and-need-commit? config)
-    (assert (zero? (:exit (git-workspace/commit config "Update versions")))
-            "Failed to commit updated dependencies.")))
-
-(defn lein-report-vulnerabilities
-  [{{:keys [github-workspace]} :env :as config}]
-  (with-open [vulnerabilities (io/writer (io/file "./doc/Known vulnerabilities.md"))]
-    (let [{:keys [exit]} @(process/process "lein nvd check"
-                                           {:out vulnerabilities
-                                            :err :inherit
-                                            :dir (io/file github-workspace)})]
-      (assert (zero? exit) "Failed to report vulnerabilities.")))
-  (when (git-workspace/stage!-and-need-commit? config)
-    (assert (zero? (:exit (git-workspace/commit config "Report vulnerabilities")))
-            "Failed to commit vulnerability report.")))
-
-(defn lein-list-licenses
-  [{{:keys [github-workspace]} :env :as config}]
-  (with-open [licenses (io/writer (io/file "./doc/Licenses.csv"))]
-    (let [{:keys [exit]} @(process/process "lein licenses :csv"
-                                           {:out licenses
-                                            :err :inherit
-                                            :dir (io/file github-workspace)})]
-      (assert (zero? exit) "Failed to list licenses.")))
-  (when (git-workspace/stage!-and-need-commit? config)
-    (assert (zero? (:exit (git-workspace/commit config "List licenses")))
-            "Failed to commit license list.")))
-
-(defn lein-deploy
-  [{{:keys [github-workspace]} :env}]
-  (let [leiningen-project (-> (io/file github-workspace "project.clj")
-                              (.getAbsolutePath)
-                              (leiningen/read [:deploy]))
-        deploy-repositories (->> leiningen-project
-                                 :deploy-repositories
-                                 (map first)
-                                 seq)]
-    (if deploy-repositories
-      (println "Deploying to repositories:" deploy-repositories)
-      (println "No deploy repository found, not deploying."))
-    (doseq [deploy-repository deploy-repositories]
-      (let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
-                                             {:out :inherit
-                                              :err :inherit
-                                              :dir (io/file github-workspace)})]
-        (when-not (zero? exit)
-          (println "Deployment failed to" deploy-repository))))))
-
-(def InstallConfig
-  [:map
-   [:env [:map
-          [:github-action-path string?]
-          [:walter-github-password string?]
-          [:github-workspace string?]
-          [:walter-git-email string?]
-          [:github-actor string?]]]])
-
-(defn walter-install
-  [{{:keys [github-workspace github-action-path]} :env :as config}]
-  (when-not (m/validate InstallConfig config)
-    (println (pr-str (m/explain InstallConfig config)))
-    (throw (ex-info "Config invalid" {})))
-  (let [source-yml (io/file github-action-path "resources" "walter-ci.standard.yml")
-        target-yml (io/file github-workspace ".github" "workflows" "walter-ci.yml")]
-    (io/copy source-yml target-yml)
-    (when (git-workspace/stage!-and-need-commit? config)
-      (assert (zero? (:exit (git-workspace/commit config "Update walter-ci.yml")))
-              "Install commit failed")
-      (assert (zero? (:exit (git-workspace/push config)))
-              "Install push failed")
-      :installed)))
-
-(defn schedule-run?
-  [{{:keys [github-event-name]} :env}]
-  (= "schedule" github-event-name))
-
-"--code-coverage"
-;; Run a code coverage and post it as a comment to the commit.
-
-"--conform-github-repository"
-
-"--list-licenses"
-
-"--vulnerabilities"
-
-"--documentation"
-
-"--funding"
-
-"--test"
-
-"--push-commits-tags"
-
-"--deploy"
-;; Deploy a jar to Clojars or GitHub
-(let [config (load-config
-               (System/getenv)
-               args)]
-  (when-not (m/validate Config config)
-    (pp/pprint (m/explain m/validate Config config))
-    (System/exit 1)))
+  []
+  (->> (System/getenv)
+       (into {})
+       (medley/map-keys csk/->kebab-case-keyword)))
 
 (defn -main
-  [& args]
-  (let [config (load-config (System/getenv) args)]
-    (when-not (m/validate Config config)
-      (pp/pprint (m/explain m/validate Config config))
-      (System/exit 1))
+  [& _]
+  (let [{:keys [github-action-path github-workspace] :as config} (load-config)]
+    (let [github-action-path "./resources"
+          github-workspace "."]
+      (doseq [[input-file output-file] [["Update managed repositories.edn" "Update managed repositories.yml"]
+                                        ["Code review.edn" "Code review.yml"]]]
+        (spit-workflow-yaml
+          (str/join "/" [github-action-path "workflows" input-file])
+          (str/join "/" [github-workspace ".github" "workflows" output-file]))))
 
-
-    (when (walter-install config)
-      (println "Just installed, this has triggered another build.")
-      (System/exit 0))
-    (github/conform-repository config)
-    (lein-ns-sort config)
-    (when (schedule-run? config)
-      (lein-update-versions config)
-      (lein-report-vulnerabilities config))
-    (lein-list-licenses config)
-    (lein-test config)
-    (git-workspace/push config)
-    (lein-deploy config)
+    (doseq [{:keys [github-repository]} (-> (io/resource "state.edn")
+                                            slurp
+                                            clojure.edn/read-string
+                                            :managed-repositories)
+            secret-name [:walter-clojars-username
+                         :walter-clojars-password
+                         :walter-github-password
+                         :walter-git-email]]
+      (forward-action-secret (assoc config :github-repository github-repository)
+                             secret-name))
     (println :all-done)))
 
-;; Trigger documentation build:
-;; curl --verbose 'https://cljdoc.org/api/request-build2' \
-;;   --header 'Content-Type: application/x-www-form-urlencoded' \
-;;   --header 'Origin: https://cljdoc.org' \
-;;   --data-raw 'project=com.github.piotr-yuxuan%2Fmalli-cli&version=0.0.6'
+;;; Trigger documentation build:
+;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
+;;;   --header 'Content-Type: application/x-www-form-urlencoded' \
+;;;   --header 'Origin: https://cljdoc.org' \
+;;;   --data-raw 'project=com.github.piotr-yuxuan%2Fmalli-cli&version=0.0.6'

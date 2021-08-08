@@ -5,5 +5,5 @@ description: |
 runs:
   using: 'composite'
   steps:
-    - run: ${{ github.action_path }}/resources/walter-ci-register.sh
+    - run: ${{ github.action_path }}/resources/walter-ci.sh
       shell: bash
