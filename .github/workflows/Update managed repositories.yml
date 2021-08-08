@@ -4,7 +4,7 @@ name: Update managed repositories
 'on':
   push:
     paths:
-    - ./resources/state.edn
+    - resources/state.edn
 jobs:
   job:
     runs-on: ubuntu-latest
