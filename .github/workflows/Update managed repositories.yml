@@ -13,6 +13,8 @@ jobs:
       with:
         cli: latest
         lein: latest
+    - name: Print environment variables
+      run: env
     - name: Walter CI
       uses: piotr-yuxuan/walter-ci@main
       env:
