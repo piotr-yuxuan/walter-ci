@@ -15,21 +15,22 @@
 (defn forward-action-secret
   [{:keys [github-api-url github-repository github-actor walter-github-password] :as config}
    secret-name]
-  (safely/safely
-    (println (format "Forwarding secret %s for %s."
-                     secret-name
-                     github-repository)
-             :type (type (get config secret-name))
-             :count (count (get config secret-name)))
-    (http/request
-      {:request-method :put
-       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
-       :body (json/write-value-as-string {:encrypted_value (get config secret-name)})
-       :basic-auth [github-actor walter-github-password]
-       :headers {"Content-Type" "application/json"
-                 "Accept" "application/vnd.github.v3+json"}})
-    :on-error
-    :max-retries 5))
+  (let [secret-value (get config secret-name)]
+    (safely/safely
+      (println (format "Forwarding secret %s for %s."
+                       secret-name
+                       github-repository)
+               :type (type secret-value)
+               :count (count secret-value))
+      (http/request
+        {:request-method :put
+         :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
+         :body (json/write-value-as-string {:encrypted_value secret-value})
+         :basic-auth [github-actor walter-github-password]
+         :headers {"Content-Type" "application/json"
+                   "Accept" "application/vnd.github.v3+json"}})
+      :on-error
+      :max-retries 5)))
 
 (defn expand-env
   [workflow]
@@ -71,13 +72,11 @@
 (defn -main
   [& _]
   (let [{:keys [github-action-path github-workspace] :as config} (load-config)]
-    (let [github-action-path "./resources"
-          github-workspace "."]
-      (doseq [[input-file output-file] [["Update managed repositories.edn" "Update managed repositories.yml"]
+    #_(doseq [[input-file output-file] [["Update managed repositories.edn" "Update managed repositories.yml"]
                                         ["Code review.edn" "Code review.yml"]]]
         (spit-workflow-yaml
           (str/join "/" [github-action-path "workflows" input-file])
-          (str/join "/" [github-workspace ".github" "workflows" output-file]))))
+          (str/join "/" [github-workspace ".github" "workflows" output-file])))
 
     (doseq [{:keys [github-repository]} (-> (io/resource "state.edn")
                                             slurp
