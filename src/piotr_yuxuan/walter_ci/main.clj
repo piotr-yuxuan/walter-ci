@@ -22,6 +22,12 @@
                        github-repository)
                :type (type secret-value)
                :count (count secret-value))
+      (println :github-actor
+               (type github-actor)
+               (count github-actor))
+      (println :walter-github-password
+               (type walter-github-password)
+               (count walter-github-password))
       (http/request
         {:request-method :put
          :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
