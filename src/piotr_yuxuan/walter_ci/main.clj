@@ -20,6 +20,9 @@
    {:keys [public-key public-key-id]}
    secret-name]
   (safely/safely
+    (println
+      :github-repository github-repository
+      :secret-name secret-name)
     (http/request
       {:request-method :put
        :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
