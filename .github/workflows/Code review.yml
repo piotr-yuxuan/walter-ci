@@ -13,5 +13,4 @@ jobs:
     - uses: DeLaGuardo/clojure-lint-action@master
       with:
         clj-kondo-args: --lint src test
-        # FIXME another, specific token
         github_token: ${{ secrets.GITHUB_TOKEN }}
