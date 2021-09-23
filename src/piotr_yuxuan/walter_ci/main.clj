@@ -70,18 +70,17 @@
           public-key (public-key config target-repository)
           secret-name "MY_SECRET"
           secret-value "MY_SECRET_VALUE"]
-      (println
-        "Secret values"
-        (->> (clojure.data/diff secret-value
-                                (System/getenv secret-name))
-             (map avoid-secret-redaction)
-             pr-str))
+      (println "Current secret value" (avoid-secret-redaction (System/getenv secret-name)))
+      (println "Secret value" (avoid-secret-redaction secret-value))
       (println
         "Upsert response"
-        (->> secret-value
-             (sealed-public-key-box public-key)
-             (upsert-secret-value config target-repository secret-name)
-             pr-str)))))
+        (dissoc
+          (->> secret-value
+               (sealed-public-key-box public-key)
+               (upsert-secret-value config target-repository secret-name)
+               pr-str)
+          :headers
+          :http-client)))))
 
 ;;; Trigger documentation build:
 ;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
