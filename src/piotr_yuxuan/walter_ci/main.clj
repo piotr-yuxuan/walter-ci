@@ -77,8 +77,7 @@
         (dissoc
           (->> secret-value
                (sealed-public-key-box public-key)
-               (upsert-secret-value config target-repository secret-name)
-               pr-str)
+               (upsert-secret-value config target-repository secret-name))
           :headers
           :http-client)))))
 
