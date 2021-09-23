@@ -1,70 +1,15 @@
 (ns piotr-yuxuan.walter-ci.main
   "Hint: caesium appears to run on Java SDK 14, but not 17."
-  (:require [clj-yaml.core :as yaml]
-            [camel-snake-kebab.core :as csk]
-            [clojure.java.io :as io]
+  (:require [camel-snake-kebab.core :as csk]
             [leiningen.change]
-            [clojure.edn :as edn]
+            [clojure.data]
             [clojure.string :as str]
             [clj-http.client :as http]
-            [safely.core :as safely]
-            [clojurewerkz.balagan.core :as balagan]
             [jsonista.core :as json]
             [medley.core :as medley]
             [caesium.crypto.secretbox :as crypto])
-  (:gen-class))
-
-(defn forward-action-secret
-  [{:keys [github-api-url github-actor walter-github-password] :as config}
-   github-repository
-   {:keys [public-key public-key-id]}
-   secret-name]
-  (safely/safely
-    (println
-      :github-repository github-repository
-      :secret-name secret-name)
-    (http/request
-      {:request-method :put
-       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
-       :body (json/write-value-as-string {:encrypted_value (slurp (crypto/encrypt public-key (crypto/int->nonce 0) (.getBytes ^String (get config secret-name))))
-                                          :key_id public-key-id})
-       :basic-auth [github-actor walter-github-password]
-       :headers {"Content-Type" "application/json"
-                 "Accept" "application/vnd.github.v3+json"}})
-    :on-error
-    :message (format "Can't forward action secret %s to repository %s using public key %s" secret-name github-repository public-key-id)
-    :max-retries 1))
-
-(defn expand-env
-  [workflow]
-  (balagan/update
-    workflow
-    ;; Workflow env
-    [:env] vec
-    [:env :*] (juxt identity #(format "${{ secrets.%s }}" %))
-    [:env] #(into {} %)
-    ;; Jobs env
-    [:jobs :* :env] vec
-    [:jobs :* :env :*] (juxt identity #(format "${{ secrets.%s }}" %))
-    [:jobs :* :env] #(into {} %)
-    ;; Steps env
-    [:jobs :* :steps :* :env] vec
-    [:jobs :* :steps :* :env :*] (juxt identity #(format "${{ secrets.%s }}" %))
-    [:jobs :* :steps :* :env] #(into {} %)))
-
-(defn spit-workflow-yaml
-  "Did you know that the alpha2 country code of Norway is `false`, and
-  `on` is `true`? I just refuse to touch a file format so corrupted by
-  syntactic sugar. Read edn data in `input-file` and write yaml
-  equivalent in `output-file`. Prepend a header."
-  [input-file output-file]
-  (as-> input-file $
-    (io/resource $)
-    (slurp $)
-    (edn/read-string $)
-    (yaml/generate-string $ :dumper-options {:flow-style :block})
-    (str (slurp (io/resource "header.yaml")) $)
-    (spit output-file $ :append false)))
+  (:gen-class)
+  (:import (java.util Base64)))
 
 (defn load-config
   []
@@ -72,53 +17,59 @@
        (into {})
        (medley/map-keys csk/->kebab-case-keyword)))
 
-(defn repo-public-key
+(defn public-key
   [{:keys [github-api-url github-actor walter-github-password]} github-repository]
-  (let [{:strs [key key_id]} (json/read-value
-                               (:body
-                                 (safely/safely
-                                   (println :github-repository github-repository)
-                                   (try
-                                     (http/request
-                                       {:request-method :get
-                                        :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
-                                        :basic-auth [github-actor walter-github-password]
-                                        :headers {"Content-Type" "application/json"
-                                                  "Accept" "application/vnd.github.v3+json"}})
-                                     (catch Exception ex
-                                       (println (pr-str (ex-data ex)))
-                                       (throw ex)))
-                                   :on-error
-                                   :message (format "Can't retrieve public key for repository %s" github-repository)
-                                   :max-retries 1)))]
-    {:public-key key
-     :public-key-id key_id}))
+  (let [payload (->> {:request-method :get
+                      :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
+                      :basic-auth [github-actor walter-github-password]
+                      :headers {"Content-Type" "application/json"
+                                "Accept" "application/vnd.github.v3+json"}}
+                     http/request
+                     :body
+                     json/read-value)
+        ^String encoded-key (get payload "key")]
+    {:encoded-key encoded-key
+     :decoded-key (.decode (Base64/getDecoder) encoded-key)
+     :key-id (get payload "key_id")}))
+
+(defn sealed-public-key-box
+  [{:keys [decoded-key key-id]} ^String secret-value]
+  {:encrypted_value (->> (.getBytes secret-value)
+                         (crypto/encrypt decoded-key (crypto/int->nonce 0))
+                         slurp)
+   :key_id key-id})
+
+(defn upsert-secret-value
+  [{:keys [github-api-url github-actor walter-github-password] :as config} target-repository secret-name sealed-public-key-box]
+  (http/request
+    {:request-method :put
+     :url (str/join "/" [github-api-url "repos" target-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
+     :body (json/write-value-as-string sealed-public-key-box)
+     :basic-auth [github-actor walter-github-password]
+     :headers {"Content-Type" "application/json"
+               "Accept" "application/vnd.github.v3+json"}}))
+
+(defn avoid-secret-redaction
+  "You must not use it. Display a string as a collection of characters."
+  [^String secret-value]
+  (map identity secret-value))
 
 (defn -main
   [& _]
-  (let [{:keys [github-action-path github-workspace] :as config} (load-config)]
-    #_(doseq [[input-file output-file] [["Update managed repositories.edn" "Update managed repositories.yml"]
-                                        ["Code review.edn" "Code review.yml"]]]
-        (spit-workflow-yaml
-          (str/join "/" [github-action-path "workflows" input-file])
-          (str/join "/" [github-workspace ".github" "workflows" output-file])))
+  (let [config (load-config)]
     (println :config config)
-    (try
-      (doseq [github-repository (-> (io/resource "state.edn")
-                                    slurp
-                                    clojure.edn/read-string
-                                    :github-repositories)
-              :let [public-key (repo-public-key config github-repository)]
-              secret-name [:walter-clojars-username
-                           :walter-clojars-password
-                           :walter-github-password
-                           :walter-git-email]]
-        (forward-action-secret config
-                               github-repository
-                               public-key
-                               secret-name))
-      (catch Exception ex
-        (println (pr-str (ex-data ex)))))
+    (let [target-repository "piotr-yuxuan/walter-ci"
+          public-key (public-key config target-repository)
+          secret-name "MY_SECRET"
+          secret-value "MY_SECRET_VALUE"]
+      (println
+        (->> (System/getenv secret-name)
+             (clojure.data/diff (get config secret-name))
+             (map avoid-secret-redaction)
+             pr-str))
+      (->> secret-value
+           (sealed-public-key-box public-key)
+           (upsert-secret-value config target-repository secret-name)))
     (println :all-done)))
 
 ;;; Trigger documentation build:

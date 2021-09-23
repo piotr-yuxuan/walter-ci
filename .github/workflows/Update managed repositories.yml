@@ -18,6 +18,7 @@ jobs:
     - name: Walter CI
       uses: piotr-yuxuan/walter-ci@main
       env:
+        MY_SECRET: ${{ secrets.MY_SECRET }}
         WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
         WALTER_CLOJARS_PASSWORD: ${{ secrets.WALTER_CLOJARS_PASSWORD }}
         WALTER_CLOJARS_USERNAME: ${{ secrets.WALTER_CLOJARS_USERNAME }}
