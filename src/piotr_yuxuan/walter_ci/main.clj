@@ -2,6 +2,7 @@
   "Hint: caesium appears to run on Java SDK 14, but not 17."
   (:require [camel-snake-kebab.core :as csk]
             [leiningen.change]
+            [caesium.magicnonce.secretbox]
             [clojure.data]
             [clojure.string :as str]
             [clj-http.client :as http]
@@ -9,7 +10,8 @@
             [medley.core :as medley]
             [caesium.crypto.secretbox :as crypto])
   (:gen-class)
-  (:import (java.util Base64)))
+  (:import (java.util Base64)
+           (java.nio.charset StandardCharsets)))
 
 (defn load-config
   []
@@ -33,11 +35,10 @@
      :key-id (get payload "key_id")}))
 
 (defn sealed-public-key-box
-  [{:keys [decoded-key key-id]} ^String secret-value]
-  {:encrypted_value (->> (.getBytes secret-value)
-                         ^"[B" (crypto/encrypt decoded-key (crypto/int->nonce 0))
-                         (.encode (Base64/getEncoder))
-                         slurp)
+  [{:keys [^String decoded-key key-id]} ^String secret-value]
+  {:encrypted_value (->> secret-value
+                         (caesium.magicnonce.secretbox/secretbox-nmr decoded-key)
+                         (.encodeToString (Base64/getEncoder)))
    :key_id key-id})
 
 (defn upsert-secret-value
