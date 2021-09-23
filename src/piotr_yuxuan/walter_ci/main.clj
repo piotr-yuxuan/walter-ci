@@ -66,7 +66,7 @@
     (let [target-repository "piotr-yuxuan/walter-ci"
           public-key (public-key config target-repository)
           secret-name "MY_SECRET"
-          secret-value "MY_SECRET_VALUE"]
+          secret-value "MY_OTHER_VALUE"]
       (println
         (->> (clojure.data/diff secret-value
                                 (System/getenv secret-name))
