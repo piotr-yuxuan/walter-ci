@@ -40,14 +40,18 @@
    :key_id key-id})
 
 (defn upsert-secret-value
-  [{:keys [github-api-url github-actor walter-github-password] :as config} target-repository secret-name sealed-public-key-box]
-  (http/request
-    {:request-method :put
-     :url (str/join "/" [github-api-url "repos" target-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
-     :body (json/write-value-as-string sealed-public-key-box)
-     :basic-auth [github-actor walter-github-password]
-     :headers {"Content-Type" "application/json"
-               "Accept" "application/vnd.github.v3+json"}}))
+  [{:keys [github-api-url github-actor walter-github-password]} target-repository secret-name sealed-public-key-box]
+  (try
+    (http/request
+      {:request-method :put
+       :url (str/join "/" [github-api-url "repos" target-repository "actions" "secrets" (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)])
+       :body (json/write-value-as-string sealed-public-key-box)
+       :basic-auth [github-actor walter-github-password]
+       :headers {"Content-Type" "application/json"
+                 "Accept" "application/vnd.github.v3+json"}})
+    (catch Exception ex
+      (println (pr-str (ex-data ex)))
+      (throw ex))))
 
 (defn avoid-secret-redaction
   "You must not use it. Display a string as a collection of characters."
@@ -63,8 +67,8 @@
           secret-name "MY_SECRET"
           secret-value "MY_SECRET_VALUE"]
       (println
-        (->> (System/getenv secret-name)
-             (clojure.data/diff (get config secret-name))
+        (->> (clojure.data/diff secret-value
+                                (System/getenv secret-name))
              (map avoid-secret-redaction)
              pr-str))
       (->> secret-value
