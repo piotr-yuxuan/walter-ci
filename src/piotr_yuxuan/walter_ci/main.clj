@@ -35,7 +35,8 @@
 (defn sealed-public-key-box
   [{:keys [decoded-key key-id]} ^String secret-value]
   {:encrypted_value (->> (.getBytes secret-value)
-                         (crypto/encrypt decoded-key (crypto/int->nonce 0))
+                         ^"[B" (crypto/encrypt decoded-key (crypto/int->nonce 0))
+                         (.encode (Base64/getEncoder))
                          slurp)
    :key_id key-id})
 
