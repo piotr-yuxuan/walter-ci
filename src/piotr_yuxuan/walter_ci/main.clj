@@ -42,6 +42,9 @@
 
 (defn upsert-secret-value
   [{:keys [github-api-url github-actor walter-github-password]} target-repository secret-name sealed-public-key-box]
+  (println :target-repository target-repository)
+  (println :secret-name secret-name)
+  (println :sealed-public-key-box (pr-str sealed-public-key-box))
   (try
     (http/request
       {:request-method :put
@@ -66,16 +69,19 @@
     (let [target-repository "piotr-yuxuan/walter-ci"
           public-key (public-key config target-repository)
           secret-name "MY_SECRET"
-          secret-value "MY_OTHER_VALUE"]
+          secret-value "MY_SECRET_VALUE"]
       (println
+        "Secret values"
         (->> (clojure.data/diff secret-value
                                 (System/getenv secret-name))
              (map avoid-secret-redaction)
              pr-str))
-      (->> secret-value
-           (sealed-public-key-box public-key)
-           (upsert-secret-value config target-repository secret-name)))
-    (println :all-done)))
+      (println
+        "Upsert response"
+        (->> secret-value
+             (sealed-public-key-box public-key)
+             (upsert-secret-value config target-repository secret-name)
+             pr-str)))))
 
 ;;; Trigger documentation build:
 ;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
