@@ -7,8 +7,7 @@
             [clojure.string :as str]
             [clj-http.client :as http]
             [jsonista.core :as json]
-            [medley.core :as medley]
-            [caesium.crypto.secretbox :as crypto])
+            [medley.core :as medley])
   (:gen-class)
   (:import (java.util Base64)
            (java.nio.charset StandardCharsets)))
@@ -43,9 +42,6 @@
 
 (defn upsert-secret-value
   [{:keys [github-api-url github-actor walter-github-password]} target-repository secret-name sealed-public-key-box]
-  (println :target-repository target-repository)
-  (println :secret-name secret-name)
-  (println :sealed-public-key-box (pr-str sealed-public-key-box))
   (try
     (http/request
       {:request-method :put
@@ -65,22 +61,8 @@
 
 (defn -main
   [& _]
-  (let [config (load-config)]
-    (println :config config)
-    (let [target-repository "piotr-yuxuan/walter-ci"
-          public-key (public-key config target-repository)
-          secret-name "MY_SECRET"
-          secret-value "MY_SECRET_VALUE"]
-      (println "Current secret value" (avoid-secret-redaction (System/getenv secret-name)))
-      (println "Secret value" (avoid-secret-redaction secret-value))
-      (println
-        "Upsert response"
-        (dissoc
-          (->> secret-value
-               (sealed-public-key-box public-key)
-               (upsert-secret-value config target-repository secret-name))
-          :headers
-          :http-client)))))
+  (println "Current secret value")
+  (println (avoid-secret-redaction (System/getenv "MY_SECRET"))))
 
 ;;; Trigger documentation build:
 ;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
