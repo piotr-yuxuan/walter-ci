@@ -3,7 +3,8 @@
 name: Update managed repositories
 'on':
   push:
-    branches: '*'
+    paths:
+    - resources/state.edn
 jobs:
   update-managed-repositories:
     runs-on: ubuntu-latest

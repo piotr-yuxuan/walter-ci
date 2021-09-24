@@ -1,9 +1,9 @@
 # This file is maintained by Walter CI, and may be rewritten.
 # https://github.com/piotr-yuxuan/walter-ci
 name: Code review
-'on':
-  push:
-    branches: '*'
+#'on':
+#  push:
+#    branches: '*'
 jobs:
   clojure-kondo:
     name: Clojure Kondo
