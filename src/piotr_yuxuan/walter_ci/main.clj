@@ -6,7 +6,9 @@
             [clojure.data]
             [clojure.string :as str]
             [clj-http.client :as http]
-            [jsonista.core :as json])
+            [jsonista.core :as json]
+            [clojure.java.io :as io]
+            [clojure.edn :as edn])
   (:gen-class)
   (:import (java.util Base64)
            (java.nio.charset StandardCharsets)))
@@ -54,11 +56,13 @@
                 :github-api-url (System/getenv "GITHUB_API_URL")
                 :github-actor (System/getenv "GITHUB_ACTOR")
                 :walter-github-password (System/getenv "WALTER_GITHUB_PASSWORD")}]
-    (let [public-key (public-key config github-repository)
-          secret-name "MY_SECRET"
-          secret-value "Value set by an action."]
-      (->> (sealed-public-key-box public-key secret-value)
-           (upsert-secret-value config github-repository secret-name)))))
+    (doseq [github-repository (:github-repositories (edn/read-string (slurp (io/resource "state.edn"))))
+            {:keys [secret-name secret-value]} [{:secret-name "MY_SECRET" :secret-value "Value set by an action."}]]
+      (println :github-repository github-repository
+               :secret-name secret-name)
+      (let [public-key (public-key config github-repository)]
+        (->> (sealed-public-key-box public-key secret-value)
+             (upsert-secret-value config github-repository secret-name))))))
 
 ;;; Trigger documentation build:
 ;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
