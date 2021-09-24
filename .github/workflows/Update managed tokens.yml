@@ -3,8 +3,7 @@
 name: Update managed tokens
 'on':
   push:
-    paths:
-    - '*'
+    branches: '*'
 jobs:
   piotr-yuxuan-walter-ci:
     runs-on: ubuntu-latest
