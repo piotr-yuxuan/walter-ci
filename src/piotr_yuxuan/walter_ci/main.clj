@@ -6,17 +6,10 @@
             [clojure.data]
             [clojure.string :as str]
             [clj-http.client :as http]
-            [jsonista.core :as json]
-            [medley.core :as medley])
+            [jsonista.core :as json])
   (:gen-class)
   (:import (java.util Base64)
            (java.nio.charset StandardCharsets)))
-
-(defn load-config
-  []
-  (->> (System/getenv)
-       (into {})
-       (medley/map-keys csk/->kebab-case-keyword)))
 
 (defn public-key
   [{:keys [github-api-url github-actor walter-github-password]} github-repository]
@@ -54,15 +47,18 @@
       (println (pr-str (ex-data ex)))
       (throw ex))))
 
-(defn avoid-secret-redaction
-  "You must not use it. Display a string as a collection of characters."
-  [^String secret-value]
-  (map identity secret-value))
-
 (defn -main
   [& _]
-  (println "Current secret value")
-  (println (avoid-secret-redaction (System/getenv "MY_SECRET"))))
+  (let [github-repository (System/getenv "GITHUB_REPOSITORY")
+        config {:github-repository github-repository
+                :github-api-url (System/getenv "GITHUB_API_URL")
+                :github-actor (System/getenv "GITHUB_ACTOR")
+                :walter-github-password (System/getenv "WALTER_GITHUB_PASSWORD")}]
+    (let [public-key (public-key config github-repository)
+          secret-name "MY_SECRET"
+          secret-value "Value set by an action."]
+      (->> (sealed-public-key-box public-key secret-value)
+           (upsert-secret-value config github-repository secret-name)))))
 
 ;;; Trigger documentation build:
 ;;; curl --verbose 'https://cljdoc.org/api/request-build2' \
