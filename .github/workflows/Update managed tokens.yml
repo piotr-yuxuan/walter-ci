@@ -4,7 +4,7 @@ name: Update managed tokens
 'on':
   push:
     paths:
-    - ./.github/workflows/Update managed tokens.yml
+    - '*'
 jobs:
   piotr-yuxuan-walter-ci:
     runs-on: ubuntu-latest
