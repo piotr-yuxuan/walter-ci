@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="repl" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
     <module name="walter-ci" />
+    <setting name="displayName" value="repl" />
     <setting name="replType" value="NREPL" />
     <setting name="execution" value="LEININGEN" />
     <setting name="jvmArgs" value="" />
