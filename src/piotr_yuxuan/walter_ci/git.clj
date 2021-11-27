@@ -54,9 +54,9 @@
                      :err :inherit
                      :dir working-directory
                      :env {"GIT_COMMITTER_NAME" github-actor
-                           "GIT_COMMITTER_EMAIL" walter-git-email
+                           "GIT_COMMITTER_EMAIL" "piotr-yuxuan@users.noreply.github.com"
                            "GIT_AUTHOR_NAME" walter-author-name
-                           "GIT_AUTHOR_EMAIL" walter-git-email}}))
+                           "GIT_AUTHOR_EMAIL" "piotr-yuxuan@users.noreply.github.com"}}))
 
 (defn push
   "Simple `git push` and nothing else."
