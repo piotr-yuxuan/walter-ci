@@ -1,5 +1,5 @@
 set -xe
-# Shockingly bad. See history for better attempts. Instead of
+# Unfathomably bad. See history for better attempts. Instead of
 # downloading and installing dependencies every time, we should
 # download a small, compact binary and run it directly.
 cd "${GITHUB_ACTION_PATH}"
