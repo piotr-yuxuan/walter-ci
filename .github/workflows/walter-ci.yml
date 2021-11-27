@@ -1,4 +1,4 @@
-name: Walter CI
+name: Dummy workflow
 'on':
   push:
     branches: '*'
