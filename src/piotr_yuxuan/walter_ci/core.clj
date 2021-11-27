@@ -16,6 +16,7 @@
     (println ::target-files (->file working-directory ".github" "workflows" (.getName workflow-file)))
     (git-workspace/clone working-directory options)
     (io/copy workflow-file (->file working-directory ".github" "workflows" (.getName workflow-file)))
+    (Thread/sleep 2e3) ;; test hypothesis that copy sometimes isn't finished
     (git-workspace/stage-all working-directory options)
     (git-workspace/commit working-directory options (format "Copy workflow %s" (.getName workflow-file)))
     (git-workspace/push working-directory options)))
