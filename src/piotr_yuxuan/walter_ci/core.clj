@@ -12,10 +12,13 @@
   (println ::update-workflow)
   (with-delete! [working-directory (->tmp-dir "update-workflow")]
     (git-workspace/clone working-directory options)
+    (println :source (str workflow-file))
+    (println :target (str (->file working-directory ".github" "workflows" (.getName workflow-file))))
     (io/copy workflow-file (doto (->file working-directory ".github" "workflows" (.getName workflow-file))
                              (io/make-parents)))
     (git-workspace/stage-all working-directory options)
-    (git-workspace/commit working-directory options (format "Update %s" (.getName workflow-file)))
+    (when (git-workspace/need-commit? working-directory options)
+      (git-workspace/commit working-directory options (format "Update %s" (.getName workflow-file))))
     (git-workspace/push working-directory options)))
 
 (defn replicate
