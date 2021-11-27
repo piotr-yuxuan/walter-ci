@@ -9,6 +9,11 @@
   [options ^File workflow-file]
   (with-delete! [working-directory (->tmp-dir)]
     (println ::working-directory working-directory)
+    (println ::workflow-file workflow-file)
+    (println ::target-files (->file working-directory))
+    (println ::target-files (->file working-directory ".github"))
+    (println ::target-files (->file working-directory ".github" "workflows"))
+    (println ::target-files (->file working-directory ".github" "workflows" (.getName workflow-file)))
     (git-workspace/clone working-directory options)
     (io/copy workflow-file (->file working-directory ".github" "workflows" (.getName workflow-file)))
     (git-workspace/stage-all working-directory options)
