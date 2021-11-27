@@ -21,7 +21,7 @@
       (git-workspace/commit working-directory options (format "Update %s" (.getName workflow-file))))
     (git-workspace/push working-directory options)))
 
-(defn replicate
+(defn replicate-workflow
   [{:keys [github-action-path managed-repositories] :as config}]
   (println ::replicate)
   (doseq [github-repository managed-repositories]
@@ -31,4 +31,4 @@
 
 (defn start
   [{:keys [input-command] :as config}]
-  (cond (= :replicate input-command) (replicate config)))
+  (cond (= :replicate input-command) (replicate-workflow config)))
