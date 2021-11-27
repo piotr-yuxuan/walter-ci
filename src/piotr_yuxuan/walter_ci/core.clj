@@ -61,6 +61,15 @@
             "Failed to commit vulnerability report.")
     (git/push github-workspace config)))
 
+(defn clojure-git-ignore
+  [{:keys [github-action-path github-workspace] :as options}]
+  (io/copy (io/file github-action-path "resources" ".gitignore")
+           (->file github-workspace ".gitignore"))
+  (git/stage-all github-workspace options)
+  (when (git/need-commit? github-workspace options)
+    (git/commit github-workspace options (format "Update .gitignore"))
+    (git/push github-workspace options)))
+
 (defn sort-ns
   [{:keys [github-workspace] :as config}]
   (let [{:keys [exit]} @(process/process "lein ns-sort"
@@ -117,7 +126,8 @@
 
 (defn start
   [{:keys [input-command] :as config}]
-  (cond (= :conform-repository input-command) (github/conform-repository config)
+  (cond (= :clojure-git-ignore input-command) (clojure-git-ignore config)
+        (= :conform-repository input-command) (github/conform-repository config)
         (= :list-licences input-command) (list-licenses config)
         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
         (= :replicate-walter-ci input-command) (replicate-walter-ci config)

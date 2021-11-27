@@ -90,6 +90,7 @@
                                :default "Walter CI"}]]
    [:input-command [:enum {:decode/string keyword
                            :env-var "WALTER_COMMAND"}
+                    :clojure-git-ignore
                     :conform-repository
                     :list-licences
                     :list-vulnerabilities
