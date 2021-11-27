@@ -9,7 +9,8 @@
   [options ^File workflow-file]
   (with-delete! [working-directory (->tmp-dir "copy-workflow")]
     (git-workspace/clone working-directory options)
-    (io/copy workflow-file (->file working-directory ".github" "workflows" (.getName workflow-file)))
+    (io/copy workflow-file (doto (->file working-directory ".github" "workflows" (.getName workflow-file))
+                             (io/make-parents)))
     (git-workspace/stage-all working-directory options)
     (git-workspace/commit working-directory options (format "Copy workflow %s" (.getName workflow-file)))
     (git-workspace/push working-directory options)))
