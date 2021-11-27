@@ -121,7 +121,7 @@
   (cond (= :conform-repository input-command) (github/conform-repository config)
         (= :list-licences input-command) (list-licenses config)
         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
-        (= :replicate input-command) (replicate-walter-ci config)
+        (= :replicate-walter-ci input-command) (replicate-walter-ci config)
         (= :sort-ns input-command) (sort-ns config)
         (= :run-tests input-command) (run-tests config)
         (= :update-dependencies-run-tests input-command) (update-dependencies-run-tests config)))

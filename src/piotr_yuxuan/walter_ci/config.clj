@@ -93,7 +93,7 @@
                     :conform-repository
                     :list-licences
                     :list-vulnerabilities
-                    :replicate
+                    :replicate-walter-ci
                     :sort-ns
                     :run-tests
                     :update-dependencies-run-tests]]
