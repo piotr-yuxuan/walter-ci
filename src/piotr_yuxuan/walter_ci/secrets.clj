@@ -1,0 +1,41 @@
+(ns piotr-yuxuan.walter-ci.secrets
+  (:require [caesium.crypto.box]
+            [clj-http.client :as http]
+            [clojure.string :as str]
+            [jsonista.core :as json]
+            [leiningen.change])
+  (:import (java.util Base64)))
+
+(defn repository-public-key
+  [{:keys [github-repository github-api-url github-actor walter-github-password]}]
+  (let [payload (->> {:request-method :get
+                      :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
+                      :basic-auth [github-actor walter-github-password]
+                      :headers {"Content-Type" "application/json"
+                                "Accept" "application/vnd.github.v3+json"}}
+                     http/request
+                     :body
+                     json/read-value)
+        ^String encoded-key (get payload "key")]
+    {:encoded-key encoded-key
+     :decoded-key (.decode (Base64/getDecoder) (.getBytes encoded-key))
+     :key-id (get payload "key_id")}))
+
+(defn public-key-sealed-box
+  [{:keys [^String decoded-key key-id]} ^String secret-value]
+  {:encrypted_value (->> (byte-streams/to-byte-array secret-value)
+                         (caesium.crypto.box/anonymous-encrypt decoded-key)
+                         (.encodeToString (Base64/getEncoder)))
+   :key_id key-id})
+
+(defn upsert-value
+  [{:keys [github-repository github-api-url github-actor walter-github-password] :as config} ^String secret-name ^String secret-value]
+  (let [public-key (repository-public-key config)
+        sealed-box (public-key-sealed-box public-key secret-value)]
+    (http/request
+      {:request-method :put
+       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
+       :body (json/write-value-as-string sealed-box)
+       :basic-auth [github-actor walter-github-password]
+       :headers {"Content-Type" "application/json"
+                 "Accept" "application/vnd.github.v3+json"}})))
