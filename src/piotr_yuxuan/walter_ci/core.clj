@@ -7,15 +7,15 @@
   (:import (java.io File)
            (java.time ZonedDateTime)))
 
-(defn copy-workflow
+(defn update-workflow
   [options ^File workflow-file]
-  (println ::copy-workflow)
-  (with-delete! [working-directory (->tmp-dir "copy-workflow")]
+  (println ::update-workflow)
+  (with-delete! [working-directory (->tmp-dir "update-workflow")]
     (git-workspace/clone working-directory options)
     (io/copy workflow-file (doto (->file working-directory ".github" "workflows" (.getName workflow-file))
                              (io/make-parents)))
     (git-workspace/stage-all working-directory options)
-    (git-workspace/commit working-directory options (format "Copy workflow %s" (.getName workflow-file)))
+    (git-workspace/commit working-directory options (format "Update %s" (.getName workflow-file)))
     (git-workspace/push working-directory options)))
 
 (defn replicate
@@ -24,7 +24,7 @@
   (doseq [github-repository managed-repositories]
     (doto (assoc config :github-repository github-repository)
       (secret/upsert-value "MY_SECRET" (format "Secret value generated at %s." (ZonedDateTime/now)))
-      (copy-workflow (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
+      (update-workflow (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
 
 (defn start
   [{:keys [input-command] :as config}]
