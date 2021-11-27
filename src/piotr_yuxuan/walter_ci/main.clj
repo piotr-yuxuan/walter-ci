@@ -11,6 +11,7 @@
 (defn -main
   [& args]
   (let [config (load-config args)]
+    (println (System/getenv "INPUT_COMMAND"))
     (cond (:show-config? config) (do (clojure.pprint/pprint config) (System/exit 0))
           (:help config) (do (println (malli-cli/summary Config)) (System/exit 0))
 

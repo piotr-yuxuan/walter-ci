@@ -89,7 +89,7 @@
                                :env-var "WALTER_AUTHOR_NAME"
                                :default "Walter CI"}]]
    [:input-command [:enum {:decode/string keyword
-                           :env-var "INPUT_COMMAND"}
+                           :env-var "WALTER_COMMAND"}
                     :copy-workflows]]
    [:managed-repositories [:vector string?]]])
 
