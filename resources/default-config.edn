@@ -1,0 +1,7 @@
+{:managed-repositories [;"piotr-yuxuan/walter-ci"
+                       "piotr-yuxuan/closeable-map"
+                       "piotr-yuxuan/slava"
+                       "piotr-yuxuan/slava-record"
+                       "piotr-yuxuan/malli-cli"
+                       "piotr-yuxuan/ephemeral-server"
+                       "piotr-yuxuan/dove"]}

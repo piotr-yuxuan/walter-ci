@@ -1,0 +1,21 @@
+name: Walter CI
+on:
+  push:
+    branches: '*'
+copy-workflows:
+  walter-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Install Clojure
+        uses: DeLaGuardo/setup-clojure@master
+        with:
+          cli: latest
+          lein: latest
+      - name: Walter CI
+        uses: piotr-yuxuan/walter-ci@main
+        env:
+          WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+          WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+        with:
+          command: copy-workflows

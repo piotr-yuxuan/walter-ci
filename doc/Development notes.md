@@ -161,3 +161,38 @@ For projects that produce a binary, use `pandoc md roff` to generate documentati
      be focus on technical matters only, otherwise substack or
      anything else would be a better medium. Also, social media
      integration would allow to publish a link on Twitter.
+  6. Try to automatically merge PR from dependabot.
+  
+https://github.com/babashka/neil
+
+I feel like every developers like Bruno or
+https://github.com/logicblocks always reinvent different and
+non-interoperable answers to the same set of issues:
+- Configuration
+- Logging
+- CLI
+- App state management
+- Browser-side data retrieval
+- other?
+
+Instead of creating my own set of answers to these issues I could just
+list them, and present what makes each unique.
+
+## Small steps
+
+- Even if it has to be run dynamically every time, get to the smallest
+  clean state in which `(-main)` can be run. Don't care about config
+  or anything. You'll still be able to recover code in git later.
+- Then, forward dummy workflow to managed repositories. Consider that
+  you will only manage repos from one user. Don't try to bootstrap
+  Walter CI. Keep simple, stupid. Such dummy workflow will print the
+  time and value of a public secret.
+- Then for selected secrets forward them to the managed repositories.
+- Now update the dummy workflow to some simple actions (form existing
+  GitHub Actions in Market) on every pushes. See above for these
+  simple actions.
+- Expand Walter CI code so that it can commit a version update on
+  every push to master (with Clojure code).
+
+At this point it has a pretty good shape to be quickly expandable in
+any direction.

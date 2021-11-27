@@ -1,7 +1,23 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:import (java.time LocalDateTime))
+  (:require [malli.core :as m]
+            [malli.error :as me]
+            [piotr-yuxuan.malli-cli :as malli-cli]
+            [piotr-yuxuan.walter-ci.config :refer [Config load-config]]
+            [piotr-yuxuan.walter-ci.core :as core]
+            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]])
   (:gen-class))
 
 (defn -main
-  [& _]
-  (println "Hello world" (LocalDateTime/now)))
+  [& args]
+  (let [config (load-config args)]
+    (cond (:show-config? config) (do (clojure.pprint/pprint config) (System/exit 0))
+          (:help config) (do (println (malli-cli/summary Config)) (System/exit 0))
+
+          (not (m/validate Config config))
+          (do (println "Invalid configuration value")
+              (clojure.pprint/pprint (->> config
+                                          (m/explain Config)
+                                          me/humanize))
+              (System/exit 1))
+
+          :else (core/start config))))
