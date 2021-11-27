@@ -90,7 +90,13 @@
                                :default "Walter CI"}]]
    [:input-command [:enum {:decode/string keyword
                            :env-var "WALTER_COMMAND"}
-                    :replicate]]
+                    :conform-repository
+                    :list-licences
+                    :list-vulnerabilities
+                    :replicate
+                    :sort-ns
+                    :run-tests
+                    :update-dependencies-run-tests]]
    [:managed-repositories [:vector string?]]])
 
 (defn load-config
