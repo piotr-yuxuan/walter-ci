@@ -17,11 +17,13 @@
     (git-workspace/commit working-directory options (format "Copy workflow %s" (.getName workflow-file)))
     (git-workspace/push working-directory options)))
 
+(defn replicate
+  [{:keys [github-action-path managed-repositories] :as config}]
+  (doseq [github-repository managed-repositories]
+    (doto (assoc config :github-repository github-repository)
+      (secret/upsert-value "MY_SECRET" (format "Secret value generated at %s." (ZonedDateTime/now)))
+      (copy-workflow (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
+
 (defn start
-  [{:keys [input-command github-action-path managed-repositories] :as config}]
-  (cond (= :copy-workflows input-command)
-        (doseq [github-repository managed-repositories]
-          (let [config+github-repository (assoc config :github-repository github-repository)]
-            (copy-workflow config+github-repository
-                           (->file github-action-path "resources" "workflows" "walter-ci.yml"))
-            (secret/upsert-value config+github-repository "MY_SECRET" (format "Secret value generated at %s." (ZonedDateTime/now)))))))
+  [{:keys [input-command] :as config}]
+  (cond (= :replicate input-command) (replicate config)))

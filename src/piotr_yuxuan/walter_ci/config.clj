@@ -90,7 +90,7 @@
                                :default "Walter CI"}]]
    [:input-command [:enum {:decode/string keyword
                            :env-var "WALTER_COMMAND"}
-                    :copy-workflows]]
+                    :replicate]]
    [:managed-repositories [:vector string?]]])
 
 (defn load-config
