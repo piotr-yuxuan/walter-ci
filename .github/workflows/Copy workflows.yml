@@ -1,9 +1,9 @@
 name: Walter CI
-on:
+'on':
   push:
     branches: '*'
-copy-workflows:
-  walter-ci:
+jobs:
+  copy-workflows:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
