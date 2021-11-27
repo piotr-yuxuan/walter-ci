@@ -3,17 +3,22 @@
             [clj-http.client :as http]
             [clojure.string :as str]
             [jsonista.core :as json]
-            [leiningen.change])
+            [leiningen.change]
+            [safely.core :refer [safely]])
   (:import (java.util Base64)))
 
 (defn repository-public-key
   [{:keys [github-repository github-api-url github-actor walter-github-password]}]
-  (let [payload (->> {:request-method :get
+  (let [response (safely
+                   (http/request
+                     {:request-method :get
                       :url (str/join "/" [github-api-url "repos" github-repository "actions/secrets/public-key"])
                       :basic-auth [github-actor walter-github-password]
                       :headers {"Content-Type" "application/json"
-                                "Accept" "application/vnd.github.v3+json"}}
-                     http/request
+                                "Accept" "application/vnd.github.v3+json"}})
+                   :on-error
+                   :max-retries 5)
+        payload (->> response
                      :body
                      json/read-value)
         ^String encoded-key (get payload "key")]
@@ -32,10 +37,13 @@
   [{:keys [github-repository github-api-url github-actor walter-github-password] :as config} ^String secret-name ^String secret-value]
   (let [public-key (repository-public-key config)
         sealed-box (public-key-sealed-box public-key secret-value)]
-    (http/request
-      {:request-method :put
-       :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
-       :body (json/write-value-as-string sealed-box)
-       :basic-auth [github-actor walter-github-password]
-       :headers {"Content-Type" "application/json"
-                 "Accept" "application/vnd.github.v3+json"}})))
+    (safely
+      (http/request
+        {:request-method :put
+         :url (str/join "/" [github-api-url "repos" github-repository "actions" "secrets" secret-name])
+         :body (json/write-value-as-string sealed-box)
+         :basic-auth [github-actor walter-github-password]
+         :headers {"Content-Type" "application/json"
+                   "Accept" "application/vnd.github.v3+json"}})
+      :on-error
+      :max-retries 5)))
