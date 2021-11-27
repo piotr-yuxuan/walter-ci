@@ -2,6 +2,10 @@ name: 'piotr-yuxuan/walter-ci-register'
 description: |
   Opinionated set of standard steps for all your Clojure projects,
   defined by conventions and no configuration.
+inputs:
+  command:
+    description: 'Walter CI command to run'
+    required: true
 runs:
   using: 'composite'
   steps:
