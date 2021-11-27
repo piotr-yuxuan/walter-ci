@@ -92,7 +92,6 @@
                               (try
                                 (with-delete! ~(subvec bindings 2) ~@body)
                                 (finally
-                                  ; (~delete! ~(bindings 0))
-                                  )))
+                                  (~delete! ~(bindings 0)))))
     :else (throw (IllegalArgumentException.
                    "with-delete only allows Symbols in bindings"))))
