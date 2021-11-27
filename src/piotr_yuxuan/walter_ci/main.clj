@@ -11,9 +11,8 @@
 (defn -main
   [& args]
   (let [config (load-config args)]
-    (println (System/getenv "INPUT_COMMAND"))
-    (cond (:show-config? config) (do (clojure.pprint/pprint config) (System/exit 0))
-          (:help config) (do (println (malli-cli/summary Config)) (System/exit 0))
+    (cond (:show-config? config) (do (clojure.pprint/pprint config))
+          (:help config) (do (println (malli-cli/summary Config)))
 
           (not (m/validate Config config))
           (do (println "Invalid configuration value")
@@ -24,4 +23,5 @@
                                           me/humanize))
               (System/exit 1))
 
-          :else (core/start config))))
+          :else (core/start config)))
+  (System/exit 0))
