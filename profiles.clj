@@ -5,7 +5,7 @@
                   [lein-bikeshed "LATEST"]
                   [lein-cloverage "LATEST"]
                   [lein-kibit "LATEST"]
-                  [lein-licenses "LATEST"]
+                  [lein-licenses "0.2.2"]
                   [lein-nvd "LATEST"]
                   [ns-sort "LATEST"]
                   [mutant "LATEST"] ; source: https://github.com/pithyless/mutant
