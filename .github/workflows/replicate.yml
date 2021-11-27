@@ -1,4 +1,4 @@
-name: Walter CI
+name: Replicate Walter CI
 'on':
   push:
     branches: '*'
