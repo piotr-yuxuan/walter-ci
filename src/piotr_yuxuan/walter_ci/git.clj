@@ -1,6 +1,6 @@
 (ns piotr-yuxuan.walter-ci.git
-  (:require [babashka.process :as process]
-            [piotr-yuxuan.walter-ci.files :refer [->tmp-file with-delete!]])
+  (:require [piotr-yuxuan.walter-ci.files :refer [->tmp-file with-delete!]]
+            [babashka.process :as process])
   (:import (java.io File)
            (java.nio.file.attribute PosixFilePermissions PosixFilePermission)))
 

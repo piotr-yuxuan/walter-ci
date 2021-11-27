@@ -1,6 +1,6 @@
 (ns piotr-yuxuan.walter-ci.config
-  (:require [piotr-yuxuan.utils :refer [deep-merge]]
-            [piotr-yuxuan.malli-cli :as malli-cli]
+  (:require [piotr-yuxuan.malli-cli :as malli-cli]
+            [piotr-yuxuan.utils :refer [deep-merge]]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [malli.core :as m])

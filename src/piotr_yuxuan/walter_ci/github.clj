@@ -10,8 +10,8 @@
             [malli.core :as m]
             [malli.transform :as mt]
             [malli.util :as mu]
-            [safely.core :refer [safely]]
-            [medley.core :as medley]))
+            [medley.core :as medley]
+            [safely.core :refer [safely]]))
 
 (def Defaults
   (m/schema

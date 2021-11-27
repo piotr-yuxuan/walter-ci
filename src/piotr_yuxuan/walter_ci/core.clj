@@ -1,12 +1,12 @@
 (ns piotr-yuxuan.walter-ci.core
-  (:require [clojure.java.io :as io]
-            [camel-snake-kebab.core :as csk]
-            [piotr-yuxuan.utils :refer [deep-merge]]
+  (:require [piotr-yuxuan.utils :refer [deep-merge]]
             [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete!]]
             [piotr-yuxuan.walter-ci.git :as git]
             [piotr-yuxuan.walter-ci.github :as github]
             [piotr-yuxuan.walter-ci.secrets :as secret]
-            [babashka.process :as process])
+            [babashka.process :as process]
+            [camel-snake-kebab.core :as csk]
+            [clojure.java.io :as io])
   (:import (java.io File)))
 
 (defn update-workflow

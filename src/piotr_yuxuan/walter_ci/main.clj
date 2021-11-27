@@ -1,11 +1,11 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:require [malli.core :as m]
-            [malli.error :as me]
-            [clojure.pprint]
-            [piotr-yuxuan.malli-cli :as malli-cli]
+  (:require [piotr-yuxuan.malli-cli :as malli-cli]
             [piotr-yuxuan.walter-ci.config :refer [Config load-config]]
             [piotr-yuxuan.walter-ci.core :as core]
-            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]])
+            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]]
+            [clojure.pprint]
+            [malli.core :as m]
+            [malli.error :as me])
   (:gen-class))
 
 (defn -main
