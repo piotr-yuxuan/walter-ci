@@ -26,8 +26,9 @@
   (doseq [github-repository managed-repositories]
     (println ::replicate github-repository)
     (let [config+github-repository (assoc config :github-repository github-repository)]
-      (doseq [secret-name [:walter-author-name :walter-github-password :github-api-url]]
-        (println :secret-name (csk/->SCREAMING_SNAKE_CASE_STRING secret-name))
+      (doseq [secret-name [:walter-author-name
+                           :walter-github-password
+                           :walter-git-email]]
         (secret/upsert-value config+github-repository
                              (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
                              (get config secret-name)))
