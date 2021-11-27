@@ -14,7 +14,7 @@
                  [clj-commons/clj-yaml "0.7.0"]
                  [vvvvalvalval/supdate "0.2.3"]
                  [clojurewerkz/balagan "1.0.5" :exclusions [org.clojure/clojure]]
-                 [com.github.piotr-yuxuan/malli-cli "1.0.3-SNAPSHOT"] ; Command-line processing
+                 [com.github.piotr-yuxuan/malli-cli "1.0.2"] ; Command-line processing
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [medley "1.3.0"]
                  [clj-http "3.12.0"]

@@ -6,6 +6,5 @@ cd "${GITHUB_ACTION_PATH}"
 lein install
 
 cd "${GITHUB_WORKSPACE}"
-export LEIN_SNAPSHOTS_IN_RELEASE=true
 WALTER_CI_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
 clojure -Sdeps "{:aliases {:walter-ci {:replace-deps {com.github.piotr-yuxuan/walter-ci {:mvn/version \"${WALTER_CI_VERSION}\"}}}}}" -M:walter-ci -m piotr-yuxuan.walter-ci.main
