@@ -6,7 +6,7 @@
 (defn ^File askpass
   "This is kind of a useless indirection. Perhaps ssh would be better?"
   [secret-name]
-  (doto (->tmp-file)
+  (doto (->tmp-file "askpass")
     (spit (format "#!/bin/sh\necho \"${%s}\"\n" secret-name))))
 
 (defn clone

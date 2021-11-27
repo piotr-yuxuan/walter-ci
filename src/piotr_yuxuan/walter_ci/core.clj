@@ -7,7 +7,7 @@
 
 (defn copy-workflow
   [options ^File workflow-file]
-  (with-delete! [working-directory (->tmp-dir)]
+  (with-delete! [working-directory (->tmp-dir "copy-workflow")]
     (println ::working-directory working-directory)
     (println ::workflow-file workflow-file)
     (println ::target-files (->file working-directory))
