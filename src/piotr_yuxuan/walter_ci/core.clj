@@ -21,8 +21,8 @@
     (git-workspace/push working-directory options)))
 
 (defn start
-  [{:keys [input-command managed-repositories] :as config}]
+  [{:keys [input-command github-action-path managed-repositories] :as config}]
   (cond (= :copy-workflows input-command)
         (doseq [github-repository managed-repositories]
           (copy-workflow (assoc config :github-repository github-repository)
-                         (->file (io/resource "workflows/dummy-workflow.yml"))))))
+                         (->file github-action-path "resources" "workflows" "dummy-workflow.yml")))))
