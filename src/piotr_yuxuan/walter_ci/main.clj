@@ -16,6 +16,7 @@
 
           (not (m/validate Config config))
           (do (println "Invalid configuration value")
+              (clojure.pprint/pprint config)
               (clojure.pprint/pprint (->> config
                                           (m/explain Config)
                                           me/humanize))

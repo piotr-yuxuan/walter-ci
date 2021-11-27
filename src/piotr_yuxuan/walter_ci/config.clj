@@ -73,13 +73,13 @@
    [:walter-github-password [any? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
                                    :env-var "WALTER_GITHUB_PASSWORD"}]]
    ;; Non-GitHub config keys
-   [:show-config? [boolean? {:description "Print actual configuration value and exit."
-                             :optional true
-                             :arg-number 0}]]
-   [:help [boolean? {:description "Display usage summary and exit."
-                     :short-option "-h"
-                     :optional true
-                     :arg-number 0}]]
+   [:show-config? {:optional true} [boolean? {:description "Print actual configuration value and exit."
+                                              :optional true
+                                              :arg-number 0}]]
+   [:help {:optional true} [boolean? {:description "Display usage summary and exit."
+                                      :short-option "-h"
+                                      :optional true
+                                      :arg-number 0}]]
    [:now {:optional true} [:fn {:decode/string #(ZonedDateTime/parse %)
                                 :description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
                                 :env-var "NOW"
