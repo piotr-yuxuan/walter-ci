@@ -1,11 +1,11 @@
 (ns piotr-yuxuan.walter-ci.core
   (:require [clojure.java.io :as io]
+            [camel-snake-kebab.core :as csk]
             [piotr-yuxuan.utils :refer [deep-merge]]
             [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete!]]
             [piotr-yuxuan.walter-ci.git :as git-workspace]
             [piotr-yuxuan.walter-ci.secrets :as secret])
-  (:import (java.io File)
-           (java.time ZonedDateTime)))
+  (:import (java.io File)))
 
 (defn update-workflow
   [options ^File workflow-file]
@@ -23,11 +23,15 @@
 
 (defn replicate-workflow
   [{:keys [github-action-path managed-repositories] :as config}]
-  (println ::replicate)
   (doseq [github-repository managed-repositories]
-    (doto (assoc config :github-repository github-repository)
-      (secret/upsert-value "MY_SECRET" (format "Secret value generated at %s." (ZonedDateTime/now)))
-      (update-workflow (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
+    (println ::replicate github-repository)
+    (let [config+github-repository (assoc config :github-repository github-repository)]
+      (doseq [secret-name [:walter-author-name :walter-github-password :github-api-url]]
+        (println :secret-name (csk/->SCREAMING_SNAKE_CASE_STRING secret-name))
+        (secret/upsert-value config+github-repository
+                             (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
+                             (get config secret-name)))
+      (update-workflow config+github-repository (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
 
 (defn start
   [{:keys [input-command] :as config}]
