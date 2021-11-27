@@ -1,6 +1,7 @@
 (ns piotr-yuxuan.walter-ci.main
   (:require [malli.core :as m]
             [malli.error :as me]
+            [clojure.pprint]
             [piotr-yuxuan.malli-cli :as malli-cli]
             [piotr-yuxuan.walter-ci.config :refer [Config load-config]]
             [piotr-yuxuan.walter-ci.core :as core]
