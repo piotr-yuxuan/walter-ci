@@ -9,6 +9,7 @@
 
 (defn copy-workflow
   [options ^File workflow-file]
+  (println ::copy-workflow)
   (with-delete! [working-directory (->tmp-dir "copy-workflow")]
     (git-workspace/clone working-directory options)
     (io/copy workflow-file (doto (->file working-directory ".github" "workflows" (.getName workflow-file))
@@ -19,6 +20,7 @@
 
 (defn replicate
   [{:keys [github-action-path managed-repositories] :as config}]
+  (println ::replicate)
   (doseq [github-repository managed-repositories]
     (doto (assoc config :github-repository github-repository)
       (secret/upsert-value "MY_SECRET" (format "Secret value generated at %s." (ZonedDateTime/now)))

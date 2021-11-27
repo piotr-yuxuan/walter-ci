@@ -15,7 +15,6 @@
 
 (defn clone
   [working-directory {:keys [github-repository walter-github-password]}]
-  (println ::clone)
   (with-delete! [askpass (askpass "GIT_PASSWORD")]
     (assert (zero? (:exit @(process/process ["git"
                                              ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
@@ -31,7 +30,6 @@
 
 (defn stage-all
   [working-directory _]
-  (println ::stage-all)
   (assert (zero? (:exit @(process/process "git add --all"
                                           {:out :inherit
                                            :err :inherit
@@ -40,7 +38,6 @@
 
 (defn need-commit?
   [working-directory _]
-  (println ::need-commit?)
   (let [{:keys [out exit]} @(process/process "git diff --staged"
                                              {:out :slurp
                                               :err :inherit
@@ -52,7 +49,6 @@
   "Simple `git commit` and nothing else."
   ;; FIXME https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work
   [working-directory {:keys [walter-git-email walter-author-name github-actor]} commit-message]
-  (println ::commit)
   @(process/process ["git" "commit" "-m" commit-message]
                     {:out :inherit
                      :err :inherit
@@ -65,7 +61,6 @@
 (defn push
   "Simple `git push` and nothing else."
   [working-directory {:keys [walter-github-password]}]
-  (println ::push)
   (with-delete! [askpass (askpass "GIT_PASSWORD")]
     @(process/process ["git"
                        ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
