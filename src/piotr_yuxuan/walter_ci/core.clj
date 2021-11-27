@@ -8,15 +8,8 @@
 (defn copy-workflow
   [options ^File workflow-file]
   (with-delete! [working-directory (->tmp-dir "copy-workflow")]
-    (println ::working-directory working-directory)
-    (println ::workflow-file workflow-file)
-    (println ::target-files (->file working-directory))
-    (println ::target-files (->file working-directory ".github"))
-    (println ::target-files (->file working-directory ".github" "workflows"))
-    (println ::target-files (->file working-directory ".github" "workflows" (.getName workflow-file)))
     (git-workspace/clone working-directory options)
     (io/copy workflow-file (->file working-directory ".github" "workflows" (.getName workflow-file)))
-    (Thread/sleep 2e3) ;; test hypothesis that copy sometimes isn't finished
     (git-workspace/stage-all working-directory options)
     (git-workspace/commit working-directory options (format "Copy workflow %s" (.getName workflow-file)))
     (git-workspace/push working-directory options)))
@@ -25,5 +18,13 @@
   [{:keys [input-command github-action-path managed-repositories] :as config}]
   (cond (= :copy-workflows input-command)
         (doseq [github-repository managed-repositories]
+
+          (println ::start github-repository)
+          (println ::workflow-file (.exists (->file github-action-path)) (str (->file github-action-path)))
+          (println ::workflow-file (.exists (->file github-action-path "resources")) (str (->file github-action-path "resources")))
+          (println ::workflow-file (.exists (->file github-action-path "resources" "workflows")) (str (->file github-action-path "resources" "workflows")))
+          (println ::workflow-file (.exists (->file github-action-path "resources" "workflows" "dummy-workflow.yml")) (str (->file github-action-path "resources" "workflows" "dummy-workflow.yml")))
+
+          (println ::github-repository github-repository)
           (copy-workflow (assoc config :github-repository github-repository)
                          (->file github-action-path "resources" "workflows" "dummy-workflow.yml")))))
