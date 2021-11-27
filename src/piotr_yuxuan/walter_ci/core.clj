@@ -51,11 +51,10 @@
   [{{:keys [github-workspace]} :env :as config}]
   (with-open [vulnerabilities (io/writer (doto (io/file "./doc/Known vulnerabilities.md")
                                            io/make-parents))]
-    (let [{:keys [exit]} @(process/process "lein nvd check"
-                                           {:out vulnerabilities
-                                            :err :inherit
-                                            :dir github-workspace})]
-      (assert (zero? exit) "Failed to report vulnerabilities.")))
+    @(process/process "lein nvd check"
+                      {:out vulnerabilities
+                       :err :inherit
+                       :dir github-workspace}))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
