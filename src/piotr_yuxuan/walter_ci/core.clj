@@ -33,7 +33,7 @@
       (update-workflow config+github-repository (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
 
 (defn list-licenses
-  [{{:keys [github-workspace]} :env :as config}]
+  [{:keys [github-workspace] :as config}]
   (with-open [licenses (io/writer (doto (io/file "./doc/Licenses.csv")
                                     io/make-parents))]
     (let [{:keys [exit]} @(process/process "lein licenses :csv"
@@ -48,7 +48,7 @@
     (git/push github-workspace config)))
 
 (defn list-vulnerabilities
-  [{{:keys [github-workspace]} :env :as config}]
+  [{:keys [github-workspace] :as config}]
   (with-open [vulnerabilities (io/writer (doto (io/file "./doc/Known vulnerabilities.md")
                                            io/make-parents))]
     @(process/process "lein nvd check"
@@ -105,7 +105,7 @@
     (assert (zero? exit) "Tests failed.")))
 
 #_(defn lein-deploy
-    [{{:keys [github-workspace]} :env}]
+    [:keys [github-workspace]]
     (let [leiningen-project (-> (io/file github-workspace "project.clj")
                                 (.getAbsolutePath)
                                 (leiningen/read [:deploy]))
