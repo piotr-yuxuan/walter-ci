@@ -1,7 +1,7 @@
 (ns piotr-yuxuan.walter-ci.core
   (:require [clojure.java.io :as io]
             [piotr-yuxuan.utils :refer [deep-merge]]
-            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]]
+            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete!]]
             [piotr-yuxuan.walter-ci.git :as git-workspace])
   (:import (java.io File)))
 
@@ -17,11 +17,11 @@
 
 (defn delete-workflow
   [options ^File workflow-file]
-  (with-delete! [working-directory (->tmp-dir "copy-workflow")]
+  (with-delete! [working-directory (->tmp-dir "delete-workflow")]
     (git-workspace/clone working-directory options)
-    (io/delete-file (->file working-directory ".github" "workflows" (.getName workflow-file)))
+    (io/delete-file (->file working-directory ".github" "workflows" workflow-file))
     (git-workspace/stage-all working-directory options)
-    (git-workspace/commit working-directory options (format "Delete workflow %s" (.getName workflow-file)))
+    (git-workspace/commit working-directory options (format "Delete workflow %s" workflow-file))
     (git-workspace/push working-directory options)))
 
 (defn start
