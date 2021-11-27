@@ -69,7 +69,7 @@
    [:github-api-url [any? {:description "Returns the API URL. For example: https://api.github.com."
                            :env-var "GITHUB_API_URL"}]]
    [:walter-git-email [any? {:description "Returns the API URL. For example: https://api.github.com."
-                             :env-var "GITHUB_API_URL"}]]
+                             :env-var "WALTER_GIT_EMAIL"}]]
    [:walter-github-password [any? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
                                    :env-var "WALTER_GITHUB_PASSWORD"}]]
    ;; Non-GitHub config keys
