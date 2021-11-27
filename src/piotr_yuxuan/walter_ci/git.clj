@@ -1,12 +1,16 @@
 (ns piotr-yuxuan.walter-ci.git
   (:require [babashka.process :as process]
             [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]])
-  (:import (java.io File)))
+  (:import (java.io File)
+           (java.nio.file.attribute PosixFilePermissions PosixFilePermission)))
 
 (defn ^File askpass
   "This is kind of a useless indirection. Perhaps ssh would be better?"
   [secret-name]
-  (doto (->tmp-file "askpass")
+  (doto (->tmp-file "askpass" "sh" (PosixFilePermissions/asFileAttribute
+                                     #{PosixFilePermission/OWNER_READ
+                                       PosixFilePermission/OWNER_WRITE
+                                       PosixFilePermission/OWNER_EXECUTE}))
     (spit (format "#!/bin/sh\necho \"${%s}\"\n" secret-name))))
 
 (defn clone

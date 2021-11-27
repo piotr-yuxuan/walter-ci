@@ -45,7 +45,7 @@
   ([] (->tmp-file nil nil nil))
   ([suffix] (->tmp-file nil suffix nil))
   ([prefix suffix] (->tmp-file prefix suffix nil))
-  ([prefix suffix file-attributes]
+  ([prefix suffix & file-attributes]
    (-> prefix
        ^Path (Files/createTempFile suffix (into-array FileAttribute file-attributes))
        .toFile
