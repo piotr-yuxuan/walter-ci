@@ -48,14 +48,14 @@
 (defn commit
   "Simple `git commit` and nothing else."
   ;; FIXME https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work
-  [working-directory {:keys [walter-git-email walter-author-name github-actor]} commit-message]
+  [working-directory {:keys [walter-git-email github-actor]} commit-message]
   @(process/process ["git" "commit" "-m" commit-message]
                     {:out :inherit
                      :err :inherit
                      :dir working-directory
                      :env {"GIT_COMMITTER_NAME" github-actor
                            "GIT_COMMITTER_EMAIL" walter-git-email
-                           "GIT_AUTHOR_NAME" walter-author-name
+                           "GIT_AUTHOR_NAME" github-actor
                            "GIT_AUTHOR_EMAIL" walter-git-email}}))
 
 (defn push
