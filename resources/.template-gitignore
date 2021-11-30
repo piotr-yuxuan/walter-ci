@@ -16,7 +16,6 @@
 pom.xml.asc
 target/
 checkouts
-.env
 /.events.log
 /.eastwood
 perf/terraform*

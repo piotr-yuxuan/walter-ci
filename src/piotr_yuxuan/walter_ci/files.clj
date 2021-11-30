@@ -32,6 +32,13 @@
        (when (instance? File $)
          (.getCanonicalFile ^File $))))))
 
+(defn ^File ->dir
+  "Do-what-I-mean syntactic sugar that return the canonical directory file for its arguments. Return nil if not possible."
+  ([& args]
+   (when-let [^File f (apply ->file args)]
+     (when (.isDirectory f)
+       f))))
+
 (defn ^File ->tmp-dir
   ([] (->tmp-dir nil nil))
   ([prefix] (->tmp-dir prefix nil))

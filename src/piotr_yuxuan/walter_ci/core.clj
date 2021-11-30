@@ -6,7 +6,9 @@
             [piotr-yuxuan.walter-ci.secrets :as secret]
             [babashka.process :as process]
             [camel-snake-kebab.core :as csk]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [clojure.set :as set])
   (:import (java.io File)))
 
 (defn update-workflow
@@ -63,12 +65,16 @@
 
 (defn clojure-git-ignore
   [{:keys [github-action-path github-workspace] :as options}]
-  (io/copy (io/file github-action-path "resources" ".gitignore")
-           (->file github-workspace ".gitignore"))
-  (git/stage-all github-workspace options)
-  (when (git/need-commit? github-workspace options)
-    (git/commit github-workspace options (format "Update .gitignore"))
-    (git/push github-workspace options)))
+  (let [required-entries (set (line-seq (io/reader (->file github-action-path "resources" ".template-gitignore"))))
+        current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
+        missing-entries (sort (set/difference required-entries current-entries))]
+    (spit (->file github-workspace ".gitignore")
+          (str/join (System/lineSeparator) missing-entries)
+          :append true)
+    (git/stage-all github-workspace options)
+    (when (git/need-commit? github-workspace options)
+      (git/commit github-workspace options (format "Update .gitignore"))
+      (git/push github-workspace options))))
 
 (defn sort-ns
   [{:keys [github-workspace] :as config}]
