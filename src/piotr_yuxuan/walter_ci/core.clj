@@ -35,13 +35,13 @@
       (update-workflow config+github-repository (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
 
 (defn list-licenses
-  [{:keys [github-workspace] :as config}]
+  [{:keys [^File github-workspace] :as config}]
   (with-open [licenses (io/writer (doto (io/file "./doc/Licenses.csv")
                                     io/make-parents))]
     (let [{:keys [exit]} @(process/process "lein licenses :csv"
                                            {:out licenses
                                             :err :inherit
-                                            :dir github-workspace})]
+                                            :dir (.getPath github-workspace)})]
       (assert (zero? exit) "Failed to list licenses.")))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
@@ -50,13 +50,13 @@
     (git/push github-workspace config)))
 
 (defn list-vulnerabilities
-  [{:keys [github-workspace] :as config}]
+  [{:keys [^File github-workspace] :as config}]
   (with-open [vulnerabilities (io/writer (doto (io/file "./doc/Known vulnerabilities.md")
                                            io/make-parents))]
     @(process/process "lein nvd check"
                       {:out vulnerabilities
                        :err :inherit
-                       :dir github-workspace}))
+                       :dir (.getPath github-workspace)}))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
@@ -77,11 +77,11 @@
       (git/push github-workspace options))))
 
 (defn rewrite-idiomatic-simple
-  [{:keys [github-workspace] :as options}]
+  [{:keys [^File github-workspace] :as options}]
   (let [{:keys [exit]} @(process/process "lein kibit --replace"
                                          {:out :inherit
                                           :err :inherit
-                                          :dir github-workspace})]
+                                          :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Failed to apply kibit advices"))
   (git/stage-all github-workspace options)
   (when (git/need-commit? github-workspace options)
@@ -89,11 +89,11 @@
     (git/push github-workspace options)))
 
 (defn sort-ns
-  [{:keys [github-workspace] :as config}]
+  [{:keys [^File github-workspace] :as config}]
   (let [{:keys [exit]} @(process/process "lein ns-sort"
                                          {:out :inherit
                                           :err :inherit
-                                          :dir github-workspace})]
+                                          :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Failed to sort namespaces."))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
@@ -102,11 +102,11 @@
     (git/push github-workspace config)))
 
 (defn update-dependencies-run-tests
-  [{:keys [github-workspace] :as config}]
+  [{:keys [^File github-workspace] :as config}]
   (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
                                          {:out :inherit
                                           :err :inherit
-                                          :dir github-workspace})]
+                                          :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Failed to update versions."))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
@@ -115,11 +115,11 @@
     (git/push github-workspace config)))
 
 (defn run-tests
-  [{:keys [github-workspace]}]
+  [{:keys [^File github-workspace]}]
   (let [{:keys [exit]} @(process/process "lein test"
                                          {:out :inherit
                                           :err :inherit
-                                          :dir github-workspace})]
+                                          :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Tests failed.")))
 
 #_(defn lein-deploy
@@ -138,7 +138,7 @@
         (let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
                                                {:out :inherit
                                                 :err :inherit
-                                                :dir github-workspace})]
+                                                :dir (.getPath github-workspace)})]
           (when-not (zero? exit)
             (println "Deployment failed to" deploy-repository))))))
 

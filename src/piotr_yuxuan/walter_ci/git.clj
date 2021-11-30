@@ -14,7 +14,7 @@
     (spit (format "#!/bin/sh\necho \"${%s}\"\n" secret-name))))
 
 (defn clone
-  [working-directory {:keys [github-repository walter-github-password]}]
+  [^File working-directory {:keys [github-repository walter-github-password]}]
   (with-delete! [askpass (askpass "GIT_PASSWORD")]
     (assert (zero? (:exit @(process/process ["git"
                                              ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
@@ -23,36 +23,36 @@
                                              "."]
                                             {:out :inherit
                                              :err :inherit
-                                             :dir working-directory
+                                             :dir (.getPath working-directory)
                                              :env {"GIT_ASKPASS" (.getAbsolutePath askpass)
                                                    "GIT_PASSWORD" walter-github-password}})))
             "Failed to clone GitHub repository")))
 
 (defn stage-all
-  [working-directory _]
+  [^File working-directory _]
   (assert (zero? (:exit @(process/process "git add --all"
                                           {:out :inherit
                                            :err :inherit
-                                           :dir working-directory})))
+                                           :dir (.getPath working-directory)})))
           "Failed ot add updated files to index."))
 
 (defn need-commit?
-  [working-directory _]
+  [^File working-directory _]
   (let [{:keys [out exit]} @(process/process "git diff --staged"
                                              {:out :slurp
                                               :err :inherit
-                                              :dir working-directory})]
+                                              :dir (.getPath working-directory)})]
     (assert (zero? exit) "Failed to get staged changes in git.")
     (boolean (seq out))))
 
 (defn commit
   "Simple `git commit` and nothing else."
   ;; FIXME https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work
-  [working-directory {:keys [walter-git-email walter-author-name github-actor]} commit-message]
+  [^File working-directory {:keys [walter-git-email walter-author-name github-actor]} commit-message]
   @(process/process ["git" "commit" "-m" commit-message]
                     {:out :inherit
                      :err :inherit
-                     :dir working-directory
+                     :dir (.getPath working-directory)
                      :env {"GIT_COMMITTER_NAME" github-actor
                            "GIT_COMMITTER_EMAIL" walter-git-email
                            "GIT_AUTHOR_NAME" walter-author-name
@@ -60,7 +60,7 @@
 
 (defn push
   "Simple `git push` and nothing else."
-  [working-directory {:keys [walter-github-password]}]
+  [^File working-directory {:keys [walter-github-password]}]
   (with-delete! [askpass (askpass "GIT_PASSWORD")]
     @(process/process ["git"
                        ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
@@ -68,6 +68,6 @@
                        "push"]
                       {:out :inherit
                        :err :inherit
-                       :dir working-directory
+                       :dir (.getPath working-directory)
                        :env {"GIT_PASSWORD" walter-github-password
                              "GIT_ASKPASS" (.getAbsolutePath askpass)}})))
