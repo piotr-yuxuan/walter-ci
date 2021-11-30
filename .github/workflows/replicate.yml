@@ -5,6 +5,9 @@ name: Replicate Walter CI
 jobs:
   replicate-walter-ci:
     runs-on: ubuntu-latest
+    env:
+      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
       - name: Install Clojure
@@ -12,9 +15,13 @@ jobs:
         with:
           cli: latest
           lein: latest
+
+      - name: Run tests
+        uses: piotr-yuxuan/walter-ci@main
+        env:
+          WALTER_COMMAND: run-tests
+
       - name: Walter CI
         uses: piotr-yuxuan/walter-ci@main
         env:
-          WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
-          WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
           WALTER_COMMAND: replicate-walter-ci
