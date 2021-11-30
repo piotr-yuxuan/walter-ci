@@ -76,6 +76,18 @@
       (git/commit github-workspace options (format "Update .gitignore"))
       (git/push github-workspace options))))
 
+(defn rewrite-idiomatic-simple
+  [{:keys [github-workspace] :as options}]
+  (let [{:keys [exit]} @(process/process "lein kibit --replace"
+                                         {:out :inherit
+                                          :err :inherit
+                                          :dir github-workspace})]
+    (assert (zero? exit) "Failed to apply kibit advices"))
+  (git/stage-all github-workspace options)
+  (when (git/need-commit? github-workspace options)
+    (git/commit github-workspace options (format "More idiomatic code"))
+    (git/push github-workspace options)))
+
 (defn sort-ns
   [{:keys [github-workspace] :as config}]
   (let [{:keys [exit]} @(process/process "lein ns-sort"
@@ -137,6 +149,7 @@
         (= :list-licences input-command) (list-licenses config)
         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
         (= :replicate-walter-ci input-command) (replicate-walter-ci config)
-        (= :sort-ns input-command) (sort-ns config)
+        (= :rewrite-idiomatic-simple input-command) (rewrite-idiomatic-simple config)
         (= :run-tests input-command) (run-tests config)
+        (= :sort-ns input-command) (sort-ns config)
         (= :update-dependencies-run-tests input-command) (update-dependencies-run-tests config)))

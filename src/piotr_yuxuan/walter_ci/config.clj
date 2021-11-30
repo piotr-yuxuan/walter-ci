@@ -107,8 +107,9 @@
                       :list-licences
                       :list-vulnerabilities
                       :replicate-walter-ci
-                      :sort-ns
+                      :rewrite-idiomatic-simple
                       :run-tests
+                      :sort-ns
                       :update-dependencies-run-tests]]
      [:managed-repositories [:vector string?]]]))
 
