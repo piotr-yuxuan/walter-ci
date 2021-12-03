@@ -9,8 +9,8 @@
   :pom-addition [:developers [:developer
                               [:name "胡雨軒 Петр"]
                               [:url "https://github.com/piotr-yuxuan"]]]
-  :dependencies [[leiningen "2.9.8"]
-                 [leiningen-core "2.9.8"]
+  :dependencies [[leiningen "2.9.6" :upgrade false]
+                 [leiningen-core "2.9.6" :upgrade false]
                  [clj-commons/clj-yaml "0.7.107"]
                  [vvvvalvalval/supdate "0.2.3"]
                  [clojurewerkz/balagan "1.0.5" :exclusions [org.clojure/clojure]]
@@ -31,9 +31,7 @@
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
              :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
              :dev {:global-vars {*warn-on-reflection* true}}
-             :uberjar {:aot [piotr-yuxuan.walter-ci.main]
-                       :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=false"
-                                  "-Dclojure.compiler.direct-linking=true"]}}
+             :uberjar {:aot [piotr-yuxuan.walter-ci.main]}}
   :deploy-repositories [["clojars" {:sign-releases false
                                     :url "https://clojars.org/repo"
                                     :username :env/WALTER_CLOJARS_USERNAME

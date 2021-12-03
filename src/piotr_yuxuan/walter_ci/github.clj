@@ -11,7 +11,8 @@
             [malli.transform :as mt]
             [malli.util :as mu]
             [medley.core :as medley]
-            [safely.core :refer [safely]]))
+            [safely.core :refer [safely]])
+  (:import (clojure.lang DynamicClassLoader)))
 
 (def Defaults
   (m/schema
@@ -57,9 +58,22 @@
                 ::not-found)))))
       mt/transformer))
 
+(defn ensure-dynamic-classloader!
+  ;; https://github.com/riemann/riemann/pull/892/files#diff-691f7c44e67c3e00a8d2eda28e4b4422535c693efaf6779ce29aa537fef26ceeR109-R115
+  [^Thread current-thread]
+  (let [cl (.getContextClassLoader current-thread)]
+    (when-not (instance? DynamicClassLoader cl)
+      (.setContextClassLoader current-thread (DynamicClassLoader. cl)))))
+
 (defn expected-settings
   [{:keys [github-workspace]}]
-  (let [project (leiningen/read (.getAbsolutePath (io/file github-workspace "project.clj")) [:github])]
+  (let [project (try (ensure-dynamic-classloader! (Thread/currentThread))
+                     (leiningen/read (.getAbsolutePath (io/file github-workspace "project.clj")) [:github])
+                     (catch Throwable th
+                       (println th)
+                       (println (ex-message th))
+                       (println (ex-data th))
+                       (println (ex-cause th))))]
     (m/encode Defaults (-> project
                            (assoc :github/homepage (or (:github/homepage project) (:url project) (:scm (:url project))))
                            (assoc :github/description (or (:github/description project) (:description project))))
@@ -68,33 +82,32 @@
                 mt/strip-extra-keys-transformer))))
 
 (defn apply-settings
-  [config {:github/keys [topics] :as settings}]
-  (let [{:keys [github-api-url github-actor github-repository walter-github-password]} (:env config)]
-    ;; Setting topics through the API is still in preview.
+  [{:keys [github-api-url github-actor github-repository walter-github-password]} {:github/keys [topics] :as settings}]
+  ;; Setting topics through the API is still in preview.
+  (safely
+    (http/request {:request-method :put
+                   :url (str/join "/" [github-api-url "repos" github-repository "topics"])
+                   :body (json/write-value-as-string {:names topics})
+                   :basic-auth [github-actor walter-github-password]
+                   :headers {"Content-Type" "application/json"
+                             "Accept" "application/vnd.github.mercy-preview+json"}})
+    :on-error
+    :max-retries 5)
+  (let [json-settings (m/encode Defaults (dissoc settings :github/topics)
+                                (mt/transformer
+                                  mt/strip-extra-keys-transformer
+                                  request-key-transformer))]
     (safely
-      (http/request {:request-method :put
-                     :url (str/join "/" [github-api-url "repos" github-repository "topics"])
-                     :body (json/write-value-as-string {:names topics})
+      (http/request {:request-method :patch
+                     :url (str/join "/" [github-api-url "repos" github-repository])
+                     :body (json/write-value-as-string json-settings)
                      :basic-auth [github-actor walter-github-password]
                      :headers {"Content-Type" "application/json"
-                               "Accept" "application/vnd.github.mercy-preview+json"}})
+                               "Accept" "application/vnd.github.v3+json"}})
       :on-error
-      :max-retries 5)
-    (let [json-settings (m/encode Defaults (dissoc settings :github/topics)
-                                  (mt/transformer
-                                    mt/strip-extra-keys-transformer
-                                    request-key-transformer))]
-      (safely
-        (http/request {:request-method :patch
-                       :url (str/join "/" [github-api-url "repos" github-repository])
-                       :body (json/write-value-as-string json-settings)
-                       :basic-auth [github-actor walter-github-password]
-                       :headers {"Content-Type" "application/json"
-                                 "Accept" "application/vnd.github.v3+json"}})
-        :on-error
-        :max-retries 5))))
+      :max-retries 5)))
 
 (defn conform-repository
   [config]
-  (-> (expected-settings config)
-      (apply-settings config)))
+  (->> (expected-settings config)
+       (apply-settings config)))
