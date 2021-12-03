@@ -13,7 +13,6 @@
                  [leiningen-core "2.9.6" :upgrade false]
                  [clj-commons/clj-yaml "0.7.107"]
                  [vvvvalvalval/supdate "0.2.3"]
-                 [clojurewerkz/balagan "1.0.5" :exclusions [org.clojure/clojure]]
                  [com.github.piotr-yuxuan/malli-cli "1.0.2"] ; Command-line processing
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [medley "1.3.0"]
