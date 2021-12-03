@@ -11,8 +11,8 @@
 (defn -main
   [& args]
   (let [config (load-config args)]
-    (cond (:show-config? config) (do (clojure.pprint/pprint config))
-          (:help config) (do (println (malli-cli/summary Config)))
+    (cond (:show-config? config) (clojure.pprint/pprint config)
+          (:help config) (println (malli-cli/summary Config))
 
           (not (m/validate Config config))
           (do (println "Invalid configuration value")

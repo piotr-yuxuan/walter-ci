@@ -109,5 +109,4 @@
 
 (defn conform-repository
   [config]
-  (->> (expected-settings config)
-       (apply-settings config)))
+  (apply-settings config (expected-settings config)))
