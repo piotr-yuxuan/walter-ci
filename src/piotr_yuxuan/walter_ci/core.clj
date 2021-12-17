@@ -60,9 +60,7 @@
                          :err :inherit
                          :dir (.getPath github-workspace)}))
     (assert (seq (slurp known-vulnerabilities)) "Unable to report vulnerabilities")
-    (-> (slurp known-vulnerabilities)
-        (str/replace #"\x1b\[[0-9;]*m" "")
-        (spit known-vulnerabilities)))
+    (spit known-vulnerabilities (str/replace (slurp known-vulnerabilities) #"\x1b\[[0-9;]*m" "")))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
