@@ -16,6 +16,14 @@ jobs:
           cli: latest
           lein: latest
 
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Run tests
         uses: piotr-yuxuan/walter-ci@main
         env:
