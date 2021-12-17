@@ -27,16 +27,10 @@
                  ;[vvvvalvalval/supdate "0.2.3"]
                  ]
   :main piotr-yuxuan.walter-ci.main
-  :plugins [[lein-deploy-uberjar "2.0.0"]]
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
              :provided {:dependencies [[org.clojure/clojure "1.10.3"]]}
              :dev {:global-vars {*warn-on-reflection* true}}
-             :uberjar {:aot [piotr-yuxuan.walter-ci.main]}}
-  :deploy-repositories [["clojars" {:sign-releases false
-                                    :url "https://clojars.org/repo"
-                                    :username :env/WALTER_CLOJARS_USERNAME
-                                    :password :env/WALTER_CLOJARS_PASSWORD}]
-                        ["github" {:sign-releases false
-                                   :url "https://maven.pkg.github.com/piotr-yuxuan/walter-ci"
-                                   :username :env/GITHUB_ACTOR
-                                   :password :env/WALTER_GITHUB_PASSWORD}]])
+             :uberjar {:aot :all
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"
+                                  "-Dclojure.compiler.disable-locals-clearing=false"
+                                  "-Dclojure.compiler.elide-meta=[:doc :file :line :added]"]}})
