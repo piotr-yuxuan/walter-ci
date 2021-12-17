@@ -57,10 +57,12 @@
                         {:out vulnerabilities
                          :err :inherit
                          :dir (.getPath github-workspace)}))
-    @(process/process ["sed"
-                       "-i"
-                       "s/\\x1b\\[[0-9;]*m//g"
-                       (.getPath known-vulnerabilities)]))
+    (let [known-vulnerabilities (io/file "./doc/Known vulnerabilities.md")
+          {:keys [exit]} @(process/process ["sed"
+                                            "-i"
+                                            "s/\\x1b\\[[0-9;]*m//g"
+                                            (.getPath known-vulnerabilities)])]
+      (assert (zero? exit) "Failed to remove ANSI colour codes in known vulnerabilities.")))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
