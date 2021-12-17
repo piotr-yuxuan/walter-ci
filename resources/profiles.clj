@@ -6,7 +6,6 @@
                   [lein-cloverage "LATEST"]
                   [lein-kibit "LATEST"]
                   [lein-licenses "0.2.2"]
-                  [nvd-clojure/nvd-clojure "LATEST"]
                   [ns-sort "LATEST"]
                   [mutant "LATEST"] ; source: https://github.com/pithyless/mutant
                   [venantius/yagni "LATEST"]]}
