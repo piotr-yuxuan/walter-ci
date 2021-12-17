@@ -1,5 +1,6 @@
 (ns piotr-yuxuan.walter-ci.secrets
-  (:require [caesium.crypto.box]
+  (:require [byte-streams :as byte-streams]
+            [caesium.crypto.box :as crypto]
             [clj-http.client :as http]
             [clojure.string :as str]
             [jsonista.core :as json]
@@ -29,7 +30,7 @@
 (defn public-key-sealed-box
   [{:keys [^String decoded-key key-id]} ^String secret-value]
   {:encrypted_value (->> (byte-streams/to-byte-array secret-value)
-                         (caesium.crypto.box/anonymous-encrypt decoded-key)
+                         (crypto/anonymous-encrypt decoded-key)
                          (.encodeToString (Base64/getEncoder)))
    :key_id key-id})
 
