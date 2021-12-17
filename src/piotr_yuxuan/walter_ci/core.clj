@@ -51,12 +51,16 @@
 
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
-  (with-open [vulnerabilities (io/writer (doto (io/file "./doc/Known vulnerabilities.md")
-                                           io/make-parents))]
-    @(process/process "lein nvd check"
-                      {:out vulnerabilities
-                       :err :inherit
-                       :dir (.getPath github-workspace)}))
+  (let [^File known-vulnerabilities (doto (io/file "./doc/Known vulnerabilities.md") io/make-parents)]
+    (with-open [vulnerabilities (io/writer known-vulnerabilities)]
+      @(process/process "lein nvd check"
+                        {:out vulnerabilities
+                         :err :inherit
+                         :dir (.getPath github-workspace)}))
+    @(process/process ["sed"
+                       "-i"
+                       "s/\\x1b\\[[0-9;]*m//g"
+                       (.getPath known-vulnerabilities)]))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
