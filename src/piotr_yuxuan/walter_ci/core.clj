@@ -53,7 +53,7 @@
   [{:keys [^File github-workspace] :as config}]
   (let [^File known-vulnerabilities (doto (io/file "./doc/Known vulnerabilities.md") io/make-parents)]
     (with-open [vulnerabilities (io/writer known-vulnerabilities)]
-      @(process/process "clojure -Sdeps \"{:aliases {:nvd {:extra-deps {nvd-clojure/nvd-clojure {:mvn/version \"LATEST\"}}}}}\" -M:nvd -m nvd.task.check"
+      @(process/process "clojure -Sdeps \"{:aliases {:nvd {:extra-deps {nvd-clojure/nvd-clojure {:mvn/version \\\"LATEST\\\"}}}}}\" -M:nvd -m nvd.task.check"
                         {:out vulnerabilities
                          :err :inherit
                          :dir (.getPath github-workspace)}))
