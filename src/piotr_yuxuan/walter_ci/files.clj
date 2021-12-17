@@ -94,7 +94,7 @@
     (vector? bindings) "a vector for its binding"
     (even? (count bindings)) "an even number of forms in binding vector")
   (cond
-    (zero? (count bindings)) `(do ~@body)
+    (zero? (count bindings)) `(unquote-splicing body)
     (symbol? (bindings 0)) `(let ~(subvec bindings 0 2)
                               (try
                                 (with-delete! ~(subvec bindings 2) ~@body)
