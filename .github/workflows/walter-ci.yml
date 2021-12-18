@@ -19,6 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@main
 
+      - name: Package and deploy artifacts
+        if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
+        run:
+          echo "run package"
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
