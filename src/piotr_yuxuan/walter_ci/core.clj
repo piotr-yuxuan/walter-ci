@@ -8,7 +8,8 @@
             [camel-snake-kebab.core :as csk]
             [clojure.java.io :as io]
             [clojure.set :as set]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [leiningen.core.project :as leiningen])
   (:import (java.io File)))
 
 (defn update-workflow
@@ -53,7 +54,9 @@
   [{:keys [^File github-workspace] :as config}]
   (let [^File github-workspace (io/file ".")
         ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
-    (delete! (io/file "./doc/Known vulnerabilities.md") true)
+    (delete! (io/file "./doc/Known vulnerabilities.md") :quiet)
+    (delete! (io/file "./doc/Known vulnerabilities.csv") :quiet)
+    (delete! (io/file "./doc/KNOWN_VULNERABILITIES.md") :quiet)
     (with-open [txt-report-writer (io/writer txt-report)]
       @(process/process ["clojure" "-Sdeps" (pr-str {:aliases {:nvd {:extra-deps {'nvd-clojure/nvd-clojure {:mvn/version "LATEST"}}}}})
                          "-M:nvd"
@@ -128,20 +131,21 @@
                                           :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Tests failed.")))
 
-#_(defn lein-deploy
-    [:keys [github-workspace]]
-    (let [leiningen-project (-> (io/file github-workspace "project.clj")
-                                (.getAbsolutePath)
-                                (leiningen/read [:deploy]))
-          deploy-repositories (->> leiningen-project
-                                   :deploy-repositories
-                                   (map first)
-                                   seq)]
-      (if deploy-repositories
-        (println "Deploying to repositories:" deploy-repositories)
-        (println "No deploy repository found, not deploying."))
-      (doseq [deploy-repository deploy-repositories]
-        (let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
+(defn package-deploy-artifacts
+  [{:keys [github-workspace]}]
+  (let [leiningen-project (-> (io/file github-workspace "project.clj")
+                              (.getAbsolutePath)
+                              (leiningen/read [:deploy]))
+        deploy-repositories (->> leiningen-project
+                                 :deploy-repositories
+                                 (map first)
+                                 seq)]
+    (if deploy-repositories
+      (println "Deploying to repositories:" deploy-repositories)
+      (println "No deploy repositories found, not deploying."))
+    (doseq [deploy-repository deploy-repositories]
+      (println :dry-run ["lein" "deploy" deploy-repository])
+      #_(let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
                                                {:out :inherit
                                                 :err :inherit
                                                 :dir (.getPath github-workspace)})]
@@ -158,4 +162,5 @@
         (= :rewrite-idiomatic-simple input-command) (rewrite-idiomatic-simple config)
         (= :run-tests input-command) (run-tests config)
         (= :sort-ns input-command) (sort-ns config)
+        (= :package-deploy-artifacts input-command) (package-deploy-artifacts config)
         (= :update-dependencies-run-tests input-command) (update-dependencies-run-tests config)))

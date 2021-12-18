@@ -73,3 +73,9 @@ jobs:
         uses: piotr-yuxuan/walter-ci@main
         env:
           WALTER_COMMAND: update-dependencies-run-tests
+
+      - name: Package and deploy artifacts
+        if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
+        uses: piotr-yuxuan/walter-ci@main
+        env:
+          WALTER_COMMAND: package-deploy-artifacts

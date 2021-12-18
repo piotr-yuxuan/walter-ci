@@ -107,6 +107,7 @@
                       :list-licences
                       :list-vulnerabilities
                       :replicate-walter-ci
+                      :package-deploy-artifacts
                       :rewrite-idiomatic-simple
                       :run-tests
                       :sort-ns
