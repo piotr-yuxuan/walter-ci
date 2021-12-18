@@ -52,8 +52,7 @@
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
   (let [^File github-workspace (io/file ".")
-        ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)
-        ^File csv-report (doto (io/file "./doc/Known vulnerabilities.csv") io/make-parents)]
+        ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
     (delete! (io/file "./doc/Known vulnerabilities.md") true)
     (with-open [txt-report-writer (io/writer txt-report)]
       @(process/process ["clojure" "-Sdeps" (pr-str {:aliases {:nvd {:extra-deps {'nvd-clojure/nvd-clojure {:mvn/version "LATEST"}}}}})
@@ -63,9 +62,7 @@
                          :err :inherit
                          :dir (.getPath github-workspace)}))
     ;; Remove ANSI colour codes.
-    (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" ""))
-    (copy! (io/file "target/nvd/dependency-check-report.csv")
-           (io/file csv-report)))
+    (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" "")))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
