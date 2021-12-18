@@ -1,7 +1,7 @@
 (ns piotr-yuxuan.walter-ci.core
   (:require [piotr-yuxuan.utils :refer [deep-merge]]
-            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete!]]
             [piotr-yuxuan.walter-ci.git :as git]
+            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete! copy!]]
             [piotr-yuxuan.walter-ci.github :as github]
             [piotr-yuxuan.walter-ci.secrets :as secret]
             [babashka.process :as process]
@@ -51,16 +51,21 @@
 
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
-  (let [^File known-vulnerabilities (doto (io/file "./doc/Known vulnerabilities.md") io/make-parents)]
-    (with-open [vulnerabilities (io/writer known-vulnerabilities)]
-      @(process/process ["clojure" "-Sdeps" (pr-str (str {:aliases {:nvd {:extra-deps {'nvd-clojure/nvd-clojure {:mvn/version "LATEST"}}}}}))
+  (let [^File github-workspace (io/file ".")
+        ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)
+        ^File csv-report (doto (io/file "./doc/Known vulnerabilities.csv") io/make-parents)]
+    (delete! (io/file "./doc/Known vulnerabilities.md") true)
+    (with-open [txt-report-writer (io/writer txt-report)]
+      @(process/process ["clojure" "-Sdeps" (pr-str {:aliases {:nvd {:extra-deps {'nvd-clojure/nvd-clojure {:mvn/version "LATEST"}}}}})
                          "-M:nvd"
                          "-m" "nvd.task.check"]
-                        {:out vulnerabilities
+                        {:out txt-report-writer
                          :err :inherit
                          :dir (.getPath github-workspace)}))
-    (assert (seq (slurp known-vulnerabilities)) "Unable to report vulnerabilities")
-    (spit known-vulnerabilities (str/replace (slurp known-vulnerabilities) #"\x1b\[[0-9;]*m" "")))
+    ;; Remove ANSI colour codes.
+    (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" ""))
+    (copy! (io/file "target/nvd/dependency-check-report.csv")
+           (io/file csv-report)))
   (git/stage-all github-workspace config)
   (when (git/need-commit? github-workspace config)
     (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
