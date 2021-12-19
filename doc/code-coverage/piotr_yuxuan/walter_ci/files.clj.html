@@ -1,0 +1,320 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../coverage.css"/>  <title> piotr_yuxuan/walter_ci/files.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;piotr-yuxuan.walter-ci.files
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clojure.java.io&nbsp;:as&nbsp;io]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.string&nbsp;:as&nbsp;str])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;(java.io&nbsp;File)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.net&nbsp;URI&nbsp;URL)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(clojure.lang&nbsp;Named)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.nio.file&nbsp;Files&nbsp;Path)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.nio.file.attribute&nbsp;FileAttribute))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;(:gen-class))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                011&nbsp;&nbsp;(defn&nbsp;^File&nbsp;-&gt;file
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&quot;Do-what-I-mean&nbsp;syntactic&nbsp;sugar&nbsp;that&nbsp;return&nbsp;the&nbsp;canonical&nbsp;file&nbsp;for&nbsp;its&nbsp;arguments.&nbsp;Return&nbsp;nil&nbsp;if&nbsp;not&nbsp;possible.&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;([]&nbsp;(-&gt;file&nbsp;&quot;.&quot;))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;([x&nbsp;&amp;&nbsp;r]
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(letfn&nbsp;[(join-seq&nbsp;[c]
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;(flatten&nbsp;c)&nbsp;;&nbsp;Perhaps&nbsp;a&nbsp;legit&nbsp;use&nbsp;case&nbsp;of&nbsp;flatten?
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;path-elem)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(remove&nbsp;nil?)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&#x2F;join&nbsp;(File&#x2F;separator))))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(path-elem&nbsp;[x]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as-&gt;&nbsp;x&nbsp;$
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(instance?&nbsp;Named&nbsp;$)&nbsp;(name&nbsp;$)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(instance?&nbsp;Path&nbsp;$)&nbsp;(.toFile&nbsp;^Path&nbsp;$)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(instance?&nbsp;URI&nbsp;$)&nbsp;(.getPath&nbsp;^URI&nbsp;$)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(instance?&nbsp;URL&nbsp;$)&nbsp;(.getFile&nbsp;^URL&nbsp;$)&nbsp;$)))]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;Try&nbsp;to&nbsp;bring&nbsp;anything&nbsp;in&nbsp;line&nbsp;with&nbsp;the&nbsp;happy&nbsp;path.
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as-&gt;&nbsp;x&nbsp;$
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(seq&nbsp;r)&nbsp;(cons&nbsp;x&nbsp;r)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(sequential?&nbsp;$)&nbsp;(join-seq&nbsp;$)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(path-elem&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(string?&nbsp;$)&nbsp;(io&#x2F;file&nbsp;$)&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(instance?&nbsp;File&nbsp;$)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getCanonicalFile&nbsp;^File&nbsp;$))))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                035&nbsp;&nbsp;(defn&nbsp;^File&nbsp;-&gt;dir
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&quot;Do-what-I-mean&nbsp;syntactic&nbsp;sugar&nbsp;that&nbsp;return&nbsp;the&nbsp;canonical&nbsp;directory&nbsp;file&nbsp;for&nbsp;its&nbsp;arguments.&nbsp;Return&nbsp;nil&nbsp;if&nbsp;not&nbsp;possible.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;([&amp;&nbsp;args]
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-let&nbsp;[^File&nbsp;f&nbsp;(apply&nbsp;-&gt;file&nbsp;args)]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(.isDirectory&nbsp;f)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                041&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                042&nbsp;&nbsp;(defn&nbsp;^File&nbsp;-&gt;tmp-dir
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;([]&nbsp;(-&gt;tmp-dir&nbsp;nil&nbsp;nil))
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;([prefix]&nbsp;(-&gt;tmp-dir&nbsp;prefix&nbsp;nil))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;([prefix&nbsp;file-attributes]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&nbsp;prefix
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^Path&nbsp;(Files&#x2F;createTempDirectory&nbsp;(into-array&nbsp;FileAttribute&nbsp;file-attributes))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.toFile
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getCanonicalFile)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                050&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                051&nbsp;&nbsp;(defn&nbsp;^File&nbsp;-&gt;tmp-file
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;([]&nbsp;(-&gt;tmp-file&nbsp;nil&nbsp;nil&nbsp;nil))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;([suffix]&nbsp;(-&gt;tmp-file&nbsp;nil&nbsp;suffix&nbsp;nil))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;([prefix&nbsp;suffix]&nbsp;(-&gt;tmp-file&nbsp;prefix&nbsp;suffix&nbsp;nil))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;([prefix&nbsp;suffix&nbsp;&amp;&nbsp;file-attributes]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&nbsp;prefix
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^Path&nbsp;(Files&#x2F;createTempFile&nbsp;suffix&nbsp;(into-array&nbsp;FileAttribute&nbsp;file-attributes))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.toFile
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getCanonicalFile)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                060&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="1 out of 2 forms covered">
+                061&nbsp;&nbsp;(defn&nbsp;delete!
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                062&nbsp;&nbsp;&nbsp;&nbsp;&quot;Idempotent&nbsp;procedure&nbsp;that&nbsp;ensures&nbsp;that&nbsp;the&nbsp;argument&nbsp;`file`&nbsp;no&nbsp;longer&nbsp;exists&nbsp;at&nbsp;the&nbsp;end.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                063&nbsp;&nbsp;&nbsp;&nbsp;[^File&nbsp;file&nbsp;&amp;&nbsp;[silently]]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                064&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(.isDirectory&nbsp;file)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;(.listFiles&nbsp;file)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pmap&nbsp;#(delete!&nbsp;%&nbsp;silently))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doall))
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                068&nbsp;&nbsp;&nbsp;&nbsp;(io&#x2F;delete-file&nbsp;file&nbsp;silently)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                069&nbsp;&nbsp;&nbsp;&nbsp;nil)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                070&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="1 out of 2 forms covered">
+                071&nbsp;&nbsp;(defn&nbsp;copy!
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                072&nbsp;&nbsp;&nbsp;&nbsp;[^File&nbsp;source&nbsp;^File&nbsp;target
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                073&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&nbsp;{:keys&nbsp;[callback]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:or&nbsp;{callback&nbsp;(fn&nbsp;[_source&nbsp;_target]&nbsp;nil)}
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:as&nbsp;opts}]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                076&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(.isDirectory&nbsp;source)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;(.listFiles&nbsp;source)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pmap&nbsp;(fn&nbsp;[nested-source]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[nested-target&nbsp;(io&#x2F;file&nbsp;target&nbsp;(.getName&nbsp;^File&nbsp;nested-source))]
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(copy!&nbsp;nested-source&nbsp;nested-target)
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(callback&nbsp;nested-source&nbsp;nested-target))))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doall)
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                083&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;io&#x2F;copy&nbsp;source&nbsp;target&nbsp;opts))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                084&nbsp;&nbsp;&nbsp;&nbsp;nil)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                085&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                086&nbsp;&nbsp;(defmacro&nbsp;with-delete!
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;&quot;bindings&nbsp;=&gt;&nbsp;[name&nbsp;init&nbsp;...]
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                088&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                089&nbsp;&nbsp;&nbsp;&nbsp;Evaluates&nbsp;body&nbsp;in&nbsp;a&nbsp;try&nbsp;expression&nbsp;with&nbsp;names&nbsp;bound&nbsp;to&nbsp;the&nbsp;values
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                090&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;inits,&nbsp;and&nbsp;a&nbsp;`finally`&nbsp;clause&nbsp;that&nbsp;deletes&nbsp;each&nbsp;file&nbsp;in&nbsp;reverse&nbsp;order.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                091&nbsp;&nbsp;&nbsp;&nbsp;{:added&nbsp;&quot;1.0&quot;}
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;[bindings&nbsp;&amp;&nbsp;body]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                093&nbsp;&nbsp;&nbsp;&nbsp;(#&#x27;clojure.core&#x2F;assert-args
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vector?&nbsp;bindings)&nbsp;&quot;a&nbsp;vector&nbsp;for&nbsp;its&nbsp;binding&quot;
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(even?&nbsp;(count&nbsp;bindings))&nbsp;&quot;an&nbsp;even&nbsp;number&nbsp;of&nbsp;forms&nbsp;in&nbsp;binding&nbsp;vector&quot;)
+                </span><br/>
+<span class="partial" title="72 out of 73 forms covered">
+                096&nbsp;&nbsp;&nbsp;&nbsp;(cond
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(zero?&nbsp;(count&nbsp;bindings))&nbsp;`(do&nbsp;:no-kibit&nbsp;~@body)
+                </span><br/>
+<span class="covered" title="10 out of 10 forms covered">
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(symbol?&nbsp;(bindings&nbsp;0))&nbsp;`(let&nbsp;~(subvec&nbsp;bindings&nbsp;0&nbsp;2)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(with-delete!&nbsp;~(subvec&nbsp;bindings&nbsp;2)&nbsp;~@body)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(finally
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(~delete!&nbsp;~(bindings&nbsp;0)))))
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(throw&nbsp;(IllegalArgumentException.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;with-delete&nbsp;only&nbsp;allows&nbsp;Symbols&nbsp;in&nbsp;bindings&quot;))))
+                </span><br/>
+ </body>
+</html>

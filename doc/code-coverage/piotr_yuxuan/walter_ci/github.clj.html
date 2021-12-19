@@ -1,0 +1,344 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../coverage.css"/>  <title> piotr_yuxuan/walter_ci/github.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;piotr-yuxuan.walter-ci.github
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;GitHub&nbsp;repository&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clj-http.client&nbsp;:as&nbsp;http]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.data]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.java.io&nbsp;:as&nbsp;io]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.set]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.string&nbsp;:as&nbsp;str]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[jsonista.core&nbsp;:as&nbsp;json]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[leiningen.core.project&nbsp;:as&nbsp;leiningen]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[malli.core&nbsp;:as&nbsp;m]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[malli.transform&nbsp;:as&nbsp;mt]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[malli.util&nbsp;:as&nbsp;mu]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[medley.core&nbsp;:as&nbsp;medley]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[safely.core&nbsp;:refer&nbsp;[safely]])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;(clojure.lang&nbsp;DynamicClassLoader)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                017&nbsp;&nbsp;(def&nbsp;Defaults
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;(m&#x2F;schema
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:map&nbsp;{:description&nbsp;&quot;It&nbsp;is&nbsp;about&nbsp;GitHub&nbsp;repository,&nbsp;not&nbsp;the&nbsp;way&nbsp;Walter&nbsp;behaves.&quot;}
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;description&nbsp;[string?&nbsp;{:request-key&nbsp;&quot;description&quot;&nbsp;:default&nbsp;nil&nbsp;:description&nbsp;&quot;Description&nbsp;of&nbsp;the&nbsp;GitHub&nbsp;repository.&nbsp;Fallback&nbsp;on&nbsp;:description&nbsp;from&nbsp;the&nbsp;project&nbsp;definition.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;homepage&nbsp;[string?&nbsp;{:request-key&nbsp;&quot;homepage&quot;&nbsp;:default&nbsp;nil&nbsp;:description&nbsp;&quot;URL&nbsp;of&nbsp;the&nbsp;webpage&nbsp;for&nbsp;this&nbsp;project.&nbsp;Fallback&nbsp;on&nbsp;:url&nbsp;then&nbsp;on&nbsp;[:scm&nbsp;:url]&nbsp;from&nbsp;the&nbsp;project&nbsp;definition.&quot;}]]
+                </span><br/>
+<span class="covered" title="12 out of 12 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;topics&nbsp;[:vector&nbsp;{:request-key&nbsp;&quot;topics&quot;&nbsp;:default&nbsp;[]&nbsp;:description&nbsp;&quot;An&nbsp;array&nbsp;of&nbsp;topics&nbsp;to&nbsp;add&nbsp;to&nbsp;the&nbsp;repository.&quot;}&nbsp;string?]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;private?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;private&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Either&nbsp;`true`&nbsp;to&nbsp;make&nbsp;the&nbsp;repository&nbsp;private&nbsp;or&nbsp;`false`&nbsp;to&nbsp;make&nbsp;it&nbsp;public.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;issues?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;has_issues&quot;&nbsp;:default&nbsp;true&nbsp;:description&nbsp;&quot;Enable&nbsp;GitHub&nbsp;issues&nbsp;for&nbsp;this&nbsp;repository.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;projects?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;has_projects&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Enable&nbsp;GitHub&nbsp;projects&nbsp;for&nbsp;this&nbsp;repository.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;wiki?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;has_wiki&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Enable&nbsp;GitHub&nbsp;wiki&nbsp;for&nbsp;this&nbsp;repository.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;template?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;is_template&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Make&nbsp;this&nbsp;repo&nbsp;available&nbsp;as&nbsp;a&nbsp;template&nbsp;repository&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;default-branch&nbsp;[string?&nbsp;{:request-key&nbsp;&quot;default_branch&quot;&nbsp;:default&nbsp;&quot;main&quot;&nbsp;:description&nbsp;&quot;Name&nbsp;of&nbsp;the&nbsp;default&nbsp;git&nbsp;branch.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;allow-squash-merge?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;allow_squash_merge&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Allow&nbsp;squash-merging&nbsp;pull&nbsp;requests&nbsp;on&nbsp;GitHub.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;allow-merge-commit?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;allow_merge_commit&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Allow&nbsp;merging&nbsp;pull&nbsp;requests&nbsp;with&nbsp;a&nbsp;merge&nbsp;commit.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;allow-rebase-merge?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;allow_rebase_merge&quot;&nbsp;:default&nbsp;true&nbsp;:description&nbsp;&quot;Allow&nbsp;rebase-merging&nbsp;pull&nbsp;requests.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;delete-branch-on-merge?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;delete_branch_on_merge&quot;&nbsp;:default&nbsp;true&nbsp;:description&nbsp;&quot;Allow&nbsp;automatically&nbsp;deleting&nbsp;head&nbsp;branches&nbsp;when&nbsp;pull&nbsp;requests&nbsp;are&nbsp;merged.&quot;}]]
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:github&#x2F;archived?&nbsp;[boolean?&nbsp;{:request-key&nbsp;&quot;archived&quot;&nbsp;:default&nbsp;false&nbsp;:description&nbsp;&quot;Mark&nbsp;the&nbsp;GitHub&nbsp;repository&nbsp;as&nbsp;archived.&nbsp;Note:&nbsp;You&nbsp;cannot&nbsp;unarchive&nbsp;repositories&nbsp;through&nbsp;the&nbsp;API.&quot;}]]]))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                035&nbsp;&nbsp;(def&nbsp;request-key-transformer
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&nbsp;{}
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc-in&nbsp;[:encoders&nbsp;:map&nbsp;:compile]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[schema&nbsp;_]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(partial&nbsp;medley&#x2F;map-keys
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(comp&nbsp;:request-key
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m&#x2F;properties
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(partial&nbsp;mu&#x2F;get&nbsp;schema)))))
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc-in&nbsp;[:decoders&nbsp;:map&nbsp;:compile]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[schema&nbsp;_]
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[request-keys&nbsp;(reduce&nbsp;(fn&nbsp;[acc&nbsp;[schema-key&nbsp;val-schema]]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;acc
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;val-schema
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m&#x2F;-children
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m&#x2F;properties
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:request-key)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schema-key))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{}
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(m&#x2F;-entries&nbsp;schema))]
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[m]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dissoc
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(medley.core&#x2F;map-keys&nbsp;(fn&nbsp;[k]&nbsp;(get&nbsp;request-keys&nbsp;k&nbsp;::not-found))&nbsp;m)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::not-found)))))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt&#x2F;transformer))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                060&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                061&nbsp;&nbsp;(defn&nbsp;ensure-dynamic-classloader!
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                062&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;https:&#x2F;&#x2F;github.com&#x2F;riemann&#x2F;riemann&#x2F;pull&#x2F;892&#x2F;files#diff-691f7c44e67c3e00a8d2eda28e4b4422535c693efaf6779ce29aa537fef26ceeR109-R115
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                063&nbsp;&nbsp;&nbsp;&nbsp;[^Thread&nbsp;current-thread]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                064&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[cl&nbsp;(.getContextClassLoader&nbsp;current-thread)]
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(instance?&nbsp;DynamicClassLoader&nbsp;cl)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.setContextClassLoader&nbsp;current-thread&nbsp;(DynamicClassLoader.&nbsp;cl)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                067&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                068&nbsp;&nbsp;(defn&nbsp;expected-settings
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                069&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[github-workspace]}]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                070&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[project&nbsp;(try&nbsp;(ensure-dynamic-classloader!&nbsp;(Thread&#x2F;currentThread))
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(leiningen&#x2F;read&nbsp;(.getAbsolutePath&nbsp;(io&#x2F;file&nbsp;github-workspace&nbsp;&quot;project.clj&quot;))&nbsp;[:github])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;Throwable&nbsp;th
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                073&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;th)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(ex-message&nbsp;th))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(ex-data&nbsp;th))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(ex-cause&nbsp;th))))]
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(m&#x2F;encode&nbsp;Defaults&nbsp;(-&gt;&nbsp;project
+                </span><br/>
+<span class="not-covered" title="0 out of 22 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;:github&#x2F;homepage&nbsp;(or&nbsp;(:github&#x2F;homepage&nbsp;project)&nbsp;(:url&nbsp;project)&nbsp;(:scm&nbsp;(:url&nbsp;project))))
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;:github&#x2F;description&nbsp;(or&nbsp;(:github&#x2F;description&nbsp;project)&nbsp;(:description&nbsp;project))))
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mt&#x2F;transformer
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt&#x2F;default-value-transformer
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt&#x2F;strip-extra-keys-transformer))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                083&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                084&nbsp;&nbsp;(defn&nbsp;apply-settings
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                085&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[github-api-url&nbsp;github-actor&nbsp;github-repository&nbsp;walter-github-password]}&nbsp;{:github&#x2F;keys&nbsp;[topics]&nbsp;:as&nbsp;settings}]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                086&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;Setting&nbsp;topics&nbsp;through&nbsp;the&nbsp;API&nbsp;is&nbsp;still&nbsp;in&nbsp;preview.
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;(safely
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(http&#x2F;request&nbsp;{:request-method&nbsp;:put
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:url&nbsp;(str&#x2F;join&nbsp;&quot;&#x2F;&quot;&nbsp;[github-api-url&nbsp;&quot;repos&quot;&nbsp;github-repository&nbsp;&quot;topics&quot;])
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                090&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:body&nbsp;(json&#x2F;write-value-as-string&nbsp;{:names&nbsp;topics})
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                091&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:basic-auth&nbsp;[github-actor&nbsp;walter-github-password]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:headers&nbsp;{&quot;Content-Type&quot;&nbsp;&quot;application&#x2F;json&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Accept&quot;&nbsp;&quot;application&#x2F;vnd.github.mercy-preview+json&quot;}})
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:on-error
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:max-retries&nbsp;5)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                096&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[json-settings&nbsp;(m&#x2F;encode&nbsp;Defaults&nbsp;(dissoc&nbsp;settings&nbsp;:github&#x2F;topics)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mt&#x2F;transformer
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt&#x2F;strip-extra-keys-transformer
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request-key-transformer))]
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(safely
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(http&#x2F;request&nbsp;{:request-method&nbsp;:patch
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:url&nbsp;(str&#x2F;join&nbsp;&quot;&#x2F;&quot;&nbsp;[github-api-url&nbsp;&quot;repos&quot;&nbsp;github-repository])
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:body&nbsp;(json&#x2F;write-value-as-string&nbsp;json-settings)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:basic-auth&nbsp;[github-actor&nbsp;walter-github-password]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                105&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:headers&nbsp;{&quot;Content-Type&quot;&nbsp;&quot;application&#x2F;json&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                106&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Accept&quot;&nbsp;&quot;application&#x2F;vnd.github.v3+json&quot;}})
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:on-error
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:max-retries&nbsp;5)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                109&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                110&nbsp;&nbsp;(defn&nbsp;conform-repository
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                111&nbsp;&nbsp;&nbsp;&nbsp;[config]
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                112&nbsp;&nbsp;&nbsp;&nbsp;(apply-settings&nbsp;config&nbsp;(expected-settings&nbsp;config)))
+                </span><br/>
+ </body>
+</html>
