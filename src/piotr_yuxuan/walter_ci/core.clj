@@ -33,7 +33,9 @@
         (secret/upsert-value config+github-repository
                              (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
                              (get config secret-name)))
-      (update-workflow config+github-repository (->file github-action-path "resources" "workflows" "walter-ci.yml")))))
+      (doseq [workflow-file [(->file github-action-path "resources" "workflows" "walter-cd.yml")
+                             (->file github-action-path "resources" "workflows" "walter-ci.yml")]]
+        (update-workflow config+github-repository workflow-file)))))
 
 (defn list-licenses
   [{:keys [^File github-workspace] :as config}]
