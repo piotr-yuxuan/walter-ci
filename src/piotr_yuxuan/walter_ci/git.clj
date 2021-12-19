@@ -1,5 +1,6 @@
 (ns piotr-yuxuan.walter-ci.git
   (:require [piotr-yuxuan.walter-ci.files :refer [->tmp-file with-delete!]]
+            [safely.core :refer [safely]]
             [babashka.process :as process])
   (:import (java.io File)
            (java.nio.file.attribute PosixFilePermissions PosixFilePermission)))
@@ -62,12 +63,23 @@
   "Simple `git push` and nothing else."
   [^File working-directory {:keys [walter-github-password]}]
   (with-delete! [askpass (askpass "GIT_PASSWORD")]
-    @(process/process ["git"
-                       ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
-                       "-c" "http.https://github.com/.extraheader="
-                       "push"]
-                      {:out :inherit
-                       :err :inherit
-                       :dir (.getPath working-directory)
-                       :env {"GIT_PASSWORD" walter-github-password
-                             "GIT_ASKPASS" (.getAbsolutePath askpass)}})))
+    (safely
+      (process/check
+        @(process/process "git pull --rebase"
+                          {:out :inherit
+                           :err :inherit
+                           :dir (.getPath working-directory)
+                           :env {"GIT_PASSWORD" walter-github-password
+                                 "GIT_ASKPASS" (.getAbsolutePath askpass)}}))
+      (process/check
+        @(process/process ["git"
+                           ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                           "-c" "http.https://github.com/.extraheader="
+                           "push"]
+                          {:out :inherit
+                           :err :inherit
+                           :dir (.getPath working-directory)
+                           :env {"GIT_PASSWORD" walter-github-password
+                                 "GIT_ASKPASS" (.getAbsolutePath askpass)}}))
+      :on-error
+      :max-retries 5)))
