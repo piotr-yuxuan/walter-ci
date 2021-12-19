@@ -61,7 +61,7 @@
   
 ✔ (defn push
 ?   "Simple `git push` and nothing else."
-?   [^File working-directory {:keys [walter-github-password]}]
+?   [^File working-directory {:keys [walter-github-password walter-git-email walter-author-name github-actor]}]
 ✘   (with-delete! [askpass (askpass "GIT_PASSWORD")]
 ✘     (safely
 ✘       (process/check
@@ -69,7 +69,11 @@
 ✘                           {:out :inherit
 ?                            :err :inherit
 ✘                            :dir (.getPath working-directory)
-✘                            :env {"GIT_PASSWORD" walter-github-password
+✘                            :env {"GIT_COMMITTER_NAME" github-actor
+✘                                  "GIT_COMMITTER_EMAIL" walter-git-email
+✘                                  "GIT_AUTHOR_NAME" walter-author-name
+✘                                  "GIT_AUTHOR_EMAIL" walter-git-email
+✘                                  "GIT_PASSWORD" walter-github-password
 ✘                                  "GIT_ASKPASS" (.getAbsolutePath askpass)}}))
 ✘       (process/check
 ✘         @(process/process ["git"
