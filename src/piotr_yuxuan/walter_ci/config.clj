@@ -103,6 +103,7 @@
      [:input-command [:enum {:decode/string keyword
                              :env-var "WALTER_COMMAND"}
                       :clojure-git-ignore
+                      :code-coverage
                       :conform-repository
                       :list-licences
                       :list-vulnerabilities

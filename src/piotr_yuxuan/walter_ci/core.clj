@@ -85,6 +85,17 @@
       (git/commit github-workspace options (format "Update .gitignore"))
       (git/push github-workspace options))))
 
+(defn code-coverage
+  [{:keys [^File github-workspace] :as options}]
+  @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text"]
+                    {:out :inherit
+                     :err :inherit
+                     :dir (.getPath github-workspace)})
+  (git/stage-all github-workspace options)
+  (when (git/need-commit? github-workspace options)
+    (git/commit github-workspace options (format "Update code coverage"))
+    (git/push github-workspace options)))
+
 (defn rewrite-idiomatic-simple
   [{:keys [^File github-workspace] :as options}]
   (let [{:keys [exit]} @(process/process "lein kibit --replace"
@@ -155,6 +166,7 @@
 (defn start
   [{:keys [input-command] :as config}]
   (cond (= :clojure-git-ignore input-command) (clojure-git-ignore config)
+        (= :code-coverage input-command) (code-coverage config)
         (= :conform-repository input-command) (github/conform-repository config)
         (= :list-licences input-command) (list-licenses config)
         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
