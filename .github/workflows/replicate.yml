@@ -1,7 +1,10 @@
-name: Replicate Walter CI
+name: Replicate Walter workflows
 'on':
   push:
-    branches: '*'
+    branches: 'main'
+    paths:
+      - resources/workflows/walter-cd.yml
+      - resources/workflows/walter-ci.yml
 jobs:
   replicate-walter-ci:
     runs-on: ubuntu-latest
@@ -31,5 +34,6 @@ jobs:
 
       - name: Walter CI
         uses: piotr-yuxuan/walter-ci@main
+        if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
         env:
           WALTER_COMMAND: replicate-walter-ci
