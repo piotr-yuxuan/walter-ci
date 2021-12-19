@@ -91,6 +91,7 @@
 ✘                     {:out :inherit
 ?                      :err :inherit
 ✘                      :dir (.getPath github-workspace)})
+✘   (git/stage-all github-workspace options)
 ✘   (when (git/need-commit? github-workspace options)
 ✘     (git/commit github-workspace options (format "Update code coverage"))
 ✘     (git/push github-workspace options)))

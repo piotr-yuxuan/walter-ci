@@ -283,257 +283,260 @@
 <span class="not-covered" title="0 out of 1 forms covered">
                 093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})
                 </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;options)
+                </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                094&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;options)
+                095&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;options)
                 </span><br/>
 <span class="not-covered" title="0 out of 7 forms covered">
-                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;options&nbsp;(format&nbsp;&quot;Update&nbsp;code&nbsp;coverage&quot;))
+                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;options&nbsp;(format&nbsp;&quot;Update&nbsp;code&nbsp;coverage&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;options)))
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;options)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                097&nbsp;&nbsp;
+                098&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                098&nbsp;&nbsp;(defn&nbsp;rewrite-idiomatic-simple
+                099&nbsp;&nbsp;(defn&nbsp;rewrite-idiomatic-simple
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                099&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;options}]
+                100&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;options}]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                100&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;kibit&nbsp;--replace&quot;
+                101&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;kibit&nbsp;--replace&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
+                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
                 </span><br/>
 <span class="not-covered" title="0 out of 15 forms covered">
-                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;apply&nbsp;kibit&nbsp;advices&quot;))
+                105&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;apply&nbsp;kibit&nbsp;advices&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                105&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;options)
+                106&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;options)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                106&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;options)
+                107&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;options)
                 </span><br/>
 <span class="not-covered" title="0 out of 7 forms covered">
-                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;options&nbsp;(format&nbsp;&quot;More&nbsp;idiomatic&nbsp;code&quot;))
+                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;options&nbsp;(format&nbsp;&quot;More&nbsp;idiomatic&nbsp;code&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;options)))
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;options)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                109&nbsp;&nbsp;
+                110&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                110&nbsp;&nbsp;(defn&nbsp;sort-ns
+                111&nbsp;&nbsp;(defn&nbsp;sort-ns
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                111&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;config}]
+                112&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;config}]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                112&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;ns-sort&quot;
+                113&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;ns-sort&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
+                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
+                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
+                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
                 </span><br/>
 <span class="not-covered" title="0 out of 15 forms covered">
-                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;sort&nbsp;namespaces.&quot;))
+                117&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;sort&nbsp;namespaces.&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                117&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;config)
+                118&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                118&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;config)
+                119&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 21 forms covered">
-                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;(:exit&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;config&nbsp;&quot;Sort&nbsp;namespaces&quot;)))
+                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;(:exit&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;config&nbsp;&quot;Sort&nbsp;namespaces&quot;)))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Failed&nbsp;to&nbsp;commit&nbsp;sorted&nbsp;namespaces.&quot;)
+                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Failed&nbsp;to&nbsp;commit&nbsp;sorted&nbsp;namespaces.&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;config)))
+                122&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;config)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                122&nbsp;&nbsp;
+                123&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                123&nbsp;&nbsp;(defn&nbsp;update-dependencies-run-tests
+                124&nbsp;&nbsp;(defn&nbsp;update-dependencies-run-tests
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                124&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;config}]
+                125&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]&nbsp;:as&nbsp;config}]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                125&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;ancient&nbsp;upgrade&nbsp;:all&nbsp;:check-clojure&quot;
+                126&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;ancient&nbsp;upgrade&nbsp;:all&nbsp;:check-clojure&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
+                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
+                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
+                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
                 </span><br/>
 <span class="not-covered" title="0 out of 15 forms covered">
-                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;update&nbsp;versions.&quot;))
+                130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Failed&nbsp;to&nbsp;update&nbsp;versions.&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                130&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;config)
+                131&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;stage-all&nbsp;github-workspace&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                131&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;config)
+                132&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(git&#x2F;need-commit?&nbsp;github-workspace&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 21 forms covered">
-                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;(:exit&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;config&nbsp;&quot;Update&nbsp;versions&quot;)))
+                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;(:exit&nbsp;(git&#x2F;commit&nbsp;github-workspace&nbsp;config&nbsp;&quot;Update&nbsp;versions&quot;)))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Failed&nbsp;to&nbsp;commit&nbsp;updated&nbsp;dependencies.&quot;)
+                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Failed&nbsp;to&nbsp;commit&nbsp;updated&nbsp;dependencies.&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;config)))
+                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(git&#x2F;push&nbsp;github-workspace&nbsp;config)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                135&nbsp;&nbsp;
+                136&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                136&nbsp;&nbsp;(defn&nbsp;run-tests
+                137&nbsp;&nbsp;(defn&nbsp;run-tests
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                137&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]}]
+                138&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[^File&nbsp;github-workspace]}]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                138&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;test&quot;
+                139&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;&quot;lein&nbsp;test&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
+                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
+                141&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                141&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
+                142&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
                 </span><br/>
 <span class="not-covered" title="0 out of 15 forms covered">
-                142&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Tests&nbsp;failed.&quot;)))
+                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(zero?&nbsp;exit)&nbsp;&quot;Tests&nbsp;failed.&quot;)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                143&nbsp;&nbsp;
+                144&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                144&nbsp;&nbsp;(defn&nbsp;package-deploy-artifacts
+                145&nbsp;&nbsp;(defn&nbsp;package-deploy-artifacts
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                145&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[github-workspace]}]
+                146&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[github-workspace]}]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                146&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[leiningen-project&nbsp;(-&gt;&nbsp;(io&#x2F;file&nbsp;github-workspace&nbsp;&quot;project.clj&quot;)
+                147&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[leiningen-project&nbsp;(-&gt;&nbsp;(io&#x2F;file&nbsp;github-workspace&nbsp;&quot;project.clj&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                147&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getAbsolutePath)
+                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getAbsolutePath)
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(leiningen&#x2F;read&nbsp;[:deploy]))
+                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(leiningen&#x2F;read&nbsp;[:deploy]))
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deploy-repositories&nbsp;(-&gt;&gt;&nbsp;leiningen-project
+                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deploy-repositories&nbsp;(-&gt;&gt;&nbsp;leiningen-project
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:deploy-repositories
+                151&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:deploy-repositories
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                151&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;first)
+                152&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;first)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                152&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seq)]
+                153&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seq)]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                153&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;deploy-repositories
+                154&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;deploy-repositories
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                154&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;Deploying&nbsp;to&nbsp;repositories:&quot;&nbsp;deploy-repositories)
+                155&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;Deploying&nbsp;to&nbsp;repositories:&quot;&nbsp;deploy-repositories)
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                155&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;No&nbsp;deploy&nbsp;repositories&nbsp;found,&nbsp;not&nbsp;deploying.&quot;))
+                156&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;No&nbsp;deploy&nbsp;repositories&nbsp;found,&nbsp;not&nbsp;deploying.&quot;))
                 </span><br/>
 <span class="not-covered" title="0 out of 31 forms covered">
-                156&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(doseq&nbsp;[deploy-repository&nbsp;deploy-repositories]
+                157&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(doseq&nbsp;[deploy-repository&nbsp;deploy-repositories]
                 </span><br/>
 <span class="not-covered" title="0 out of 14 forms covered">
-                157&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;:dry-run&nbsp;[&quot;lein&quot;&nbsp;&quot;deploy&quot;&nbsp;deploy-repository])
+                158&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;:dry-run&nbsp;[&quot;lein&quot;&nbsp;&quot;deploy&quot;&nbsp;deploy-repository])
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                158&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#_(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;[&quot;lein&quot;&nbsp;&quot;deploy&quot;&nbsp;deploy-repository]
+                159&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#_(let&nbsp;[{:keys&nbsp;[exit]}&nbsp;@(process&#x2F;process&nbsp;[&quot;lein&quot;&nbsp;&quot;deploy&quot;&nbsp;deploy-repository]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                159&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
+                160&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:out&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                160&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
+                161&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:err&nbsp;:inherit
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                161&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
+                162&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:dir&nbsp;(.getPath&nbsp;github-workspace)})]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                162&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(zero?&nbsp;exit)
+                163&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(zero?&nbsp;exit)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                163&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;Deployment&nbsp;failed&nbsp;to&quot;&nbsp;deploy-repository))))))
+                164&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;&quot;Deployment&nbsp;failed&nbsp;to&quot;&nbsp;deploy-repository))))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                164&nbsp;&nbsp;
+                165&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                165&nbsp;&nbsp;(defn&nbsp;start
+                166&nbsp;&nbsp;(defn&nbsp;start
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                166&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[input-command]&nbsp;:as&nbsp;config}]
+                167&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[input-command]&nbsp;:as&nbsp;config}]
                 </span><br/>
 <span class="not-covered" title="0 out of 18 forms covered">
-                167&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(=&nbsp;:clojure-git-ignore&nbsp;input-command)&nbsp;(clojure-git-ignore&nbsp;config)
+                168&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(=&nbsp;:clojure-git-ignore&nbsp;input-command)&nbsp;(clojure-git-ignore&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                168&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:code-coverage&nbsp;input-command)&nbsp;(code-coverage&nbsp;config)
+                169&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:code-coverage&nbsp;input-command)&nbsp;(code-coverage&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                169&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:conform-repository&nbsp;input-command)&nbsp;(github&#x2F;conform-repository&nbsp;config)
+                170&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:conform-repository&nbsp;input-command)&nbsp;(github&#x2F;conform-repository&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                170&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:list-licences&nbsp;input-command)&nbsp;(list-licenses&nbsp;config)
+                171&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:list-licences&nbsp;input-command)&nbsp;(list-licenses&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                171&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:list-vulnerabilities&nbsp;input-command)&nbsp;(list-vulnerabilities&nbsp;config)
+                172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:list-vulnerabilities&nbsp;input-command)&nbsp;(list-vulnerabilities&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:replicate-walter-ci&nbsp;input-command)&nbsp;(replicate-walter-ci&nbsp;config)
+                173&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:replicate-walter-ci&nbsp;input-command)&nbsp;(replicate-walter-ci&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                173&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:rewrite-idiomatic-simple&nbsp;input-command)&nbsp;(rewrite-idiomatic-simple&nbsp;config)
+                174&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:rewrite-idiomatic-simple&nbsp;input-command)&nbsp;(rewrite-idiomatic-simple&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                174&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:run-tests&nbsp;input-command)&nbsp;(run-tests&nbsp;config)
+                175&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:run-tests&nbsp;input-command)&nbsp;(run-tests&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                175&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:sort-ns&nbsp;input-command)&nbsp;(sort-ns&nbsp;config)
+                176&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:sort-ns&nbsp;input-command)&nbsp;(sort-ns&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                176&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:package-deploy-artifacts&nbsp;input-command)&nbsp;(package-deploy-artifacts&nbsp;config)
+                177&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:package-deploy-artifacts&nbsp;input-command)&nbsp;(package-deploy-artifacts&nbsp;config)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                177&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:update-dependencies-run-tests&nbsp;input-command)&nbsp;(update-dependencies-run-tests&nbsp;config)))
+                178&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;:update-dependencies-run-tests&nbsp;input-command)&nbsp;(update-dependencies-run-tests&nbsp;config)))
                 </span><br/>
  </body>
 </html>
