@@ -80,7 +80,7 @@
         current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
         missing-entries (sort (set/difference required-entries current-entries))]
     (spit (->file github-workspace ".gitignore")
-          (str/join (System/lineSeparator) missing-entries)
+          (str/join \n missing-entries)
           :append true)
     (git/stage-all github-workspace options)
     (when (git/need-commit? github-workspace options)
