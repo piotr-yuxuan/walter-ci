@@ -54,8 +54,7 @@
 
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
-  (let [^File github-workspace (io/file ".")
-        ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
+  (let [^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
     (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
                                             {:out :inherit
                                              :err :inherit
@@ -90,7 +89,7 @@
 
 (defn code-coverage
   [{:keys [^File github-workspace] :as options}]
-  @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text"]
+  @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text" "--no-html"]
                     {:out :inherit
                      :err :inherit
                      :dir (.getPath github-workspace)})
