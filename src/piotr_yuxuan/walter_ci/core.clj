@@ -56,16 +56,17 @@
   [{:keys [^File github-workspace] :as config}]
   (let [^File github-workspace (io/file ".")
         ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
-    (delete! (io/file "./doc/Known vulnerabilities.md") :quiet)
-    (delete! (io/file "./doc/Known vulnerabilities.csv") :quiet)
-    (delete! (io/file "./doc/KNOWN_VULNERABILITIES.md") :quiet)
+    (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
+                                            {:out :inherit
+                                             :err :inherit
+                                             :dir "."})))
+            "Failed to install nvd-clojure")
     (with-open [txt-report-writer (io/writer txt-report)]
-      @(process/process ["clojure" "-Sdeps" (pr-str {:aliases {:nvd {:extra-deps {'nvd-clojure/nvd-clojure {:mvn/version "LATEST"}}}}})
-                         "-M:nvd"
-                         "-m" "nvd.task.check"]
-                        {:out txt-report-writer
-                         :err :inherit
-                         :dir (.getPath github-workspace)}))
+      (assert (zero? (:exit @(process/process (pr-str "clojure -J-Dclojure.main.report=stderr -Tnvd nvd.task/check :classpath '\"'\"$(clojure -Spath -A:any:aliases)\"'\"'")
+                                              {:out txt-report-writer
+                                               :err :inherit
+                                               :dir (.getPath github-workspace)})))
+              "Failed to analyse vulnerabilities"))
     ;; Remove ANSI colour codes.
     (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" "")))
   (git/stage-all github-workspace config)
