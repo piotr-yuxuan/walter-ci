@@ -15,7 +15,7 @@
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [clj-http "3.12.3" :exclusions [riddley]]
                  [com.github.piotr-yuxuan/malli-cli "1.0.2"] ; Command-line processing
-                 [babashka/process "0.0.2"]
+                 [babashka/process "0.1.0"]
                  [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.7.5"]
                  [caesium "0.14.0"]
