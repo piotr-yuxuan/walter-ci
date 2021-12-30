@@ -19,7 +19,7 @@ jobs:
   conform-repository:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -45,7 +45,7 @@ jobs:
   update-git-ignore:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -71,7 +71,7 @@ jobs:
   sort-ns:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -97,7 +97,7 @@ jobs:
   list-vulnerabilities:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -123,7 +123,7 @@ jobs:
   code-coverage:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -149,7 +149,7 @@ jobs:
   rewrite-idiomatic-simple:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
@@ -175,7 +175,7 @@ jobs:
   update-dependencies-run-tests:
     runs-on: ubuntu-latest
     env:
-      WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+      WALTER_GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
     steps:
       - uses: actions/checkout@main
