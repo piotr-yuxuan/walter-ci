@@ -23,7 +23,7 @@
 ✘       (git/commit working-directory options (format "Update %s" (.getName workflow-file)))
 ✘       (git/push working-directory options))))
   
-✔ (defn replicate-walter-ci
+✔ (defn deploy-walter-ci
 ?   [{:keys [github-action-path managed-repositories] :as config}]
 ✘   (doseq [github-repository managed-repositories]
 ✘     (let [config+github-repository (assoc config :github-repository github-repository)]
@@ -52,17 +52,41 @@
 ?             "Failed to commit license list.")
 ✘     (git/push github-workspace config)))
   
+✔ (defn wrap-escaped-around
+?   [^String s & qs]
+✘   {:pre [(every? #{:single-quote :double-quote} qs)]}
+✘   (let [quotes {:single-quote \'
+?                 :double-quote \"}]
+✘     (->> (map quotes qs)
+✘          (reduce (fn [s q] (str q s q)) s))))
+  
+✔ (defn nvd-classpath
+?   [{:keys [^File github-workspace]}]
+✘   (-> (process/process "clojure -Spath -A:any:aliases"
+✘                        {:out :string
+?                         :err :string
+✘                         :dir (.getPath github-workspace)})
+✘       ^babashka.process.Process deref
+?       .out
+✘       (wrap-escaped-around :double-quote
+?                            :single-quote
+?                            :double-quote)
+✘       pr-str))
+  
+✔ (defn install-nvd
+?   [{:keys [^File github-workspace]}]
+✘   (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
+✘                                           {:out :inherit
+?                                            :err :inherit
+✘                                            :dir (.getPath github-workspace)})))
+?           "Failed to install nvd-clojure"))
+  
 ✔ (defn list-vulnerabilities
 ?   [{:keys [^File github-workspace] :as config}]
-✘   (let [^File github-workspace (io/file ".")
-✘         ^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
-✘     (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
-✘                                             {:out :inherit
-?                                              :err :inherit
-?                                              :dir "."})))
-?             "Failed to install nvd-clojure")
+✘   (install-nvd config)
+✘   (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
 ✘     (with-open [txt-report-writer (io/writer txt-report)]
-✘       (assert (zero? (:exit @(process/process (pr-str "clojure -J-Dclojure.main.report=stderr -Tnvd nvd.task/check :classpath '\"'\"$(clojure -Spath -A:any:aliases)\"'\"'")
+✘       (assert (zero? (:exit @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-classpath config)]
 ✘                                               {:out txt-report-writer
 ?                                                :err :inherit
 ✘                                                :dir (.getPath github-workspace)})))
@@ -90,7 +114,7 @@
   
 ~ (defn code-coverage
 ?   [{:keys [^File github-workspace] :as options}]
-✘   @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text"]
+✘   @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text" "--no-html"]
 ✘                     {:out :inherit
 ?                      :err :inherit
 ✘                      :dir (.getPath github-workspace)})
@@ -174,7 +198,7 @@
 ✘         (= :list-licences input-command) (list-licenses config)
 ✘         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
 ✘         (= :package-deploy-artifacts input-command) (package-deploy-artifacts config)
-✘         (= :replicate-walter-ci input-command) (replicate-walter-ci config)
+✘         (= :deploy-walter-ci input-command) (deploy-walter-ci config)
 ✘         (= :rewrite-idiomatic-simple input-command) (rewrite-idiomatic-simple config)
 ✘         (= :run-tests input-command) (run-tests config)
 ✘         (= :sort-ns input-command) (sort-ns config)

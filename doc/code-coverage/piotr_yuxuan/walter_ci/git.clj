@@ -40,7 +40,7 @@
 ✔ (defn need-commit?
 ?   [^File working-directory _]
 ✘   (let [{:keys [out exit]} @(process/process "git diff --staged"
-✘                                              {:out :slurp
+✘                                              {:out :string
 ?                                               :err :inherit
 ✘                                               :dir (.getPath working-directory)})]
 ✘     (assert (zero? exit) "Failed to get staged changes in git.")
