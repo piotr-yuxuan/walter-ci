@@ -52,16 +52,41 @@
             "Failed to commit license list.")
     (git/push github-workspace config)))
 
+(defn wrap-escaped-around
+  [^String s & qs]
+  {:pre [(every? #{:single-quote :double-quote} qs)]}
+  (let [quotes {:single-quote \'
+                :double-quote \"}]
+    (->> (map quotes qs)
+         (reduce (fn [s q] (str q s q)) s))))
+
+(defn nvd-classpath
+  [{:keys [^File github-workspace]}]
+  (-> (process/process "clojure -Spath -A:any:aliases"
+                       {:out :string
+                        :err :string
+                        :dir (.getPath github-workspace)})
+      ^babashka.process.Process deref
+      .out
+      (wrap-escaped-around :double-quote
+                           :single-quote
+                           :double-quote)
+      pr-str))
+
+(defn install-nvd
+  [{:keys [^File github-workspace]}]
+  (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
+                                          {:out :inherit
+                                           :err :inherit
+                                           :dir (.getPath github-workspace)})))
+          "Failed to install nvd-clojure"))
+
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
+  (install-nvd config)
   (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
-    (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
-                                            {:out :inherit
-                                             :err :inherit
-                                             :dir "."})))
-            "Failed to install nvd-clojure")
     (with-open [txt-report-writer (io/writer txt-report)]
-      (assert (zero? (:exit @(process/process "clojure -J-Dclojure.main.report=stderr -Tnvd nvd.task/check :classpath '\"'\"$(clojure -Spath -A:any:aliases)\"'\"'"
+      (assert (zero? (:exit @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-classpath config)]
                                               {:out txt-report-writer
                                                :err :inherit
                                                :dir (.getPath github-workspace)})))
