@@ -61,7 +61,7 @@
                                              :dir "."})))
             "Failed to install nvd-clojure")
     (with-open [txt-report-writer (io/writer txt-report)]
-      (assert (zero? (:exit @(process/process (pr-str "clojure -J-Dclojure.main.report=stderr -Tnvd nvd.task/check :classpath '\"'\"$(clojure -Spath -A:any:aliases)\"'\"'")
+      (assert (zero? (:exit @(process/process "clojure -J-Dclojure.main.report=stderr -Tnvd nvd.task/check :classpath '\"'\"$(clojure -Spath -A:any:aliases)\"'\"'"
                                               {:out txt-report-writer
                                                :err :inherit
                                                :dir (.getPath github-workspace)})))
