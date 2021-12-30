@@ -13,7 +13,7 @@ name: Walter CI
 
 concurrency:
   group: walter-ci
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   conform-repository:
