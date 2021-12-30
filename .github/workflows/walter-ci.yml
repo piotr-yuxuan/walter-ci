@@ -10,8 +10,12 @@ name: Walter CI
     branches: '*'
   schedule:
     - cron: "28 6,18 * * *"
-jobs:
 
+concurrency:
+  group: walter-ci
+  cancel-in-progress: true
+
+jobs:
   conform-repository:
     runs-on: ubuntu-latest
     env:

@@ -1,12 +1,22 @@
-name: Replicate Walter workflows
+name: Deploy Walter
 'on':
+  workflow_dispatch:
+  repository_dispatch:
   push:
     branches: 'main'
     paths:
       - resources/workflows/walter-cd.yml
       - resources/workflows/walter-ci.yml
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
 jobs:
-  replicate-walter-ci:
+  deploy-walter-ci:
+    environment:
+      name: production
+      url: https://github.com/piotr-yuxuan/walter-ci/releases
     runs-on: ubuntu-latest
     env:
       WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
@@ -27,13 +37,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Run tests
-        uses: piotr-yuxuan/walter-ci@main
-        env:
-          WALTER_COMMAND: run-tests
-
       - name: Walter CI
         uses: piotr-yuxuan/walter-ci@main
         if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
         env:
-          WALTER_COMMAND: replicate-walter-ci
+          WALTER_COMMAND: deploy-walter-ci

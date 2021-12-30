@@ -8,6 +8,11 @@ name: Walter CD
 'on':
   push:
     branches: '*'
+
+concurrency:
+  group: walter-cd
+  cancel-in-progress: true
+
 jobs:
   run-tests:
     runs-on: ubuntu-latest

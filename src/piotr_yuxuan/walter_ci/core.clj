@@ -23,7 +23,7 @@
       (git/commit working-directory options (format "Update %s" (.getName workflow-file)))
       (git/push working-directory options))))
 
-(defn replicate-walter-ci
+(defn deploy-walter-ci
   [{:keys [github-action-path managed-repositories] :as config}]
   (doseq [github-repository managed-repositories]
     (let [config+github-repository (assoc config :github-repository github-repository)]
@@ -54,7 +54,7 @@
 
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
-  (let [^File txt-report (doto (io/file "./doc/Known vulnerabilities.txt") io/make-parents)]
+  (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
     (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
                                             {:out :inherit
                                              :err :inherit
@@ -173,7 +173,7 @@
         (= :list-licences input-command) (list-licenses config)
         (= :list-vulnerabilities input-command) (list-vulnerabilities config)
         (= :package-deploy-artifacts input-command) (package-deploy-artifacts config)
-        (= :replicate-walter-ci input-command) (replicate-walter-ci config)
+        (= :deploy-walter-ci input-command) (deploy-walter-ci config)
         (= :rewrite-idiomatic-simple input-command) (rewrite-idiomatic-simple config)
         (= :run-tests input-command) (run-tests config)
         (= :sort-ns input-command) (sort-ns config)
