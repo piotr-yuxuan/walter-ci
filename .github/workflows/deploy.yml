@@ -5,6 +5,7 @@ name: Deploy Walter
   push:
     branches: 'main'
     paths:
+      - resources/workflows/deploy.yml
       - resources/workflows/walter-cd.yml
       - resources/workflows/walter-ci.yml
 
