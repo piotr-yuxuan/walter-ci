@@ -57,8 +57,7 @@
 ✘   {:pre [(every? #{:single-quote :double-quote} qs)]}
 ✘   (let [quotes {:single-quote \'
 ?                 :double-quote \"}]
-✘     (->> (map quotes qs)
-✘          (reduce (fn [s q] (str q s q)) s))))
+✘     (reduce (fn [s q] (str q s q)) s (map quotes qs))))
   
 ✔ (defn nvd-classpath
 ?   [{:keys [^File github-workspace]}]
