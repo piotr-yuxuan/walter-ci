@@ -1,7 +1,8 @@
 (ns piotr-yuxuan.walter-ci.github
   "GitHub repository"
-  (:require [clj-http.client :as http]
-            [piotr-yuxuan.walter-ci.files :refer [->file]]
+  (:require [piotr-yuxuan.walter-ci.files :refer [->file]]
+            [piotr-yuxuan.walter-ci.git :as git]
+            [clj-http.client :as http]
             [clojure.data]
             [clojure.java.io :as io]
             [clojure.set]
@@ -12,8 +13,7 @@
             [malli.transform :as mt]
             [malli.util :as mu]
             [medley.core :as medley]
-            [safely.core :refer [safely]]
-            [piotr-yuxuan.walter-ci.git :as git])
+            [safely.core :refer [safely]])
   (:import (clojure.lang DynamicClassLoader)))
 
 (def Defaults
