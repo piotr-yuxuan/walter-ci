@@ -1,6 +1,7 @@
 (ns piotr-yuxuan.walter-ci.github
   "GitHub repository"
   (:require [clj-http.client :as http]
+            [piotr-yuxuan.walter-ci.files :refer [->file]]
             [clojure.data]
             [clojure.java.io :as io]
             [clojure.set]
@@ -11,7 +12,8 @@
             [malli.transform :as mt]
             [malli.util :as mu]
             [medley.core :as medley]
-            [safely.core :refer [safely]])
+            [safely.core :refer [safely]]
+            [piotr-yuxuan.walter-ci.git :as git])
   (:import (clojure.lang DynamicClassLoader)))
 
 (def Defaults
@@ -67,13 +69,8 @@
 
 (defn expected-settings
   [{:keys [github-workspace]}]
-  (let [project (try (ensure-dynamic-classloader! (Thread/currentThread))
-                     (leiningen/read (.getAbsolutePath (io/file github-workspace "project.clj")) [:github])
-                     (catch Throwable th
-                       (println th)
-                       (println (ex-message th))
-                       (println (ex-data th))
-                       (println (ex-cause th))))]
+  (ensure-dynamic-classloader! (Thread/currentThread))
+  (let [project (leiningen/read (.getAbsolutePath (io/file github-workspace "project.clj")) [:github])]
     (m/encode Defaults (-> project
                            (assoc :github/homepage (or (:github/homepage project) (:url project) (:scm (:url project))))
                            (assoc :github/description (or (:github/description project) (:description project))))
@@ -108,5 +105,13 @@
       :max-retries 5)))
 
 (defn conform-repository
-  [config]
+  [{:keys [working-directory] :as config}]
+  (doseq [github-file ["FUNDING.yml"
+                       "CODEOWNERS.yml"]]
+    (io/copy (->file (io/resource github-file))
+             (doto (->file working-directory ".github" "FUNDING.yml") io/make-parents))
+    (git/stage-all working-directory config)
+    (when (git/need-commit? working-directory config)
+      (git/commit working-directory config (format "Update %s" github-file))))
+  (git/push working-directory config)
   (apply-settings config (expected-settings config)))
