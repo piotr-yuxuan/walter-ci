@@ -108,8 +108,8 @@
   [{:keys [working-directory] :as config}]
   (doseq [github-file ["FUNDING.yml"
                        "CODEOWNERS.yml"]]
-    (io/copy (->file (io/resource github-file))
-             (doto (->file working-directory ".github" "FUNDING.yml") io/make-parents))
+    (spit (doto (->file working-directory ".github" "FUNDING.yml") io/make-parents)
+          (slurp (io/resource github-file)))
     (git/stage-all working-directory config)
     (when (git/need-commit? working-directory config)
       (git/commit working-directory config (format "Update %s" github-file))))
