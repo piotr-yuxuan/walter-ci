@@ -108,7 +108,7 @@
   [{:keys [github-workspace] :as config}]
   (doseq [github-file ["FUNDING.yml"
                        "CODEOWNERS.yml"]]
-    (spit (doto (->file "." ".github" "FUNDING.yml") io/make-parents)
+    (spit (doto (->file github-workspace ".github" github-file) io/make-parents)
           (slurp (io/resource github-file)))
     (git/stage-all github-workspace config)
     (when (git/need-commit? github-workspace config)
