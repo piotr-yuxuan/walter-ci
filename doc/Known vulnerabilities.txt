@@ -1,7 +1,12 @@
 Checking dependencies for stdin  ...
   using nvd-clojure:  and dependency-check: 6.5.2
++------------------+----------------+
+| dependency       | status         |
++------------------+----------------+
+| jsoup-1.12.1.jar | CVE-2021-37714 |
++------------------+----------------+
 
-0 vulnerabilities detected. Severity: NONE
+1 vulnerabilities detected. Severity: MEDIUM
 Detailed reports saved in: /home/runner/work/walter-ci/walter-ci/target/nvd
 
    *** THIS REPORT IS WITHOUT WARRANTY ***
