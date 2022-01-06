@@ -59,9 +59,18 @@
                 :double-quote \"}]
     (reduce (fn [s q] (str q s q)) s (map quotes qs))))
 
-(defn nvd-classpath
+(defn install-nvd
   [{:keys [^File github-workspace]}]
-  (-> (process/process "clojure -Spath -A:any:aliases"
+  (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
+                                          {:out :inherit
+                                           :err :inherit
+                                           :dir (.getPath github-workspace)})))
+          "Failed to install nvd-clojure"))
+
+(defn nvd-leiningen-classpath
+  [{:keys [^File github-workspace]}]
+  ;; For deps.edn it'd be `clojure -Spath -A:any:aliases`.
+  (-> (process/process "lein with-profile -user,-dev classpath"
                        {:out :string
                         :err :string
                         :dir (.getPath github-workspace)})
@@ -72,20 +81,11 @@
                            :double-quote)
       pr-str))
 
-(defn install-nvd
-  [{:keys [^File github-workspace]}]
-  (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
-                                          {:out :inherit
-                                           :err :inherit
-                                           :dir (.getPath github-workspace)})))
-          "Failed to install nvd-clojure"))
-
 (defn list-vulnerabilities
   [{:keys [^File github-workspace] :as config}]
-  (install-nvd config)
   (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
     (with-open [txt-report-writer (io/writer txt-report)]
-      (assert (zero? (:exit @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-classpath config)]
+      (assert (zero? (:exit @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-leiningen-classpath config)]
                                               {:out txt-report-writer
                                                :err :inherit
                                                :dir (.getPath github-workspace)})))
@@ -189,16 +189,19 @@
           (when-not (zero? exit)
             (println "Deployment failed to" deploy-repository))))))
 
+(def commands
+  {:clojure-git-ignore clojure-git-ignore
+   :code-coverage code-coverage
+   :conform-repository github/conform-repository
+   :list-licences list-licenses
+   :list-vulnerabilities (juxt install-nvd list-vulnerabilities)
+   :package-deploy-artifacts package-deploy-artifacts
+   :deploy-walter-ci deploy-walter-ci
+   :rewrite-idiomatic-simple rewrite-idiomatic-simple
+   :run-tests run-tests
+   :sort-ns sort-ns
+   :update-dependencies-run-tests update-dependencies-run-tests})
+
 (defn start
   [{:keys [input-command] :as config}]
-  (cond (= :clojure-git-ignore input-command) (clojure-git-ignore config)
-        (= :code-coverage input-command) (code-coverage config)
-        (= :conform-repository input-command) (github/conform-repository config)
-        (= :list-licences input-command) (list-licenses config)
-        (= :list-vulnerabilities input-command) (list-vulnerabilities config)
-        (= :package-deploy-artifacts input-command) (package-deploy-artifacts config)
-        (= :deploy-walter-ci input-command) (deploy-walter-ci config)
-        (= :rewrite-idiomatic-simple input-command) (rewrite-idiomatic-simple config)
-        (= :run-tests input-command) (run-tests config)
-        (= :sort-ns input-command) (sort-ns config)
-        (= :update-dependencies-run-tests input-command) (update-dependencies-run-tests config)))
+  ((get commands input-command) config))
