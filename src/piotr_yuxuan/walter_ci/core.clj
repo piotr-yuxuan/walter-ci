@@ -85,11 +85,10 @@
   [{:keys [^File github-workspace] :as config}]
   (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
     (with-open [txt-report-writer (io/writer txt-report)]
-      (assert (zero? (:exit @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-leiningen-classpath config)]
-                                              {:out txt-report-writer
-                                               :err :inherit
-                                               :dir (.getPath github-workspace)})))
-              "Failed to analyse vulnerabilities"))
+      @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-leiningen-classpath config)]
+                        {:out txt-report-writer
+                         :err :inherit
+                         :dir (.getPath github-workspace)}))
     ;; Remove ANSI colour codes.
     (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" "")))
   (git/stage-all github-workspace config)
