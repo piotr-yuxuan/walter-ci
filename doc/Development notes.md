@@ -196,3 +196,6 @@ list them, and present what makes each unique.
 
 At this point it has a pretty good shape to be quickly expandable in
 any direction.
+
+Use https://github.com/phronmophobic/snowball and show you've thought
+about dependencies and jar size.
