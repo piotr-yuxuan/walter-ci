@@ -14,7 +14,7 @@
                  [leiningen-core "2.9.6" :upgrade false]
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [clj-http "3.12.3" :exclusions [riddley]]
-                 [com.github.piotr-yuxuan/malli-cli "1.0.3"] ; Command-line processing
+                 [com.github.piotr-yuxuan/malli-cli "2.0.0"] ; Command-line processing
                  [babashka/process "0.1.1"]
                  [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.8.4"]
