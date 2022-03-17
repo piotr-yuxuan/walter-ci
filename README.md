@@ -1,8 +1,8 @@
 👋 You can't use version `0.0.0` of this action. See
 [Installation](#installation).
 
-[![Clojars badge](https://img.shields.io/clojars/v/com.github.piotr-yuxuan/walter-ci.svg)](com.github.piotr-yuxuan/walter-ci)
-[![Clojars downloads](https://img.shields.io/clojars/dt/com.github.piotr-yuxuan/walter-ci)](com.github.piotr-yuxuan/walter-ci)
+[![Clojars badge](https://img.shields.io/clojars/v/com.github.piotr-yuxuan/walter-ci.svg)](https://clojars.org/com.github.piotr-yuxuan/walter-ci)
+[![Clojars downloads](https://img.shields.io/clojars/dt/com.github.piotr-yuxuan/walter-ci)](https://clojars.org/com.github.piotr-yuxuan/walter-ci)
 [![cljdoc badge](https://cljdoc.org/badge/com.github.piotr-yuxuan/walter-ci)](https://cljdoc.org/d/com.github.piotr-yuxuan/walter-ci/CURRENT)
 [![GitHub license](https://img.shields.io/github/license/piotr-yuxuan/walter-ci)](https://github.com/piotr-yuxuan/walter-ci/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/piotr-yuxuan/walter-ci)](https://github.com/piotr-yuxuan/walter-ci/issues)
