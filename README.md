@@ -1,6 +1,7 @@
 👋 You can't use version `0.0.0` of this action. See
 [Installation](#installation).
 
+[![Build status](https://img.shields.io/github/workflow/status/piotr-yuxuan/walter-ci/Walter%20CD)](https://github.com/piotr-yuxuan/walter-ci/actions/workflows/walter-cd.yml)
 [![Clojars badge](https://img.shields.io/clojars/v/com.github.piotr-yuxuan/walter-ci.svg)](https://clojars.org/com.github.piotr-yuxuan/walter-ci)
 [![Clojars downloads](https://img.shields.io/clojars/dt/com.github.piotr-yuxuan/walter-ci)](https://clojars.org/com.github.piotr-yuxuan/walter-ci)
 [![cljdoc badge](https://cljdoc.org/badge/com.github.piotr-yuxuan/walter-ci)](https://cljdoc.org/d/com.github.piotr-yuxuan/walter-ci/CURRENT)
