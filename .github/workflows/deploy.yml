@@ -40,6 +40,7 @@ jobs:
 
       - name: Walter CI
         uses: piotr-yuxuan/walter-ci@main
-        if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
+        # FIXME Do we want to give this freedom to user?
+        #if: ${{ github.event.ref == format('refs/heads/{0}', github.event.repository.master_branch) }}
         env:
           WALTER_COMMAND: deploy-walter-ci
