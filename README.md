@@ -48,6 +48,7 @@ It is able to perform certain actions on repositories:
 - Enforce and fix reverse-domain-based project group name if deploying
   to Clojars (mandatory)
 - Generate list of licenses
+- Add .java-version
 - Run quality scan
 - Lint files
 - Sort namespaces
