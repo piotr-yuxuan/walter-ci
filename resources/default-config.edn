@@ -14,4 +14,5 @@
                         "piotr-yuxuan/poor-mans-distributed-cache"
                         ;"piotr-yuxuan/subspace-segment"
                         "piotr-yuxuan/tsv-processing"
+                        "piotr-yuxuan/welcome-base-api"
                         ]}
