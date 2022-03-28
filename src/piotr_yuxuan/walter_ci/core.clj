@@ -148,7 +148,7 @@
 
 (defn update-dependencies-run-tests
   [{:keys [^File github-workspace] :as config}]
-  (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :check-clojure"
+  (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :recursive :check-clojure :allow-qualified"
                                          {:out :inherit
                                           :err :inherit
                                           :dir (.getPath github-workspace)})]
