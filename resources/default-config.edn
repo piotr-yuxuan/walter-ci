@@ -16,5 +16,5 @@
                         "piotr-yuxuan/tsv-processing"
                         "piotr-yuxuan/welcome-base-api"
                         "piotr-yuxuan/security-mining"
-                        ;; Repositories you add here will be conformed. If you do not them :github/private? then they will be public.
+                        ;; Repositories you add here will be conformed. If you do not publish them by setting `:github/private?` to false then they will be private.
                         ]}
