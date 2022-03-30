@@ -22,7 +22,7 @@
      [:github/description [string? {:request-key "description" :default nil :description "Description of the GitHub repository. Fallback on :description from the project definition."}]]
      [:github/homepage [string? {:request-key "homepage" :default nil :description "URL of the webpage for this project. Fallback on :url then on [:scm :url] from the project definition."}]]
      [:github/topics [:vector {:request-key "topics" :default [] :description "An array of topics to add to the repository."} string?]]
-     ;; This is so dangerous when you forget that unless specified otherwise it will close any new repository and make it private.
+     ;; This is so dangerous when you forget that unless specified otherwise it will close any repository and make it private.
      ;; It is the decision of the repo owner, as described in `project.clj`, to make this repo public.
      [:github/private? [boolean? {:request-key "private" :default true :description "Either `true` (default) to make the repository private or `false` to make it public."}]]
      [:github/issues? [boolean? {:request-key "has_issues" :default true :description "Enable GitHub issues for this repository."}]]
