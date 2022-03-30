@@ -27,7 +27,8 @@
                  ;[vvvvalvalval/supdate "0.2.3"]
                  ]
   :main piotr-yuxuan.walter-ci.main
-  :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]}
+  :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]
+                      :github/private? false}
              :provided {:dependencies [[org.clojure/clojure "1.11.0"]]}
              :dev {:global-vars {*warn-on-reflection* true}}
              :uberjar {:aot :all
