@@ -9,7 +9,7 @@
   :pom-addition [:developers [:developer
                               [:name "胡雨軒 Петр"]
                               [:url "https://github.com/piotr-yuxuan"]]]
-  :dependencies [[org.clojure/clojure "1.11.1-rc1"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [leiningen "2.9.6" :upgrade false :exclusions [org.apache.httpcomponents/httpcore]]
                  [leiningen-core "2.9.6" :upgrade false]
                  [com.brunobonacci/safely "0.7.0-alpha3"]
@@ -29,7 +29,7 @@
   :main piotr-yuxuan.walter-ci.main
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]
                       :github/private? false}
-             :provided {:dependencies [[org.clojure/clojure "1.11.1-rc1"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
              :dev {:global-vars {*warn-on-reflection* true}}
              :uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
