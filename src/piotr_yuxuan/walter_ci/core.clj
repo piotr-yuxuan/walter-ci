@@ -127,6 +127,14 @@
     (git/commit github-workspace options (format "Update code coverage"))
     (git/push github-workspace options)))
 
+(defn run-tests
+  [{:keys [^File github-workspace]}]
+  (let [{:keys [exit]} @(process/process "lein test"
+                                         {:out :inherit
+                                          :err :inherit
+                                          :dir (.getPath github-workspace)})]
+    (assert (zero? exit) "Tests failed.")))
+
 (defn rewrite-idiomatic-simple
   [{:keys [^File github-workspace] :as options}]
   (let [{:keys [exit]} @(process/process "lein kibit --replace"
@@ -165,13 +173,6 @@
             "Failed to commit updated dependencies.")
     (git/push github-workspace config)))
 
-(defn run-tests
-  [{:keys [^File github-workspace]}]
-  (let [{:keys [exit]} @(process/process "lein test"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (.getPath github-workspace)})]
-    (assert (zero? exit) "Tests failed.")))
 
 (defn package-deploy-artifacts
   [{:keys [github-workspace]}]
