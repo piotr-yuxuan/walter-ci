@@ -101,10 +101,13 @@
   [{:keys [github-action-path github-workspace] :as options}]
   (let [required-entries (set (line-seq (io/reader (->file github-action-path "resources" ".template-gitignore"))))
         current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
-        missing-entries (sort (set/difference required-entries current-entries))]
-    (spit (->file github-workspace ".gitignore")
-          (str/join \n missing-entries)
-          :append true)
+        missing-entries (sort (set/difference required-entries current-entries))
+        gitignore (->file github-workspace ".gitignore")]
+    (spit gitignore
+          (str (str/trim (slurp gitignore))
+               (System/lineSeparator) (System/lineSeparator)
+               (str/join (System/lineSeparator) missing-entries))
+          :append false)
     (git/stage-all github-workspace options)
     (when (git/need-commit? github-workspace options)
       (git/commit github-workspace options (format "Update .gitignore"))
