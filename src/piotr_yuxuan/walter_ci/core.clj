@@ -142,6 +142,7 @@
                                           :err :inherit
                                           :dir (.getPath github-workspace)})]
     (assert (zero? exit) "Failed to apply kibit advices"))
+  (run-tests options)
   (git/stage-all github-workspace options)
   (when (git/need-commit? github-workspace options)
     (git/commit github-workspace options (format "More idiomatic code"))
