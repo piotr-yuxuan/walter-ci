@@ -37,6 +37,14 @@
                                            :dir (.getPath working-directory)})))
           "Failed ot add updated files to index."))
 
+(defn stage
+  [^File working-directory _ ^String file-selection]
+  (assert (zero? (:exit @(process/process (format "git add %s" file-selection)
+                                          {:out :inherit
+                                           :err :inherit
+                                           :dir (.getPath working-directory)})))
+          "Failed ot add updated files to index."))
+
 (defn need-commit?
   [^File working-directory _]
   (let [{:keys [out exit]} @(process/process "git diff --staged"
