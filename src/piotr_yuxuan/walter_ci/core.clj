@@ -34,7 +34,8 @@
                              (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
                              (get config secret-name)))
       (doseq [workflow-file [(->file github-action-path "resources" "workflows" "walter-cd.yml")
-                             (->file github-action-path "resources" "workflows" "walter-ci.yml")]]
+                             (->file github-action-path "resources" "workflows" "walter-ci.yml")
+                             (->file github-action-path "resources" "workflows" "walter-perf.yml")]]
         (update-workflow config+github-repository workflow-file)))))
 
 (defn list-licenses
