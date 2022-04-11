@@ -8,6 +8,7 @@ name: Deploy Walter
       - resources/workflows/deploy.yml
       - resources/workflows/walter-cd.yml
       - resources/workflows/walter-ci.yml
+      - resources/workflows/walter-perf.yml
 
 concurrency:
   group: production
