@@ -180,7 +180,7 @@
   ;; First, check whether if would make sense to run perf tests. If no
   ;; new interesting commits on Leiningen source paths for test
   ;; profile have been pushed since last time, probably not.
-  @(process/process "lein with-profile ci-perf-test"
+  @(process/process "lein ci-perf-test"
                     {:out :inherit
                      :err :inherit
                      :dir (.getPath github-workspace)})
