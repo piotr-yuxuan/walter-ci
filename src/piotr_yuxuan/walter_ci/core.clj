@@ -115,11 +115,14 @@
 
 (defn code-coverage
   [{:keys [^File github-workspace] :as options}]
+  (delete! (->file github-workspace "doc" "code-coverage")) ;; Clean previous code coverage.
   @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text" "--no-html"]
                     {:out :inherit
                      :err :inherit
                      :dir (.getPath github-workspace)})
-  (git/stage-all github-workspace options)
+  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "coverage.css"))
+  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "coverage.txt"))
+  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "index.html"))
   (when (git/need-commit? github-workspace options)
     (git/commit github-workspace options (format "Update code coverage"))
     (git/push github-workspace options)))
