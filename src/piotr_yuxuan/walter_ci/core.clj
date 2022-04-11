@@ -174,6 +174,26 @@
             "Failed to commit updated dependencies.")
     (git/push github-workspace config)))
 
+(defn run-ci-perf-tests
+  ;; Remember that a GitHub Action will be terminated if it takes more than 6h.
+  [{:keys [^File github-workspace] :as config}]
+  ;; First, check whether if would make sense to run perf tests. If no
+  ;; new interesting commits on Leiningen source paths for test
+  ;; profile have been pushed since last time, probably not.
+  @(process/process "lein with-profile ci-perf-test"
+                    {:out :inherit
+                     :err :inherit
+                     :dir (.getPath github-workspace)})
+  ;; Don't check exit code. Some tests may fail, and you still want
+  ;; the partial results as they are so long and expensive to run.
+  (try
+    (git/stage github-workspace config "./doc/perf")
+    ;; You may have no perf test result folder, and that's fine.
+    (catch AssertionError _))
+  (when (git/need-commit? github-workspace config)
+    (assert (zero? (:exit (git/commit github-workspace config "Update perf test results")))
+            "Failed to commit perf test results.")
+    (git/push github-workspace config)))
 
 (defn package-deploy-artifacts
   [{:keys [github-workspace]}]
@@ -209,6 +229,7 @@
    :deploy-walter-ci deploy-walter-ci
    :rewrite-idiomatic-simple rewrite-idiomatic-simple
    :run-tests run-tests
+   :run-ci-perf-tests run-ci-perf-tests
    :sort-ns sort-ns
    :update-dependencies-run-tests update-dependencies-run-tests})
 

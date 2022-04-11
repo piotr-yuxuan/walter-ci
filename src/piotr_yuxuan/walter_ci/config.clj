@@ -111,6 +111,7 @@
                       :deploy-walter-ci
                       :rewrite-idiomatic-simple
                       :run-tests
+                      :run-ci-perf-tests
                       :sort-ns
                       :update-dependencies-run-tests]]
      [:managed-repositories [:vector string?]]]))
