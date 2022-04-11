@@ -181,18 +181,21 @@
         deploy-repositories (->> leiningen-project
                                  :deploy-repositories
                                  (map first)
-                                 seq)]
-    (if deploy-repositories
+                                 seq)
+        ;; Is it private?
+        deploy? false]
+    (if (and deploy? deploy-repositories)
       (println "Deploying to repositories:" deploy-repositories)
       (println "No deploy repositories found, not deploying."))
-    (doseq [deploy-repository deploy-repositories]
-      (println :dry-run ["lein" "deploy" deploy-repository])
-      #_(let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
-                                               {:out :inherit
-                                                :err :inherit
-                                                :dir (.getPath github-workspace)})]
-          (when-not (zero? exit)
-            (println "Deployment failed to" deploy-repository))))))
+    (when (and deploy? deploy-repositories)
+      (doseq [deploy-repository deploy-repositories]
+        (println :dry-run ["lein" "deploy" deploy-repository])
+        #_(let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
+                                                 {:out :inherit
+                                                  :err :inherit
+                                                  :dir (.getPath github-workspace)})]
+            (when-not (zero? exit)
+              (println "Deployment failed to" deploy-repository)))))))
 
 (def commands
   {:clojure-git-ignore clojure-git-ignore
