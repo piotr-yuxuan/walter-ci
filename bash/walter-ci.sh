@@ -2,4 +2,4 @@
 
 set -xe
 
-java -jar "$HOME/.walter-ci/walter-ci-standalone.jar"
+java -jar "$HOME/.walter-ci/walter-ci-standalone.jar" "$@"
