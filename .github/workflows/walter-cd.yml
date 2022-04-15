@@ -8,7 +8,8 @@ name: Walter CD
 'on':
   workflow_dispatch: null
   repository_dispatch: null
-  branches: '*'
+  push:
+    branches: '*'
 concurrency:
   group: walter-cd
   cancel-in-progress: true
