@@ -6,7 +6,13 @@
 
 name: piotr-yuxuan/walter-ci
 description: Collection of `bash` utilities and helpers accessible from the comfort of your command line.
-inputs: {}
+inputs:
+  github-token:
+    description: >+
+      To fix rate limit errors, provide `secrets.GITHUB_TOKEN` value to this field.
+      More info: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+    default: ${{ github.token }}
+    required: false
 runs:
   using: composite
   steps:
