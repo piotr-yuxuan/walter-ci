@@ -7,6 +7,8 @@
                   [lein-kibit "LATEST"]
                   [lein-licenses "0.2.2"]
                   [ns-sort "LATEST"]
-                  [mutant "LATEST"] ; source: https://github.com/pithyless/mutant
-                  [venantius/yagni "LATEST"]]}
- :kaocha {:dependencies [[lambdaisland/kaocha "LATEST"]]}}
+                  [lein-mutate "LATEST"] ; source: https://github.com/pithyless/mutant
+                  [venantius/yagni "LATEST"]]
+        :aliases {"test" ["with-profile" "+test,+kaocha" "run" "-m" "kaocha.runner" "--skip-meta" ":perf"]}}
+ :walter/kaocha {:dependencies [[lambdaisland/kaocha "LATEST"]
+                                [lambdaisland/kaocha-cloverage "LATEST"]]}}

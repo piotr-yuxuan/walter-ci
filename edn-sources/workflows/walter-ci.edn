@@ -1,0 +1,53 @@
+{:name "Walter CI"
+ :on {:repository_dispatch nil, :workflow_dispatch nil
+      :schedule {:cron "28 6,18 * * *"}}
+ :concurrency {:group "walter-ci", :cancel-in-progress true}
+ :env #walter/env #{:git}
+ :jobs {:conform-repository #job/wrap[#step :walter/use
+                                      {:run "walter conform-repository"}]
+        :update-git-ignore #job/wrap [#step :walter/use
+                                      {:run #cmd/join["walter update-git-ignore"
+                                                      "git add .gitignore"
+                                                      "git checkout -ff -- ." ; Clean untracked files.
+                                                      "git clean -ff -- ." ; Clean unstaged files.
+                                                      "git commit --message \"Update .gitignore\""
+                                                      #str/join["walter" "retry" "--" "git"
+                                                                ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                                "-c" "http.https://github.com/.extraheader="
+                                                                "push"]]}]
+        :sort-ns #job/wrap [#step :walter/use
+                            {:run #cmd/join["lein sort-ns"
+                                            "git add ."
+                                            "git commit --message \"Sort namespace forms\""
+                                            #str/join["walter" "retry" "--" "git"
+                                                      ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                      "-c" "http.https://github.com/.extraheader="
+                                                      "push"]]}]
+        :report-vulnerabilities #job/wrap [#step :walter/use
+                                           #step :walter/report-vulnerabilities]
+        :code-coverage #job/wrap [#step :walter/use
+                                  {:run #cmd/join["lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --cov-text --cov-html"
+                                                  "git add ./doc/code-coverage/**.{txt,css,html}" ; No Clojure files be added here.
+                                                  "git checkout -ff -- ." ; Clean untracked files.
+                                                  "git clean -ff -- ." ; Clean unstaged files.
+                                                  "git commit --message \"Update code coverage\""
+                                                  #str/join["walter" "retry" "--" "git"
+                                                            ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                            "-c" "http.https://github.com/.extraheader="
+                                                            "push"]]}]
+        :idiomatic-code #job/wrap [#step :walter/use
+                                   {:run #cmd/join["clojure -M:lint/idiom -- --replace"
+                                                   "git add ."
+                                                   "git commit --message \"More idiomatic code\""
+                                                   #str/join["walter" "retry" "--" "git"
+                                                             ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                             "-c" "http.https://github.com/.extraheader="
+                                                             "push"]]}]
+        :project/outdated #job/wrap [#step :walter/use
+                                     {:run #cmd/join["clojure -T:search/outdated :skip '[]' :upgrade true :force true" ;; Doesn't respect `:upgrade false`.
+                                                     "git add ."
+                                                     "git commit --message \"Update versions\""
+                                                     #str/join["walter" "retry" "--" "git"
+                                                               ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                               "-c" "http.https://github.com/.extraheader="
+                                                               "push"]]}]}}

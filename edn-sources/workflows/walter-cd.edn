@@ -1,0 +1,24 @@
+{:name "Walter CD"
+ :on {:workflow_dispatch nil
+      :repository_dispatch nil
+      :branches "*"}
+ :concurrency {:group "walter-cd"
+               :cancel-in-progress true}
+ :env #walter/env #{:git}
+ :jobs {:run-tests #job/wrap[#step :walter/use
+                             {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}]
+        :report-vulnerabilities #job/wrap [#step :walter/use
+                                           #step :walter/report-vulnerabilities]
+        :list-licences #job/wrap[#step :walter/use
+                                 {:run #cmd/join["lein licenses :csv > ./doc/Licenses.csv"
+                                                 "sort ./doc/Licenses.csv"
+                                                 "git add ./doc/Licenses.csv"
+                                                 "git checkout -ff -- ." ; Clean untracked files.
+                                                 "git clean -ff -- ." ; Clean unstaged files.
+                                                 "git commit --message \"List dependency licenses\""
+                                                 #str/join["walter" "retry" "--" "git"
+                                                           ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                           "-c" "http.https://github.com/.extraheader="
+                                                           "push"]]}]
+
+        :package-deploy-artifacts #job/wrap[{:run "echo :package-deploy-artifacts"}]}}

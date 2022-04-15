@@ -10,14 +10,50 @@
 
 # `piotr-yuxuan/walter-ci`
 
-Walter Kohl is the younger son of Helmut Kohl. Like his father he
-likes to break down walls and reunify friends under one common
-fundamental law.
+Walter CI intends to remove YAML boilerplate as much as possible while
+not impeding user freedom. It does so with frugal means:
+
+- A small set of edn->yaml reader macros and predefined _DRY_ steps to
+  avoid repetition where possible;
+- An action that provides standard and community-maintained tools;
+- Some `GIT_*` environment variables;
+- A runtime executable for operations that can not easily be expressed
+  in bash.
+
+It favours `bash` as much as possible to express simple steps.
+
+``` clojure
+{:name "My Simple Workflow"
+ ;; The edn->yaml conversion JustWorks™. No magic. You are writing a
+ ;; YAML GitHub Workflow file, but as edn.
+ :on {:push {:branches ["main"]}}
+ ;; Some reader macros consisely insert predefined data structures,
+ ;; but you are free not to use them.
+ :env #walter/env #{:git}
+ ;; Most jobs are the same, that is to say just a sequence of
+ ;; steps. `#job/wrap` take them and output a basic job.
+ :jobs {:run-test #job/wrap [;; This job has two steps.
+                             {:uses "piotr-yuxuan/walter-ci@main"}
+                             {:run "lein test"}]
+        :sort-ns #job/wrap [;; `#step` inserts a canned step defined as
+		                    ;; data in `resources/steps.edn`. It is the same as 
+							;; `{:uses "piotr-yuxuan/walter-ci@main"}` above.
+                            #step :walter/use
+                            ;; Multi-line strings may be expressed
+							;; as a vector, and joined later.
+                            {:run #cmd/join["lein sort-ns"
+                                            "git add ."
+                                            "git commit --message \"Sort namespace forms\""
+                                            ;; Commands too may be expressed as vectors.
+                                            ;; Walter command `retry` avoids network issues.
+                                            #str/join["walter" "retry" "--" "git" "push"]]}]}}
+```
+
+<scherz>Walter Kohl is the younger son of Helmut Kohl. Like his father
+he likes to break down walls and reunify friends under one common
+fundamental law.</scherz>
 
 ![](./doc/helmut-kohl-1.jpg)
-
-This action runs an opinionated set of standard steps for all my
-Clojure projects, defined by conventions and no configuration.
 
 The goal of Walter is to automate and standardize CI maintenance jobs
 as much as possible so that I can scale it to more than two public
@@ -29,60 +65,20 @@ a different idea to improve CI on some later project? I think that
 losing all my time propagating changes by replication and copy/paste
 is an hindrance. That's the job of a machine, so let a machine do it.
 
-## Workflow
-
-It offers standard actions for all my Clojure projects on GitHub,
-depending on their type :
-
-- Clojure library with Leiningen
-- Clojure library with `deps.edn`
-- Public page with `shadow-cljs` and Leiningen
-- Public page with `shadow-cljs` and `deps.edn`
-
-It is able to perform certain actions on repositories:
+## Supported perations
 
 - Run tests
-- Create and deploy new release
+- (not yet) Create and deploy new release
 - Upgrade dependencies
 - Report vulnerabilities
-- Enforce and fix reverse-domain-based project group name if deploying
-  to Clojars (mandatory)
+- (not yet) Enforce and fix reverse-domain-based project group name if
+  deploying to Clojars (mandatory)
 - Generate list of licenses
-- Add .java-version
+- (not yet) Add .java-version
 - Run quality scan
 - Lint files
 - Sort namespaces
 
 It doesn't require any addition to the project code, except the
-installation step. It doesn't involve configuration.
-
-## Installation
-
-Refer the `main` branch to automatically upgrade this action across
-all your repositories. This makes the most of Walter, otherwise you
-lose the benefits of it.
-
-``` yaml
-- name: Walter CI
-  uses: piotr-yuxuan/walter-ci@main # will download and use Docker image
-```
-
-``` yaml
-- name: Walter CI
-  uses: docker://piotryuxuan/walter-ci:latest # Directly use the Docker image
-```
-
-If you are unsure about how to do it, see how Walter is self-hosted
-here:
-[.github/workflows/walter-ci.yml](.github/workflows/walter-ci.yml).
-
-## How to write a good README?
-
-See it later, once there is actually something to tell about.
-
-## License
-
-Distributed under GNU GPL, version 3, or any later version. See
-`LICENSE` and `GPL_ADDITION.md`.  For you reference, text of the
-license is also available here:
-https://www.gnu.org/licenses/gpl-3.0.txt".
+installation step. It is a goal of this project to stay free from any
+project-level configuration duplicate hell.

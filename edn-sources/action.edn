@@ -1,0 +1,12 @@
+{:name "piotr-yuxuan/walter-ci"
+ :description "Collection of `bash` utilities and helpers accessible from the comfort of your command line."
+ :inputs {} ;; Add Github token as it is used in some steps.
+ :runs {:using "composite"
+        :steps [#step :checkout/repository
+                #step :cache/local-maven-repository
+                #step :install/clojure-cli
+                #step :install/clojure-deps-edn
+                #step :install/walter]}
+ :author "Piotr Yuxuan"
+ :branding {:icon :command
+            :color :orange}}

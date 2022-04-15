@@ -1,0 +1,7 @@
+{:name "Deploy Walter"
+ :on {:push {:branches ["main"]
+             :paths [".github/workflows/deploy.yml"]}}
+ :concurrency {:group "deploy-jobs"
+               :cancel-in-progress false}
+ :env #walter/env #{:git}
+ :jobs #walter/deploy-jobs{}}

@@ -1,0 +1,33 @@
+{:walter/use {:uses "piotr-yuxuan/walter-ci@main"}
+ :checkout/repository {:name "Checkout repository"
+                       :uses "actions/checkout@main"
+                       :with {:submodules "recursive"}}
+ :cache/local-maven-repository {:name "Cache local Maven repository"
+                                :uses "actions/cache@v2"
+                                :with {:path "~/.m2/repository"
+                                       :key "${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}"
+                                       :restore-keys "${{ runner.os }}-maven-"}}
+ :install/clojure-cli {:name "Install Clojure CLI"
+                       :uses "DeLaGuardo/setup-clojure@master"
+                       :with {:cli :latest
+                              :lein :latest
+                              :github-token "${{ secrets.GITHUB_TOKEN }}"}}
+ :install/clojure-deps-edn {:name "Install clojure-deps-edn"
+                            :shell "bash"
+                            :run "git clone git@github.com:practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure"}
+ :install/walter {:name "Download Walter executable and update PATH"
+                  :shell "bash"
+                  :run "${{ github.action_path }}/bash/install.sh"}
+ :deploy {:run "walter self-deploy"}
+ :walter/report-vulnerabilities {:name "Scan and report vulnerabilities"
+                                 :run #cmd/join["git rm \"./doc/Known vulnerabilities.txt\"" ; Remove previous report output
+                                                "clojure -T:security/nvd nvd.task/check :classpath '\"'\"$(lein with-profile -user,-dev classpath)\"'\"'"
+                                                "cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv"
+                                                "git add ./doc/known-vulnerabilities.csv"
+                                                "git checkout -ff -- ." ; Clean untracked files.
+                                                "git clean -ff -- ." ; Clean unstaged files.
+                                                "git commit --message \"Update known vulnerabilities\""
+                                                #str/join["walter" "retry" "--" "git"
+                                                          ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                          "-c" "http.https://github.com/.extraheader="
+                                                          "push"]]}}

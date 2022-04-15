@@ -14,23 +14,19 @@
                  [leiningen-core "2.9.6" :upgrade false]
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [clj-http "3.12.3" :exclusions [riddley]]
-                 [com.github.piotr-yuxuan/malli-cli "2.0.0"] ; Command-line processing
+                 [com.github.piotr-yuxuan/malli-cli "2.1.0-private-alpha"] ; Configuration value from the command-line
                  [babashka/process "0.1.1"]
                  [camel-snake-kebab "0.4.2"]
                  [metosin/malli "0.8.4"]
+                 [io.forward/yaml "1.0.11"] ; No same person would wilfully accept to write YAML by hand.
                  [caesium "0.14.0"]
-                 [metosin/jsonista "0.3.5"]
-                 ;[clj-commons/clj-yaml "0.7.107"]
-                 ;[com.arohner/uri "0.1.2"]
-                 ;[io.forward/semver "0.1.0"]
-                 ;[metosin/muuntaja "0.6.8"]
-                 ;[vvvvalvalval/supdate "0.2.3"]
-                 ]
+                 [metosin/jsonista "0.3.5"]]
   :main piotr-yuxuan.walter-ci.main
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]
                       :github/private? false}
              :provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
-             :dev {:global-vars {*warn-on-reflection* true}}
+             :dev {:global-vars {*warn-on-reflection* true}
+                   :plugins [[lein-binplus "0.6.6"]]}
              :uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
                                   "-Dclojure.compiler.disable-locals-clearing=false"

@@ -1,0 +1,9 @@
+{:name "Generate YAML files to deploy Walter"
+ :on {:push {:branches ["main"]
+             :paths ["edn-sources/*.edn"
+                     "managed-repositories.edn"]}}
+ :concurrency {:group "generate-deploy-workflow"
+               :cancel-in-progress true}
+ :env #walter/env #{:git}
+ :jobs {:generate-deploy-workflow #job/wrap[#step :walter/use
+                                            {:run #cmd/join["walter generate-deploy-workflow"]}]}}

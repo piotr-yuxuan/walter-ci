@@ -3,103 +3,134 @@
             [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete! copy!]]
             [piotr-yuxuan.walter-ci.git :as git]
             [piotr-yuxuan.walter-ci.github :as github]
-            [piotr-yuxuan.walter-ci.secrets :as secret]
+            [piotr-yuxuan.walter-ci.secrets :as secrets]
             [babashka.process :as process]
             [camel-snake-kebab.core :as csk]
+            [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.set :as set]
             [clojure.string :as str]
-            [leiningen.core.project :as leiningen])
+            [safely.core :refer [safely-fn]]
+            [yaml.core :as yaml])
   (:import (java.io File)))
 
 (defn update-workflow
-  [options ^File workflow-file]
-  (with-delete! [working-directory (->tmp-dir "update-workflow")]
-    (git/clone working-directory options)
-    (io/copy workflow-file (doto (->file working-directory ".github" "workflows" (.getName workflow-file))
-                             (io/make-parents)))
-    (git/stage-all working-directory options)
-    (when (git/need-commit? working-directory options)
-      (git/commit working-directory options (format "Update %s" (.getName workflow-file)))
-      (git/push working-directory options))))
+  [config ^String workflow-file-name ^String yml]
+  (with-delete! [working-directory (->tmp-dir "update-workflow")
+                 yml-file (doto (->tmp-file) (spit yml))]
+    (git/clone working-directory config)
+    (io/copy ^File yml-file (doto (->file working-directory ".github" "workflows" workflow-file-name)
+                              (io/make-parents)))
+    (git/stage-all working-directory config)
+    (when (git/need-commit? working-directory config)
+      (git/commit working-directory config (format "Update %s" workflow-file-name))
+      (git/push working-directory config))))
 
-(defn deploy-walter-ci
-  [{:keys [github-action-path managed-repositories] :as config}]
-  (doseq [github-repository managed-repositories]
-    (let [config+github-repository (assoc config :github-repository github-repository)]
-      (doseq [secret-name [:walter-author-name
-                           :walter-github-password
-                           :walter-git-email]]
-        (secret/upsert-value config+github-repository
-                             (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
-                             (get config secret-name)))
-      (doseq [workflow-file [(->file github-action-path "resources" "workflows" "walter-cd.yml")
-                             (->file github-action-path "resources" "workflows" "walter-ci.yml")
-                             (->file github-action-path "resources" "workflows" "walter-perf.yml")]]
-        (update-workflow config+github-repository workflow-file)))))
 
-(defn list-licenses
-  [{:keys [^File github-workspace] :as config}]
-  (with-open [licenses (io/writer (doto (io/file "./doc/Licenses.csv")
-                                    io/make-parents))]
-    (let [{:keys [exit]} @(process/process "lein licenses :csv"
-                                           {:out licenses
-                                            :err :inherit
-                                            :dir (.getPath github-workspace)})]
-      (assert (zero? exit) "Failed to list licenses.")))
-  (git/stage-all github-workspace config)
-  (when (git/need-commit? github-workspace config)
-    (assert (zero? (:exit (git/commit github-workspace config "List licenses")))
-            "Failed to commit license list.")
-    (git/push github-workspace config)))
+(defn walter-env
+  []
+  {:GIT_COMMITTER_NAME "${{ secrets.GITHUB_ACTOR }}"
+   :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+   :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+   :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+   :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
+   :GIT_ASKPASS "$HOME/.walter-ci/bin/askpass.sh"})
 
-(defn wrap-escaped-around
-  [^String s & qs]
-  {:pre [(every? #{:single-quote :double-quote} qs)]}
-  (let [quotes {:single-quote \'
-                :double-quote \"}]
-    (reduce (fn [s q] (str q s q)) s (map quotes qs))))
+(defn cmd-retry
+  [^String cmd]
+  (apply safely-fn
+         #(process/check
+            (process/process cmd
+                             {;:dir (.getPath working-directory)
+                              :out :inherit
+                              :err :inherit}))
+         (mapcat vec {:max-retries 5})))
 
-(defn install-nvd
-  [{:keys [^File github-workspace]}]
-  (assert (zero? (:exit @(process/process "clojure -Ttools install nvd-clojure/nvd-clojure '{:mvn/version \"RELEASE\"}' :as nvd"
-                                          {:out :inherit
-                                           :err :inherit
-                                           :dir (.getPath github-workspace)})))
-          "Failed to install nvd-clojure"))
+(defn walter-readers
+  [steps managed-repositories]
+  (letfn [(read-step [value]
+            (cond (keyword? value)
+                  (read-step [value {}])
 
-(defn nvd-leiningen-classpath
-  [{:keys [^File github-workspace]}]
-  ;; For deps.edn it'd be `clojure -Spath -A:any:aliases`.
-  (-> (process/process "lein with-profile -user,-dev classpath"
-                       {:out :string
-                        :err :string
-                        :dir (.getPath github-workspace)})
-      ^babashka.process.Process deref
-      .out
-      (wrap-escaped-around :double-quote
-                           :single-quote
-                           :double-quote)
-      pr-str))
+                  (vector? value)
+                  (let [[step-name step-opts] value]
+                    (deep-merge (get steps step-name)
+                                step-opts))))
+          (wrap-in-job [steps]
+            {:runs-on "ubuntu-latest"
+             :steps steps})]
+    {'step read-step
+     'job/wrap wrap-in-job
+     'cmd/retry cmd-retry
+     'walter/env (fn [{:keys [git]}]
+                   (merge {}
+                          (when git
+                            {:GIT_COMMITTER_NAME "${{ secrets.GITHUB_ACTOR }}"
+                             :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+                             :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+                             :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+                             :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
+                             :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"})))
+     'cmd/join #(str/join \newline %)
+     'str/join #(str/join \space %)
+     'walter/deploy-jobs (fn [_]
+                           (reduce (fn [jobs github-repo]
+                                     (let [job-name (str/replace github-repo "/" "-")]
+                                       (assoc jobs
+                                         job-name {:runs-on "ubuntu-latest"
+                                                   :environment {:name :production
+                                                                 :url (format "https://www.github.com/%s" github-repo)}
+                                                   :steps [(read-step :walter/use)
+                                                           (read-step [:deploy {:run (format "walter self-deploy --github-repository %s" github-repo)}])]})))
+                                   (sorted-map)
+                                   (sort managed-repositories)))}))
 
-(defn list-vulnerabilities
-  [{:keys [^File github-workspace] :as config}]
-  (let [^File txt-report (doto (io/file github-workspace "doc/Known vulnerabilities.txt") io/make-parents)]
-    (with-open [txt-report-writer (io/writer txt-report)]
-      @(process/process ["clojure" "-J-Dclojure.main.report=stderr" "-Tnvd" "nvd.task/check" :classpath (nvd-leiningen-classpath config)]
-                        {:out txt-report-writer
-                         :err :inherit
-                         :dir (.getPath github-workspace)}))
-    ;; Remove ANSI colour codes.
-    (spit txt-report (str/replace (slurp txt-report) #"\x1b\[[0-9;]*m" "")))
-  (git/stage-all github-workspace config)
-  (when (git/need-commit? github-workspace config)
-    (assert (zero? (:exit (git/commit github-workspace config "Report vulnerabilities")))
-            "Failed to commit vulnerability report.")
-    (git/push github-workspace config)))
+(def source+targets
+  [["edn-sources/action.edn" "action.yml"]
+   ["edn-sources/workflows/deploy.edn" ".github/workflows/deploy.yml"]
+   ["edn-sources/workflows/generate.edn" ".github/workflows/generate.yml"]
+   ["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]
+   ["edn-sources/workflows/walter-ci.edn" ".github/workflows/walter-ci.yml"]
+   ["edn-sources/workflows/walter-perf.edn" ".github/workflows/walter-perf.yml"]])
 
-(defn clojure-git-ignore
-  [{:keys [github-action-path github-workspace] :as options}]
+(def yml-header
+  "# This file is maintained by Walter CI, and may be rewritten.\n# https://github.com/piotr-yuxuan/walter-ci\n#\n# You are free to remove this project from Walter CI realm by opening\n# a PR. You may also create another workflow besides this one.\n\n")
+
+(defn steps+edn->yml
+  [steps managed-repositories source-edn]
+  (->> (slurp source-edn)
+       (edn/read-string {:readers (walter-readers steps managed-repositories)})
+       (#(yaml/generate-string % :dumper-options {:flow-style :block
+                                                  :split-lines false
+                                                  :width 1e3}))
+       (str yml-header)))
+
+(defn steps+edn->write-to-yml-file!
+  [steps managed-repositories source-edn target-yml]
+  (->> (steps+edn->yml steps managed-repositories source-edn)
+       (spit target-yml)))
+
+(defn self-deploy
+  [{:keys [github-repository] :as config}]
+  (let [config+github-repository (assoc config :github-repository github-repository)
+        steps (edn/read-string {:readers {'cmd/join #(str/join \newline %)
+                                          'str/join #(str/join \space %)}}
+                               (slurp (io/resource "steps.edn")))]
+    (doseq [secret-name [:walter-author-name
+                         :walter-github-password
+                         :walter-git-email]]
+      (secrets/upsert-value config+github-repository
+                            (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
+                            (get config secret-name)))
+    (doseq [[source-edn workflow-file-name] [["edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
+                                             ["edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
+                                             ["edn-sources/workflows/walter-perf.edn" "walter-perf.yml"]]]
+      (->> source-edn
+           (steps+edn->yml steps nil)
+           (update-workflow config+github-repository workflow-file-name)))))
+
+(defn update-git-ignore
+  [{:keys [github-action-path github-workspace]}]
   (let [required-entries (set (line-seq (io/reader (->file github-action-path "resources" ".template-gitignore"))))
         current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
         missing-entries (sort (set/difference required-entries current-entries))
@@ -108,132 +139,36 @@
           (str (str/trim (slurp gitignore))
                (System/lineSeparator) (System/lineSeparator)
                (str/join (System/lineSeparator) missing-entries))
-          :append false)
-    (git/stage-all github-workspace options)
-    (when (git/need-commit? github-workspace options)
-      (git/commit github-workspace options (format "Update .gitignore"))
-      (git/push github-workspace options))))
+          :append false)))
 
-(defn code-coverage
-  [{:keys [^File github-workspace] :as options}]
-  (delete! (->file github-workspace "doc" "code-coverage")) ;; Clean previous code coverage.
-  @(process/process ["lein" "cloverage" "--output" (->file github-workspace "doc" "code-coverage") "--text" "--no-html"]
-                    {:out :inherit
-                     :err :inherit
-                     :dir (.getPath github-workspace)})
-  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "coverage.css"))
-  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "coverage.txt"))
-  (git/stage github-workspace options (->file github-workspace "doc" "code-coverage" "index.html"))
-  (when (git/need-commit? github-workspace options)
-    (git/commit github-workspace options (format "Update code coverage"))
-    (git/push github-workspace options)))
+;; When install Walter, we should install clojure CLI, lein CLI, practicalli configs, and lein default profiles.
+;; So Walter is just a bunch of helpers around basic Bash script:
+;; - Lein and profiles
+;; - Clojure CLI and clojure-deps-edn aliases and configuration
+;; - Walter executable commands
 
-(defn run-tests
-  [{:keys [^File github-workspace]}]
-  (let [{:keys [exit]} @(process/process "lein test"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (.getPath github-workspace)})]
-    (assert (zero? exit) "Tests failed.")))
+(comment
+  (let [steps (edn/read-string {:readers {'cmd/join #(str/join \newline %)
+                                          'str/join #(str/join \space %)}}
+                               (slurp (io/resource "steps.edn")))
+        managed-repositories (edn/read-string (slurp "managed-repositories.edn"))]
+    (doseq [[source-edn target-yml] source+targets]
+      (steps+edn->write-to-yml-file! steps managed-repositories source-edn target-yml))))
 
-(defn rewrite-idiomatic-simple
-  [{:keys [^File github-workspace] :as options}]
-  (let [{:keys [exit]} @(process/process "lein kibit --replace"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (.getPath github-workspace)})]
-    (assert (zero? exit) "Failed to apply kibit advices"))
-  (run-tests options)
-  (git/stage-all github-workspace options)
-  (when (git/need-commit? github-workspace options)
-    (git/commit github-workspace options (format "More idiomatic code"))
-    (git/push github-workspace options)))
+(defmulti start :command)
 
-(defn sort-ns
-  [{:keys [^File github-workspace] :as config}]
-  (let [{:keys [exit]} @(process/process "lein ns-sort"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (.getPath github-workspace)})]
-    (assert (zero? exit) "Failed to sort namespaces."))
-  (git/stage-all github-workspace config)
-  (when (git/need-commit? github-workspace config)
-    (assert (zero? (:exit (git/commit github-workspace config "Sort namespaces")))
-            "Failed to commit sorted namespaces.")
-    (git/push github-workspace config)))
+(defmethod start :conform-repository
+  [config]
+  (github/conform-repository config))
 
-(defn update-dependencies-run-tests
-  [{:keys [^File github-workspace] :as config}]
-  (let [{:keys [exit]} @(process/process "lein ancient upgrade :all :recursive :check-clojure :allow-qualified"
-                                         {:out :inherit
-                                          :err :inherit
-                                          :dir (.getPath github-workspace)})]
-    (assert (zero? exit) "Failed to update versions."))
-  (git/stage-all github-workspace config)
-  (when (git/need-commit? github-workspace config)
-    (assert (zero? (:exit (git/commit github-workspace config "Update versions")))
-            "Failed to commit updated dependencies.")
-    (git/push github-workspace config)))
+(defmethod start :retry
+  [{:keys [sub-command]}]
+  (cmd-retry sub-command))
 
-(defn run-ci-perf-tests
-  ;; Remember that a GitHub Action will be terminated if it takes more than 6h.
-  [{:keys [^File github-workspace] :as config}]
-  ;; First, check whether if would make sense to run perf tests. If no
-  ;; new interesting commits on Leiningen source paths for test
-  ;; profile have been pushed since last time, probably not.
-  @(process/process "lein ci-perf-test"
-                    {:out :inherit
-                     :err :inherit
-                     :dir (.getPath github-workspace)})
-  ;; Don't check exit code. Some tests may fail, and you still want
-  ;; the partial results as they are so long and expensive to run.
-  (try
-    (git/stage github-workspace config "./doc/perf")
-    ;; You may have no perf test result folder, and that's fine.
-    (catch AssertionError _))
-  (when (git/need-commit? github-workspace config)
-    (assert (zero? (:exit (git/commit github-workspace config "Update perf test results")))
-            "Failed to commit perf test results.")
-    (git/push github-workspace config)))
+(defmethod start :self-deploy
+  [config]
+  (self-deploy config))
 
-(defn package-deploy-artifacts
-  [{:keys [github-workspace]}]
-  (let [leiningen-project (-> (io/file github-workspace "project.clj")
-                              (.getAbsolutePath)
-                              (leiningen/read [:deploy]))
-        deploy-repositories (->> leiningen-project
-                                 :deploy-repositories
-                                 (map first)
-                                 seq)
-        ;; Is it private?
-        deploy? false]
-    (if (and deploy? deploy-repositories)
-      (println "Deploying to repositories:" deploy-repositories)
-      (println "No deploy repositories found, not deploying."))
-    (when (and deploy? deploy-repositories)
-      (doseq [deploy-repository deploy-repositories]
-        (println :dry-run ["lein" "deploy" deploy-repository])
-        #_(let [{:keys [exit]} @(process/process ["lein" "deploy" deploy-repository]
-                                                 {:out :inherit
-                                                  :err :inherit
-                                                  :dir (.getPath github-workspace)})]
-            (when-not (zero? exit)
-              (println "Deployment failed to" deploy-repository)))))))
-
-(def commands
-  {:clojure-git-ignore clojure-git-ignore
-   :code-coverage code-coverage
-   :conform-repository github/conform-repository
-   :list-licences list-licenses
-   :list-vulnerabilities (juxt install-nvd list-vulnerabilities)
-   :package-deploy-artifacts package-deploy-artifacts
-   :deploy-walter-ci deploy-walter-ci
-   :rewrite-idiomatic-simple rewrite-idiomatic-simple
-   :run-tests run-tests
-   :run-ci-perf-tests run-ci-perf-tests
-   :sort-ns sort-ns
-   :update-dependencies-run-tests update-dependencies-run-tests})
-
-(defn start
-  [{:keys [input-command] :as config}]
-  ((get commands input-command) config))
+(defmethod start :update-git-ignore
+  [config]
+  (update-git-ignore config))

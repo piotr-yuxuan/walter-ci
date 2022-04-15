@@ -1,13 +1,38 @@
-name: 'piotr-yuxuan/walter-ci-register'
-description: |
-  Opinionated set of standard steps for all your Clojure projects,
-  defined by conventions and no configuration.
-inputs:
-  command:
-    description: 'Walter CI command to run'
-    required: true
+# This file is maintained by Walter CI, and may be rewritten.
+# https://github.com/piotr-yuxuan/walter-ci
+#
+# You are free to remove this project from Walter CI realm by opening
+# a PR. You may also create another workflow besides this one.
+
+name: piotr-yuxuan/walter-ci
+description: Collection of `bash` utilities and helpers accessible from the comfort of your command line.
+inputs: {}
 runs:
-  using: 'composite'
+  using: composite
   steps:
-    - run: ${{ github.action_path }}/resources/walter-ci.sh
-      shell: bash
+  - name: Checkout repository
+    uses: actions/checkout@main
+    with:
+      submodules: recursive
+  - name: Cache local Maven repository
+    uses: actions/cache@v2
+    with:
+      path: ~/.m2/repository
+      key: ${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
+      restore-keys: ${{ runner.os }}-maven-
+  - name: Install Clojure CLI
+    uses: DeLaGuardo/setup-clojure@master
+    with:
+      cli: latest
+      lein: latest
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+  - name: Install clojure-deps-edn
+    shell: bash
+    run: git clone git@github.com:practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
+  - name: Download Walter executable and update PATH
+    shell: bash
+    run: ${{ github.action_path }}/bash/install.sh
+author: Piotr Yuxuan
+branding:
+  icon: command
+  color: orange

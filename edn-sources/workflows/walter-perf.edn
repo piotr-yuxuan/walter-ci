@@ -1,0 +1,18 @@
+{:name "Walter Perf"
+ :on {:workflow_dispatch nil
+      :repository_dispatch nil
+      :schedule [;; Run only once a week, on Tuesday to save some credits. Otherwise: "28 3 * * 2,5".
+                 {:cron "28 3 * * 2"}]}
+ :concurrency {:group "walter-perf"
+               :cancel-in-progress true}
+ :env #walter/env #{:git}
+ :jobs {:run-perf-tests #job/wrap[#step :walter/use
+                                  {:run #cmd/join["lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --focus-meta :perf"
+                                                  "git add ./doc/perf"
+                                                  "git checkout -ff -- ." ; Clean untracked files.
+                                                  "git clean -ff -- ." ; Clean unstaged files.
+                                                  "git commit --message \"Performance test report\""
+                                                  #str/join["walter" "retry" "--" "git"
+                                                            ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
+                                                            "-c" "http.https://github.com/.extraheader="
+                                                            "push"]]}]}}
