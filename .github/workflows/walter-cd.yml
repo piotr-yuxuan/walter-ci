@@ -27,20 +27,20 @@ jobs:
       - uses: piotr-yuxuan/walter-ci@main
       - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
+    name: Scan and report vulnerabilities
     runs-on: ubuntu-latest
     steps:
       - uses: piotr-yuxuan/walter-ci@main
-      - name: Scan and report vulnerabilities
-        run: |-
-          git rm "./doc/Known vulnerabilities.txt" || true
-          clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"' || true
-          cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
-          git add ./doc/known-vulnerabilities.csv
-          git checkout -ff -- .
-          git clean -ff -- .
-          git commit --message "Update known vulnerabilities"
-          walter retry -- git -c http.https://github.com/.extraheader= push
+      - run: git rm "./doc/Known vulnerabilities.txt" || true
+      - run: clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"' || true
+      - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
+      - run: git add ./doc/known-vulnerabilities.csv
+      - run: git checkout -ff -- .
+      - run: git clean -ff -- .
+      - run: git commit --message "Update known vulnerabilities"
+      - run: walter retry -- git -c "http.https://github.com/.extraheader=" push
   list-licences:
+    name: List dependency licences
     runs-on: ubuntu-latest
     steps:
       - uses: piotr-yuxuan/walter-ci@main
@@ -50,7 +50,7 @@ jobs:
       - run: git checkout -ff -- . || true
       - run: git clean -ff -- . || true
       - run: git commit --message "List dependency licenses"
-      - run: walter retry -- git -c http.https://github.com/.extraheader= push
+      - run: walter retry -- git -c "http.https://github.com/.extraheader=" push
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     steps:
