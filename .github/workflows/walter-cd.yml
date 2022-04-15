@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: piotr-yuxuan/walter-ci@main
       - run: lein licenses :csv > ./doc/Licenses.csv
-      - run: sort ./doc/Licenses.csv > ./doc/Licenses.csv
+      - run: sort -o ./doc/Licenses.csv{,}
       - run: git add ./doc/Licenses.csv
       - run: git checkout -ff -- . || true
       - run: git clean -ff -- . || true
