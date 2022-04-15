@@ -24,24 +24,15 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-    - run: which walter-ci
-      continue-on-error: true
-    - run: pwd
     - uses: piotr-yuxuan/walter-ci@main
-      continue-on-error: true
-    - run: which walter-ci
-      continue-on-error: true
-    - run: pwd
-      continue-on-error: true
     - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
-      continue-on-error: true
   report-vulnerabilities:
     runs-on: ubuntu-latest
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - name: Scan and report vulnerabilities
       run: |-
-        git rm "./doc/Known vulnerabilities.txt"
+        git rm "./doc/Known vulnerabilities.txt" || true
         clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
         cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
         git add ./doc/known-vulnerabilities.csv
