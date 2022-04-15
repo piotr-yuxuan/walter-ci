@@ -1,0 +1,66 @@
+# This file is maintained by Walter CI, and may be rewritten.
+# https://github.com/piotr-yuxuan/walter-ci
+#
+# You are free to remove this project from Walter CI realm by opening
+# a PR. You may also create another workflow besides this one.
+
+name: Walter CD
+'on':
+  workflow_dispatch: null
+  repository_dispatch: null
+  branches: '*'
+concurrency:
+  group: walter-cd
+  cancel-in-progress: true
+env:
+  GIT_COMMITTER_NAME: ${{ secrets.GITHUB_ACTOR }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_AUTHOR_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
+  GIT_AUTHOR_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - run: which walter-ci
+      continue-on-error: true
+    - run: pwd
+    - uses: piotr-yuxuan/walter-ci@main
+      continue-on-error: true
+    - run: which walter-ci
+      continue-on-error: true
+    - run: pwd
+      continue-on-error: true
+    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
+      continue-on-error: true
+  report-vulnerabilities:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - name: Scan and report vulnerabilities
+      run: |-
+        git rm "./doc/Known vulnerabilities.txt"
+        clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
+        cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
+        git add ./doc/known-vulnerabilities.csv
+        git checkout -ff -- .
+        git clean -ff -- .
+        git commit --message "Update known vulnerabilities"
+        walter retry -- git -c http.https://github.com/.extraheader= push
+  list-licences:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: |-
+        lein licenses :csv > ./doc/Licenses.csv
+        sort ./doc/Licenses.csv
+        git add ./doc/Licenses.csv
+        git checkout -ff -- .
+        git clean -ff -- .
+        git commit --message "List dependency licenses"
+        walter retry -- git -c http.https://github.com/.extraheader= push
+  package-deploy-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo :package-deploy-artifacts
