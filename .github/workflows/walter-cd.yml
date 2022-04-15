@@ -50,7 +50,7 @@ jobs:
       - run: git checkout -ff -- . || true
       - run: git clean -ff -- . || true
       - run: git commit --message "List dependency licenses"
-      - run: git push
+      - run: walter retry -- git push
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     steps:
