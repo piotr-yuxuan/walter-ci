@@ -14,7 +14,7 @@ concurrency:
   group: walter-cd
   cancel-in-progress: true
 env:
-  GIT_COMMITTER_NAME: ${{ secrets.GITHUB_ACTOR }}
+  GIT_COMMITTER_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
   GIT_COMMITTER_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
   GIT_AUTHOR_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
   GIT_AUTHOR_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
