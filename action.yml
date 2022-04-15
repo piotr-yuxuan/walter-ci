@@ -31,12 +31,12 @@ runs:
     with:
       cli: latest
       lein: latest
-      github-token: ${{ inputs.github-token }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
   - name: Install clojure-deps-edn
     shell: bash
     run: -|
       unset GIT_ASKPASS
-      git clone git@github.com:practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
+      git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
   - name: Download Walter executable and update PATH
     shell: bash
     run: ${{ github.action_path }}/bash/install.sh
