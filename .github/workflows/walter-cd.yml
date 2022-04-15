@@ -50,7 +50,7 @@ jobs:
       - run: git checkout -ff -- . || true
       - run: git clean -ff -- . || true
       - run: git commit --message "List dependency licenses"
-      - run: walter retry -- git -c "http.https://github.com/.extraheader=" push
+      - run: git -c "http.https://github.com/.extraheader=" push
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     steps:
