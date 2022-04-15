@@ -33,7 +33,7 @@ jobs:
       - name: Scan and report vulnerabilities
         run: |-
           git rm "./doc/Known vulnerabilities.txt" || true
-          clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
+          clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"' || true
           cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
           git add ./doc/known-vulnerabilities.csv
           git checkout -ff -- .
