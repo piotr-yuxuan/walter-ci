@@ -35,9 +35,6 @@ runs:
   - name: Install clojure-deps-edn
     shell: bash
     run: GIT_ASKPASS='' git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
-  - name: Download Walter executable and update PATH
-    shell: bash
-    run: ${{ github.action_path }}/bash/install.sh
   - name: Copy walter-ci standalone jar and executable shell script
     shell: bash
     run: |-
