@@ -31,7 +31,7 @@ runs:
     with:
       cli: latest
       lein: latest
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ inputs.GITHUB_TOKEN }}
   - name: Install clojure-deps-edn
     shell: bash
     run: -|
