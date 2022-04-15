@@ -14,6 +14,10 @@
                  [leiningen-core "2.9.6" :upgrade false]
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [clj-http "3.12.3" :exclusions [riddley]]
+                 ;; This version of malli-cli is private because it
+                 ;; contains code that was not tested and likely
+                 ;; breaks quite a lot of other usecases. Nothing
+                 ;; secret except shame.
                  [com.github.piotr-yuxuan/malli-cli "2.1.0-private-alpha"] ; Configuration value from the command-line
                  [babashka/process "0.1.1"]
                  [camel-snake-kebab "0.4.2"]
