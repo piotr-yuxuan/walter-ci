@@ -24,35 +24,34 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
     runs-on: ubuntu-latest
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - name: Scan and report vulnerabilities
-      run: |-
-        git rm "./doc/Known vulnerabilities.txt" || true
-        clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
-        cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
-        git add ./doc/known-vulnerabilities.csv
-        git checkout -ff -- .
-        git clean -ff -- .
-        git commit --message "Update known vulnerabilities"
-        walter retry -- git -c http.https://github.com/.extraheader= push
+      - uses: piotr-yuxuan/walter-ci@main
+      - name: Scan and report vulnerabilities
+        run: |-
+          git rm "./doc/Known vulnerabilities.txt" || true
+          clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
+          cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
+          git add ./doc/known-vulnerabilities.csv
+          git checkout -ff -- .
+          git clean -ff -- .
+          git commit --message "Update known vulnerabilities"
+          walter retry -- git -c http.https://github.com/.extraheader= push
   list-licences:
     runs-on: ubuntu-latest
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: |-
-        lein licenses :csv > ./doc/Licenses.csv
-        sort ./doc/Licenses.csv
-        git add ./doc/Licenses.csv
-        git checkout -ff -- .
-        git clean -ff -- .
-        git commit --message "List dependency licenses"
-        walter retry -- git -c http.https://github.com/.extraheader= push
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: lein licenses :csv > ./doc/Licenses.csv
+      - run: sort ./doc/Licenses.csv > ./doc/Licenses.csv
+      - run: git add ./doc/Licenses.csv
+      - run: git checkout -ff -- . || true
+      - run: git clean -ff -- . || true
+      - run: git commit --message "List dependency licenses"
+      - run: walter retry -- git -c http.https://github.com/.extraheader= push
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     steps:
-    - run: echo :package-deploy-artifacts
+      - run: echo :package-deploy-artifacts
