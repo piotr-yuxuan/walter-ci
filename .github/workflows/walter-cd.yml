@@ -34,10 +34,9 @@ jobs:
       - run: git rm "./doc/Known vulnerabilities.txt" || true
       - run: clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"' || true
       - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
-      - run: $(git diff --exit-code); VARIABLE=$?
-      - run: [[ ${VARIABLE} -eq 1 ]] && git add ./doc/known-vulnerabilities.csv
-      - run: [[ ${VARIABLE} -eq 1 ]] && git commit --message "Update known vulnerabilities"
-      - run: [[ ${VARIABLE} -eq 1 ]] && walter retry -- git push
+      - run: git add ./doc/known-vulnerabilities.csv
+      - run: git commit --message "Update known vulnerabilities"
+      - run: walter retry -- git push
   list-licences:
     name: List dependency licences
     runs-on: ubuntu-latest
@@ -45,10 +44,9 @@ jobs:
       - uses: piotr-yuxuan/walter-ci@main
       - run: lein licenses :csv > ./doc/Licenses.csv
       - run: sort -o ./doc/Licenses.csv{,}
-      - run: $(git diff --exit-code); VARIABLE=$?
-      - run: [[ ${VARIABLE} -eq 1 ]] && git add ./doc/Licenses.csv
-      - run: [[ ${VARIABLE} -eq 1 ]] && git commit --message "List dependency licenses" || true
-      - run: [[ ${VARIABLE} -eq 1 ]] && walter retry -- git push || true
+      - run: git add ./doc/Licenses.csv
+      - run: git commit --message "List dependency licenses"
+      - run: walter retry -- git push
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     steps:
