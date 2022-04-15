@@ -38,7 +38,7 @@ jobs:
       - run: git checkout -ff -- .
       - run: git clean -ff -- .
       - run: git commit --message "Update known vulnerabilities"
-      - run: walter retry -- git -c "http.https://github.com/.extraheader=" push
+      - run: walter retry -- git push
   list-licences:
     name: List dependency licences
     runs-on: ubuntu-latest
