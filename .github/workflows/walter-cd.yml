@@ -49,8 +49,8 @@ jobs:
     - run: git commit --message "Update known vulnerabilities"
       if: steps.diff.outcome == 'failure'
     - run: |-
-        echo "INPUT_TRY=${INPUT_TRY}"
-        walter retry
+        echo "WALTER_TRY=${WALTER_TRY}"
+        walter retry -- ${WALTER_TRY}
       if: steps.diff.outcome == 'failure'
       env:
         WALTER_TRY: git push
@@ -69,11 +69,11 @@ jobs:
     - run: git commit --message "List dependency licenses"
       if: steps.diff.outcome == 'failure'
     - run: |-
-        echo "INPUT_TRY=${INPUT_TRY}"
-        walter retry
+        echo "WALTER_TRY=${WALTER_TRY}"
+        walter retry -- ${WALTER_TRY}
       if: steps.diff.outcome == 'failure'
       env:
-        WALTER_TRY: git push -- ${INPUT_TRY}
+        WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git --rebase pull
   package-deploy-artifacts:
     runs-on: ubuntu-latest
