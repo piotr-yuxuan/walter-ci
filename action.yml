@@ -36,7 +36,10 @@ runs:
       shell: bash
     - run: mkdir "$HOME/.walter-ci"
       shell: bash
-    - run: wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")/download/walter-ci-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
+    - run: |
+        WALTER_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
+        echo "$WALTER_VERSION=${WALTER_VERSION}"
+        wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/${WALTER_VERSION}/download/walter-ci-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/bash/walter-ci.sh" "$HOME/.walter-ci/walter"
       shell: bash
