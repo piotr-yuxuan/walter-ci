@@ -14,10 +14,6 @@
         {:runs-on "ubuntu-latest"
          :name "Run tests"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:uses "actions/cache@master"
-                  :with {:path #line/join["~/.m2/repository"]
-                         :key "${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}"
-                         :restore-keys "${{ runner.os }}-maven-"}}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}]}
 
         :report-vulnerabilities
@@ -35,10 +31,11 @@
                   :id "diff"}
                  {:run "git commit --message \"Update known vulnerabilities\""
                   :if "steps.diff.outcome == 'failure'"}
-                 {:run "walter retry"
+                 {:name "git push"
+                  :run "walter retry"
                   :if "steps.diff.outcome == 'failure'"
                   :env {:WALTER_TRY "git push"
-                        :WALTER_BEFORE_RETRY "git --rebase pull"}}]}
+                        :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
         :list-licences
         {:runs-on "ubuntu-latest"
@@ -52,10 +49,11 @@
                   :id "diff"}
                  {:run "git commit --message \"List dependency licenses\""
                   :if "steps.diff.outcome == 'failure'"}
-                 {:run "walter retry"
+                 {:name "git push"
+                  :run "walter retry"
                   :if "steps.diff.outcome == 'failure'"
                   :env {:WALTER_TRY "git push"
-                        :WALTER_BEFORE_RETRY "git --rebase pull"}}]}
+                        :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
         :package-deploy-artifacts
         {:runs-on "ubuntu-latest"

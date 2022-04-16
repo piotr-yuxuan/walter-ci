@@ -26,11 +26,6 @@ jobs:
     name: Run tests
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - uses: actions/cache@master
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
-        restore-keys: ${{ runner.os }}-maven-
     - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
     runs-on: ubuntu-latest
