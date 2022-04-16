@@ -107,13 +107,5 @@
       :max-retries 5)))
 
 (defn conform-repository
-  [{:keys [github-workspace] :as config}]
-  (doseq [github-file ["FUNDING.yml"
-                       "CODEOWNERS.yml"]]
-    (spit (doto (->file github-workspace ".github" github-file) io/make-parents)
-          (slurp (io/resource github-file)))
-    (git/stage-all github-workspace config)
-    (when (git/need-commit? github-workspace config)
-      (git/commit github-workspace config (format "Update %s" github-file))))
-  (git/push github-workspace config)
+  [config]
   (apply-settings config (expected-settings config)))
