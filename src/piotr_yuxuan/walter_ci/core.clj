@@ -125,8 +125,8 @@
       (secrets/upsert-value config+github-repository
                             (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
                             (get config secret-name)))
-    (doseq [[source-edn workflow-file-name] [["edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
-                                             ["edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
+    (doseq [[source-edn workflow-file-name] [["edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
+                                             ["edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
                                              ["edn-sources/workflows/walter-perf.edn" "walter-perf.yml"]]]
       (->> source-edn
            (steps+edn->yml steps nil)
