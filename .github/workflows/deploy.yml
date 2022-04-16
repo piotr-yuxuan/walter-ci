@@ -6,6 +6,8 @@
 
 name: Deploy Walter
 'on':
+  repository_dispatch: null
+  workflow_dispatch: null
   push:
     branches:
     - main
@@ -29,7 +31,7 @@ jobs:
   piotr-yuxuan-algo-calisthenics:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/algo-calisthenics
       url: https://www.github.com/piotr-yuxuan/algo-calisthenics
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -37,7 +39,7 @@ jobs:
   piotr-yuxuan-closeable-map:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/closeable-map
       url: https://www.github.com/piotr-yuxuan/closeable-map
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -45,7 +47,7 @@ jobs:
   piotr-yuxuan-dove:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/dove
       url: https://www.github.com/piotr-yuxuan/dove
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -53,7 +55,7 @@ jobs:
   piotr-yuxuan-ephemeral-server:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/ephemeral-server
       url: https://www.github.com/piotr-yuxuan/ephemeral-server
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -61,7 +63,7 @@ jobs:
   piotr-yuxuan-malli-cli:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/malli-cli
       url: https://www.github.com/piotr-yuxuan/malli-cli
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -69,7 +71,7 @@ jobs:
   piotr-yuxuan-nabab:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/nabab
       url: https://www.github.com/piotr-yuxuan/nabab
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -77,7 +79,7 @@ jobs:
   piotr-yuxuan-polygam:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/polygam
       url: https://www.github.com/piotr-yuxuan/polygam
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -85,7 +87,7 @@ jobs:
   piotr-yuxuan-poor-mans-distributed-cache:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/poor-mans-distributed-cache
       url: https://www.github.com/piotr-yuxuan/poor-mans-distributed-cache
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -93,7 +95,7 @@ jobs:
   piotr-yuxuan-security-mining:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/security-mining
       url: https://www.github.com/piotr-yuxuan/security-mining
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -101,7 +103,7 @@ jobs:
   piotr-yuxuan-slava:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/slava
       url: https://www.github.com/piotr-yuxuan/slava
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -109,7 +111,7 @@ jobs:
   piotr-yuxuan-slava-record:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/slava-record
       url: https://www.github.com/piotr-yuxuan/slava-record
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -117,7 +119,7 @@ jobs:
   piotr-yuxuan-tsv-processing:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/tsv-processing
       url: https://www.github.com/piotr-yuxuan/tsv-processing
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -125,7 +127,7 @@ jobs:
   piotr-yuxuan-walter-ci:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/walter-ci
       url: https://www.github.com/piotr-yuxuan/walter-ci
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -133,7 +135,7 @@ jobs:
   piotr-yuxuan-welcome-base-api:
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: piotr-yuxuan/welcome-base-api
       url: https://www.github.com/piotr-yuxuan/welcome-base-api
     steps:
     - uses: piotr-yuxuan/walter-ci@main
