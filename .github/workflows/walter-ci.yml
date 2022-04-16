@@ -21,6 +21,7 @@ env:
   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
   WALTER_ACTOR: ${{ secrets.WALTER_ACTOR }}
+  WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
 jobs:
   conform-repository:
     runs-on: ubuntu-latest
