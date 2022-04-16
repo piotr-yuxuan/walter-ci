@@ -3,5 +3,12 @@
              :paths [".github/workflows/deploy.yml"]}}
  :concurrency {:group "deploy-jobs"
                :cancel-in-progress false}
- :env #walter/env #{:git}
+ :env {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+       :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+       :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+       :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
+       :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
+       :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"
+       :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
+       :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"}
  :jobs #walter/deploy-jobs{}}

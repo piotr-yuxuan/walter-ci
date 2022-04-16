@@ -1,0 +1,138 @@
+# This file is maintained by Walter CI, and may be rewritten.
+# https://github.com/piotr-yuxuan/walter-ci
+#
+# You are free to remove this project from Walter CI realm by opening
+# a PR. You may also create another workflow besides this one.
+
+name: Deploy Walter
+'on':
+  push:
+    branches:
+    - main
+    paths:
+    - .github/workflows/deploy.yml
+concurrency:
+  group: deploy-jobs
+  cancel-in-progress: false
+env:
+  GIT_COMMITTER_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_AUTHOR_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
+  GIT_AUTHOR_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
+  WALTER_ACTOR: ${{ secrets.WALTER_ACTOR }}
+  WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
+jobs:
+  piotr-yuxuan-algo-calisthenics:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/algo-calisthenics
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/algo-calisthenics
+  piotr-yuxuan-closeable-map:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/closeable-map
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/closeable-map
+  piotr-yuxuan-dove:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/dove
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/dove
+  piotr-yuxuan-ephemeral-server:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/ephemeral-server
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/ephemeral-server
+  piotr-yuxuan-malli-cli:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/malli-cli
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/malli-cli
+  piotr-yuxuan-nabab:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/nabab
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/nabab
+  piotr-yuxuan-polygam:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/polygam
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/polygam
+  piotr-yuxuan-poor-mans-distributed-cache:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/poor-mans-distributed-cache
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/poor-mans-distributed-cache
+  piotr-yuxuan-security-mining:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/security-mining
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/security-mining
+  piotr-yuxuan-slava:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/slava
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/slava
+  piotr-yuxuan-slava-record:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/slava-record
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/slava-record
+  piotr-yuxuan-tsv-processing:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/tsv-processing
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/tsv-processing
+  piotr-yuxuan-walter-ci:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/walter-ci
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/walter-ci
+  piotr-yuxuan-welcome-base-api:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.github.com/piotr-yuxuan/welcome-base-api
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: walter self-deploy --github-repository piotr-yuxuan/welcome-base-api
