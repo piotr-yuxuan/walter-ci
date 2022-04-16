@@ -68,10 +68,12 @@ jobs:
       id: diff
     - run: git commit --message "List dependency licenses"
       if: steps.diff.outcome == 'failure'
-    - run: walter retry
+    - run: |-
+        echo "INPUT_TRY=${INPUT_TRY}"
+        walter retry
       if: steps.diff.outcome == 'failure'
       env:
-        WALTER_TRY: git push
+        WALTER_TRY: git push -- ${INPUT_TRY}
         WALTER_BEFORE_RETRY: git --rebase pull
   package-deploy-artifacts:
     runs-on: ubuntu-latest
