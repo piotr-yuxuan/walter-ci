@@ -15,8 +15,10 @@
         {:runs-on "ubuntu-latest"
          :name "Run tests"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "lein with-profile +walter/kaocha,+kaocha,+perf run -m kaocha.runner --focus-meta :perf"}
-                 {:run "git add ./doc/perf"}
+                 {:run "lein with-profile +walter/kaocha,+kaocha,+perf run -m kaocha.runner --focus-meta :perf"
+                  :continue-on-error true}
+                 {:run "git add ./doc/perf"
+                  :continue-on-error true}
                  {:run "git diff --staged --exit-code"
                   :continue-on-error true
                   :id "diff"}
