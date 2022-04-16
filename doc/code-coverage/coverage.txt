@@ -1,8 +1,8 @@
 Lines Non-Blank Instrumented Covered Partial
-  104        96           58      13       3 piotr_yuxuan/walter_ci/files.clj
+  103        95           57      13       3 piotr_yuxuan/walter_ci/files.clj
    97        90           56       7       1 piotr_yuxuan/walter_ci/git.clj
   115       109           76      29       0 piotr_yuxuan/walter_ci/github.clj
    50        47           28       4       0 piotr_yuxuan/walter_ci/secrets.clj
-  177       158          102      23       0 piotr_yuxuan/walter_ci/core.clj
+  173       156          102      22       0 piotr_yuxuan/walter_ci/core.clj
   151       147           55      37       1 piotr_yuxuan/walter_ci/config.clj
    26        23            7       2       0 piotr_yuxuan/walter_ci/main.clj
