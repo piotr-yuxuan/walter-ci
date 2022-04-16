@@ -23,31 +23,48 @@ env:
 jobs:
   run-tests:
     runs-on: ubuntu-latest
+    name: Run tests
     steps:
-      - uses: piotr-yuxuan/walter-ci@main
-      - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
+    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/cache@master
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
+        restore-keys: ${{ runner.os }}-maven-
+    - run: lein with-profile +walter/kaocha, +kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
+    runs-on: ubuntu-latest
     name: Scan and report vulnerabilities
-    runs-on: ubuntu-latest
     steps:
-      - uses: piotr-yuxuan/walter-ci@main
-      - run: git rm "./doc/Known vulnerabilities.txt" || true
-      - run: clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"' || true
-      - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
-      - run: git add ./doc/known-vulnerabilities.csv
-      - run: git commit --message "Update known vulnerabilities"
-      - run: walter retry -- git push
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: git rm "./doc/Known vulnerabilities.txt"
+      continue-on-error: true
+    - run: walter retry -- clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
+    - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
+    - run: git add ./doc/known-vulnerabilities.csv
+    - run: git commit --message "Update known vulnerabilities"
+    - run: |-
+        echo "INPUT_TRY=${INPUT_TRY}"
+        walter retry
+      with:
+        try: git push
+        before-retry: git --rebase pull
   list-licences:
-    name: List dependency licences
     runs-on: ubuntu-latest
+    name: List dependency licences
     steps:
-      - uses: piotr-yuxuan/walter-ci@main
-      - run: lein licenses :csv > ./doc/Licenses.csv
-      - run: sort -o ./doc/Licenses.csv{,}
-      - run: git add ./doc/Licenses.csv
-      - run: git commit --message "List dependency licenses"
-      - run: walter retry -- git push
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: lein licenses :csv > ./doc/Licenses.csv
+    - run: sort -o ./doc/Licenses.csv{,}
+    - run: git add ./doc/Licenses.csv
+    - run: git commit --message "List dependency licenses"
+    - run: walter retry
+      with:
+        try: git push
+        before-retry: git --rebase pull
   package-deploy-artifacts:
     runs-on: ubuntu-latest
+    name: List dependency licences
     steps:
-      - run: echo :package-deploy-artifacts
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: echo :package-deploy-artifacts
