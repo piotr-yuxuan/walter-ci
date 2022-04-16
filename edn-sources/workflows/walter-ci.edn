@@ -8,7 +8,8 @@
        :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
        :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
        :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
-       :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"}
+       :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"
+       :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"}
  :jobs {:conform-repository
         {:runs-on "ubuntu-latest"
          :name "Conform GitHub repository"
