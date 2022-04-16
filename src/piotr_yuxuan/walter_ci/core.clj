@@ -111,8 +111,7 @@
 
 (defn steps+edn->write-to-yml-file!
   [steps managed-repositories source-edn target-yml]
-  (->> (steps+edn->yml steps managed-repositories source-edn)
-       (spit target-yml)))
+  (spit target-yml (steps+edn->yml steps managed-repositories source-edn)))
 
 (defn self-deploy
   [{:keys [github-repository] :as config}]
