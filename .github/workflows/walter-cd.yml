@@ -50,6 +50,9 @@ jobs:
         echo "INPUT_TRY=${INPUT_TRY}"
         walter retry
       if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git --rebase pull
       with:
         try: git push
         before-retry: git --rebase pull
@@ -67,9 +70,9 @@ jobs:
       if: steps.diff.outcome == 'failure'
     - run: walter retry
       if: steps.diff.outcome == 'failure'
-      with:
-        try: git push
-        before-retry: git --rebase pull
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git --rebase pull
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     name: Deploy artifacts
