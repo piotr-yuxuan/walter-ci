@@ -48,11 +48,12 @@ jobs:
       id: diff
     - run: git commit --message "Update known vulnerabilities"
       if: steps.diff.outcome == 'failure'
-    - run: walter retry
+    - name: git push
+      run: walter retry
       if: steps.diff.outcome == 'failure'
       env:
         WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git --rebase pull
+        WALTER_BEFORE_RETRY: git pull --rebase
   list-licences:
     runs-on: ubuntu-latest
     name: List dependency licences
@@ -66,11 +67,12 @@ jobs:
       id: diff
     - run: git commit --message "List dependency licenses"
       if: steps.diff.outcome == 'failure'
-    - run: walter retry
+    - name: git push
+      run: walter retry
       if: steps.diff.outcome == 'failure'
       env:
         WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git --rebase pull
+        WALTER_BEFORE_RETRY: git pull --rebase
   package-deploy-artifacts:
     runs-on: ubuntu-latest
     name: Deploy artifacts
