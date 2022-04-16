@@ -10,5 +10,7 @@
        :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
        :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"
        :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
-       :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"}
+       :WALTER_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+       :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
+       :WALTER_GIT_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"}
  :jobs #walter/deploy-jobs{}}
