@@ -2,6 +2,7 @@
  :checkout/repository {:name "Checkout repository"
                        :uses "actions/checkout@main"
                        :with {:submodules "recursive"}}
+ ;; Better cache with custom name.
  :cache/local-maven-repository {:name "Cache local Maven repository"
                                 :uses "actions/cache@v2"
                                 :with {:path "~/.m2/repository"
@@ -20,7 +21,7 @@
                   :run "${{ github.action_path }}/bash/install.sh"}
  :deploy {:run "walter self-deploy"}
  :walter/report-vulnerabilities {:name "Scan and report vulnerabilities"
-                                 :run #cmd/join["git rm \"./doc/Known vulnerabilities.txt\"" ; Remove previous report output
+                                 :run #line/join["git rm \"./doc/Known vulnerabilities.txt\"" ; Remove previous report output
                                                 "clojure -T:security/nvd nvd.task/check :classpath '\"'\"$(lein with-profile -user,-dev classpath)\"'\"'"
                                                 "cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv"
                                                 "git add ./doc/known-vulnerabilities.csv"

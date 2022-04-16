@@ -7,7 +7,7 @@
                :cancel-in-progress true}
  :env #walter/env #{:git}
  :jobs {:run-perf-tests #job/wrap[#step :walter/use
-                                  {:run #cmd/join["lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --focus-meta :perf"
+                                  {:run #line/join["lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --focus-meta :perf"
                                                   "git add ./doc/perf"
                                                   "git checkout -ff -- ." ; Clean untracked files.
                                                   "git clean -ff -- ." ; Clean unstaged files.

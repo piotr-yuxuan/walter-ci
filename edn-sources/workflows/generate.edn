@@ -6,4 +6,4 @@
                :cancel-in-progress true}
  :env #walter/env #{:git}
  :jobs {:generate-deploy-workflow #job/wrap[#step :walter/use
-                                            {:run #cmd/join["walter generate-deploy-workflow"]}]}}
+                                            {:run #line/join["walter generate-deploy-workflow"]}]}}

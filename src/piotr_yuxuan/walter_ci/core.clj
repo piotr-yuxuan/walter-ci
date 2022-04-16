@@ -37,13 +37,17 @@
    :GIT_ASKPASS "$HOME/.walter-ci/bin/askpass.sh"})
 
 (defn cmd-retry
-  [^String cmd]
+  [^String walter-try ^String walter-before-retry]
   (apply safely-fn
-         #(process/check
-            (process/process cmd
-                             {;:dir (.getPath working-directory)
-                              :out :inherit
-                              :err :inherit}))
+         #(let [proc (process/process walter-try
+                                      {:out :inherit
+                                       :err :inherit})]
+            (when (and walter-before-retry
+                       (not (-> @proc :exit zero?)))
+              (process/process walter-before-retry
+                               {:out :inherit
+                                :err :inherit}))
+            (process/check proc))
          (mapcat vec {:max-retries 5})))
 
 (defn walter-readers
@@ -71,7 +75,7 @@
                              :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
                              :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
                              :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"})))
-     'cmd/join #(str/join \newline %)
+     'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/deploy-jobs (fn [_]
                            (reduce (fn [jobs github-repo]
@@ -113,7 +117,7 @@
 (defn self-deploy
   [{:keys [github-repository] :as config}]
   (let [config+github-repository (assoc config :github-repository github-repository)
-        steps (edn/read-string {:readers {'cmd/join #(str/join \newline %)
+        steps (edn/read-string {:readers {'line/join #(str/join \newline %)
                                           'str/join #(str/join \space %)}}
                                (slurp (io/resource "steps.edn")))]
     (doseq [secret-name [:walter-author-name
@@ -148,11 +152,11 @@
 ;; - Walter executable commands
 
 (comment
-  (let [steps (edn/read-string {:readers {'cmd/join #(str/join \newline %)
+  (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
                                           'str/join #(str/join \space %)}}
                                (slurp (io/resource "steps.edn")))
         managed-repositories (edn/read-string (slurp "managed-repositories.edn"))]
-    (doseq [[source-edn target-yml] source+targets]
+    (doseq [[source-edn target-yml] [["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]]]
       (steps+edn->write-to-yml-file! steps managed-repositories source-edn target-yml))))
 
 (defmulti start :command)
@@ -162,8 +166,8 @@
   (github/conform-repository config))
 
 (defmethod start :retry
-  [{:keys [sub-command]}]
-  (cmd-retry sub-command))
+  [{:keys [walter-try walter-before-retry]}]
+  (cmd-retry walter-try walter-before-retry))
 
 (defmethod start :self-deploy
   [config]

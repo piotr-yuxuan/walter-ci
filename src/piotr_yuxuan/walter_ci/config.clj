@@ -99,7 +99,9 @@
                            #(instance? ZonedDateTime %)]]
    [:walter-author-name [any? {:description "Different from the GIT_COMMITTER_NAME who made the commit. Here is the GIT_AUTHOR_NAME of the changes."
                                :env-var "WALTER_AUTHOR_NAME"
-                               :default "Walter CI"}]]])
+                               :default "Walter CI"}]]
+   [:walter-try [string? {:env-var "WALTER_TRY"}]]
+   [:walter-before-retry [string? {:env-var "WALTER_BEFORE_RETRY"}]]])
 
 (def Config
   "These options include all the possible environment variables from GitHub ([link](https://docs.github.com/en/actions/learn-github-actions/environment-variables)). The ones we don't need now are commented out."
@@ -115,7 +117,9 @@
                    [:and
                     [:map [:command ::command]]
                     [:multi {:dispatch :command}
-                     [:retry [:map [:sub-command ::sub-command]]]
+                     [:retry [:map
+                              [:walter-try ::sub-command]
+                              [:walter-before-retry ::sub-command]]]
                      [:self-deploy [:map [:github-repository string?]]]
                      [::m/default :any]]]]))))
 
