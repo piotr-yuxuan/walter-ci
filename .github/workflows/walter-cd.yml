@@ -42,13 +42,17 @@ jobs:
     - run: walter retry -- clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
     - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
     - run: git add ./doc/known-vulnerabilities.csv
+    - run: git diff --staged --exit-code
+      id: diff
     - run: git commit --message "Update known vulnerabilities"
+      if: steps.diff.outcome == 'failure'
     - run: |-
-        echo "WALTER_TRY=${WALTER_TRY}"
+        echo "INPUT_TRY=${INPUT_TRY}"
         walter retry
-      env:
-        WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git --rebase pull
+      if: steps.diff.outcome == 'failure'
+      with:
+        try: git push
+        before-retry: git --rebase pull
   list-licences:
     runs-on: ubuntu-latest
     name: List dependency licences
@@ -57,14 +61,18 @@ jobs:
     - run: lein licenses :csv > ./doc/Licenses.csv
     - run: sort -o ./doc/Licenses.csv{,}
     - run: git add ./doc/Licenses.csv
+    - run: git diff --staged --exit-code
+      id: diff
     - run: git commit --message "List dependency licenses"
+      if: steps.diff.outcome == 'failure'
     - run: walter retry
-      env:
-        WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git --rebase pull
+      if: steps.diff.outcome == 'failure'
+      with:
+        try: git push
+        before-retry: git --rebase pull
   package-deploy-artifacts:
     runs-on: ubuntu-latest
-    name: List dependency licences
+    name: Deploy artifacts
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - run: echo :package-deploy-artifacts
