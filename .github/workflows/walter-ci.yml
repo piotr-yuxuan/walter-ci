@@ -9,7 +9,7 @@ name: Walter CI
   repository_dispatch: null
   workflow_dispatch: null
   schedule:
-    cron: 28 6,18 * * *
+  - cron: 28 6,18 * * *
 concurrency:
   group: walter-ci
   cancel-in-progress: true

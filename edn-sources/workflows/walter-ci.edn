@@ -1,7 +1,7 @@
 {:name "Walter CI"
  :on {:repository_dispatch nil
       :workflow_dispatch nil
-      :schedule {:cron "28 6,18 * * *"}}
+      :schedule [{:cron "28 6,18 * * *"}]}
  :concurrency {:group "walter-ci", :cancel-in-progress true}
  :env {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
        :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
