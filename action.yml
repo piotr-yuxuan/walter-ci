@@ -26,6 +26,12 @@ runs:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
         restore-keys: ${{ runner.os }}-maven-
+    - name: Cache Leiningen
+      uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
+      with:
+        path: ${LEIN_HOME}
+        key: ${{ runner.os }}-maven-${{ hashFiles("${LEIN_HOME}") }}
+        restore-keys: ${{ runner.os }}-leiningen-
     - name: Install Clojure CLI
       uses: DeLaGuardo/setup-clojure@911bc4413d0c9a0d15a435af6a7181353a453e8c
       with:

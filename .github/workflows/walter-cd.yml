@@ -32,6 +32,11 @@ jobs:
     name: Scan and report vulnerabilities
     steps:
     - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
+        restore-keys: ${{ runner.os }}-maven-
     - run: git rm "./doc/Known vulnerabilities.txt"
       continue-on-error: true
     - run: clojure -T:security/nvd nvd.task/check :classpath '"'"$(lein with-profile -user,-dev classpath)"'"'
