@@ -48,9 +48,7 @@ jobs:
       id: diff
     - run: git commit --message "Update known vulnerabilities"
       if: steps.diff.outcome == 'failure'
-    - run: |-
-        echo "WALTER_TRY=${WALTER_TRY}"
-        walter retry -- ${WALTER_TRY}
+    - run: walter retry
       if: steps.diff.outcome == 'failure'
       env:
         WALTER_TRY: git push
@@ -68,9 +66,7 @@ jobs:
       id: diff
     - run: git commit --message "List dependency licenses"
       if: steps.diff.outcome == 'failure'
-    - run: |-
-        echo "WALTER_TRY=${WALTER_TRY}"
-        walter retry -- ${WALTER_TRY}
+    - run: walter retry
       if: steps.diff.outcome == 'failure'
       env:
         WALTER_TRY: git push
