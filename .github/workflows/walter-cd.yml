@@ -44,6 +44,7 @@ jobs:
     - run: cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv
     - run: git add ./doc/known-vulnerabilities.csv
     - run: git diff --staged --exit-code
+      continue-on-error: true
       id: diff
     - run: git commit --message "Update known vulnerabilities"
       if: steps.diff.outcome == 'failure'
@@ -63,6 +64,7 @@ jobs:
     - run: sort -o ./doc/Licenses.csv{,}
     - run: git add ./doc/Licenses.csv
     - run: git diff --staged --exit-code
+      continue-on-error: true
       id: diff
     - run: git commit --message "List dependency licenses"
       if: steps.diff.outcome == 'failure'
