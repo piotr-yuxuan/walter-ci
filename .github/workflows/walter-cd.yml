@@ -94,6 +94,7 @@ jobs:
       env:
         WALTER_TRY: lein deploy github
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
-      generate_release_notes: true
-      draft: true
-      files: target/*-standalone.jar
+      with:
+        generate_release_notes: true
+        draft: true
+        files: target/*-standalone.jar
