@@ -21,6 +21,7 @@ env:
   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
   WALTER_ACTOR: ${{ secrets.WALTER_ACTOR }}
+  WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
 jobs:
   run-tests:
     runs-on: ubuntu-latest
@@ -75,7 +76,7 @@ jobs:
       env:
         WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git pull --rebase
-  package-release-artifacts:
+  release-artifacts:
     runs-on: ubuntu-latest
     name: Release artifacts
     if: ${{ startsWith(github.ref, 'refs/tags/') }}

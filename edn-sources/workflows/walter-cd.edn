@@ -9,7 +9,9 @@
        :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
        :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
        :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
-       :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"}
+       :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"
+       :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
+       :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"}
  :jobs {:run-tests
         {:runs-on "ubuntu-latest"
          :name "Run tests"
@@ -60,8 +62,24 @@
                   :env {:WALTER_TRY "git push"
                         :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
-        :package-deploy-artifacts
+        :release-artifacts
         {:runs-on "ubuntu-latest"
-         :name "Deploy artifacts"
+         :name "Release artifacts"
+         :if "${{ startsWith(github.ref, 'refs/tags/') }}"
+         :needs :run-tests
+         :environment {:name "release"}
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "echo :package-deploy-artifacts"}]}}}
+                 {:run "lein uberjar"}
+                 {:if false
+                  :name "lein deploy clojars"
+                  :run "walter retry"
+                  :env {:WALTER_TRY "lein deploy clojars"}}
+                 {:if false
+                  :name "lein deploy github"
+                  :run "walter retry"
+                  :env {:WALTER_TRY "lein deploy github"}}
+                 {:if false
+                  :uses "softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2"
+                  :with {:generate_release_notes true
+                         :draft true
+                         :files "target/*-standalone.jar"}}]}}}
