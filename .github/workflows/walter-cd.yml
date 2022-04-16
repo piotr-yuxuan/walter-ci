@@ -53,9 +53,6 @@ jobs:
       env:
         WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git --rebase pull
-      with:
-        try: git push
-        before-retry: git --rebase pull
   list-licences:
     runs-on: ubuntu-latest
     name: List dependency licences
