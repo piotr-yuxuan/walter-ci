@@ -21,25 +21,6 @@ env:
   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
 jobs:
-  project/outdated:
-    runs-on: ubuntu-latest
-    name: Update dependency versions
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified
-    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
-    - run: git add .
-    - run: git diff --staged --exit-code
-      continue-on-error: true
-      id: diff
-    - run: git commit --message "Update dependency versions"
-      if: steps.diff.outcome == 'failure'
-    - name: git push
-      run: walter retry
-      if: steps.diff.outcome == 'failure'
-      env:
-        WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git pull --rebase
   conform-funding:
     runs-on: ubuntu-latest
     name: Conform GitHub repository
@@ -160,6 +141,25 @@ jobs:
       continue-on-error: true
       id: diff
     - run: git commit --message "Update .github/CODEOWNERS.yml"
+      if: steps.diff.outcome == 'failure'
+    - name: git push
+      run: walter retry
+      if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git pull --rebase
+  update-dependencies:
+    runs-on: ubuntu-latest
+    name: Update dependency versions
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified
+    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
+    - run: git add .
+    - run: git diff --staged --exit-code
+      continue-on-error: true
+      id: diff
+    - run: git commit --message "Update dependency versions"
       if: steps.diff.outcome == 'failure'
     - name: git push
       run: walter retry

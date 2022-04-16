@@ -152,7 +152,7 @@
                   :env {:WALTER_TRY "git push"
                         :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
-        :project/outdated
+        :update-dependencies
         {:runs-on "ubuntu-latest"
          :name "Update dependency versions"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
