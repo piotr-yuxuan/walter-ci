@@ -1,0 +1,41 @@
+# This file is maintained by Walter CI, and may be rewritten.
+# https://github.com/piotr-yuxuan/walter-ci
+#
+# You are free to remove this project from Walter CI realm by opening
+# a PR. You may also create another workflow besides this one.
+
+name: Walter Perf
+'on':
+  workflow_dispatch: null
+  repository_dispatch: null
+  schedule:
+  - cron: 28 3 * * 2
+concurrency:
+  group: walter-perf
+  cancel-in-progress: true
+env:
+  GIT_COMMITTER_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_AUTHOR_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
+  GIT_AUTHOR_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
+  GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
+jobs:
+  run-perf-tests:
+    runs-on: ubuntu-latest
+    name: Run tests
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: lein with-profile +walter/kaocha,+kaocha,+perf run -m kaocha.runner --focus-meta :perf
+    - run: git add ./doc/perf
+    - run: git diff --staged --exit-code
+      continue-on-error: true
+      id: diff
+    - run: git commit --message "Performance test report"
+      if: steps.diff.outcome == 'failure'
+    - name: git push
+      run: walter retry
+      if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git pull --rebase

@@ -35,7 +35,7 @@ jobs:
     - uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
+        key: ${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}
         restore-keys: ${{ runner.os }}-maven-
     - run: git rm "./doc/Known vulnerabilities.txt"
       continue-on-error: true
