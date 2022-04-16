@@ -89,7 +89,7 @@
                    :body (json/write-value-as-string {:names topics})
                    :basic-auth [walter-actor walter-github-password]
                    :headers {"Content-Type" "application/json"
-                             "Accept" "application/vnd.github.mercy-preview+json"}})
+                             "Accept" "application/vnd.github.v3+json"}})
     :on-error
     :max-retries 5)
   (let [json-settings (m/encode Defaults (dissoc settings :github/topics)
