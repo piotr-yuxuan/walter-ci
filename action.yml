@@ -20,12 +20,6 @@ runs:
       uses: actions/checkout@main
       with:
         submodules: recursive
-    - name: Cache local Maven repository
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}
-        restore-keys: ${{ runner.os }}-maven-
     - name: Install Clojure CLI
       uses: DeLaGuardo/setup-clojure@911bc4413d0c9a0d15a435af6a7181353a453e8c
       with:
@@ -38,8 +32,7 @@ runs:
       shell: bash
     - run: |
         WALTER_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
-        echo "$WALTER_VERSION=${WALTER_VERSION}"
-        wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/${WALTER_VERSION}/download/walter-ci-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
+        wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/bash/walter-ci.sh" "$HOME/.walter-ci/walter"
       shell: bash
