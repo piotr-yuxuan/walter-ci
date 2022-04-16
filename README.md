@@ -41,7 +41,7 @@ It favours `bash` as much as possible to express simple steps.
                             #step :walter/use
                             ;; Multi-line strings may be expressed
 							;; as a vector, and joined later.
-                            {:run #cmd/join["lein sort-ns"
+                            {:run #line/join["lein sort-ns"
                                             "git add ."
                                             "git commit --message \"Sort namespace forms\""
                                             ;; Commands too may be expressed as vectors.

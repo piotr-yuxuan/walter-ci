@@ -44,12 +44,12 @@
                   :env {:WALTER_TRY "git push"
                         :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
-        :sort-ns
+        :ns-sort
         {:runs-on "ubuntu-latest"
          :name "Sort namespace forms"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:run "lein help"}
-                 {:run "lein sort-ns"}
+                 {:run "lein ns-sort"}
                  {:run "git add ."}
                  {:run "git diff --staged --exit-code"
                   :continue-on-error true
