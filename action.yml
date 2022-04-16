@@ -46,6 +46,8 @@ runs:
       shell: bash
     - run: echo "$HOME/.walter-ci" >> $GITHUB_PATH
       shell: bash
+    - run: env
+      shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/bash/askpass.sh" "$HOME/.walter-ci/askpass.sh"
