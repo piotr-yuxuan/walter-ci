@@ -9,43 +9,17 @@
        :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
        :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
        :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"}
- :jobs {:conform-github-repository
+ :jobs {:conform-repository
         {:runs-on "ubuntu-latest"
          :name "Conform GitHub repository"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "walter conform-repository"}]}
-
-        :conform-codeowners
-        {:runs-on "ubuntu-latest"
-         :name "Conform GitHub repository"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "mkdir ./.github/"
-                  :continue-on-error true}
-                 {:run "cp \"${GITHUB_ACTION_PATH}/resources/CODEOWNERS.yml\" .github/CODEOWNERS.yml"}
+                 {:run "walter conform-repository"}
                  {:run "git add .github/CODEOWNERS.yml"}
-                 {:run "git diff --staged --exit-code"
-                  :continue-on-error true
-                  :id "diff"}
-                 {:run "git commit --message \"Update .github/CODEOWNERS.yml\""
-                  :if "steps.diff.outcome == 'failure'"}
-                 {:name "git push"
-                  :run "walter retry"
-                  :if "steps.diff.outcome == 'failure'"
-                  :env {:WALTER_TRY "git push"
-                        :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
-
-        :conform-funding
-        {:runs-on "ubuntu-latest"
-         :name "Conform GitHub repository"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "mkdir ./.github/"
-                  :continue-on-error true}
-                 {:run "cp \"${GITHUB_ACTION_PATH}/resources/FUNDING.yml\" .github/FUNDING.yml"}
                  {:run "git add .github/FUNDING.yml"}
                  {:run "git diff --staged --exit-code"
                   :continue-on-error true
                   :id "diff"}
-                 {:run "git commit --message \"Update .github/FUNDING.yml\""
+                 {:run "git commit --message \"Conform repository\""
                   :if "steps.diff.outcome == 'failure'"}
                  {:name "git push"
                   :run "walter retry"
@@ -74,6 +48,7 @@
         {:runs-on "ubuntu-latest"
          :name "Sort namespace forms"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:run "lein help"}
                  {:run "lein sort-ns"}
                  {:run "git add ."}
                  {:run "git diff --staged --exit-code"

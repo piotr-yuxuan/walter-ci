@@ -21,19 +21,18 @@ env:
   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
 jobs:
-  conform-funding:
+  conform-repository:
     runs-on: ubuntu-latest
     name: Conform GitHub repository
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - run: mkdir ./.github/
-      continue-on-error: true
-    - run: cp "${GITHUB_ACTION_PATH}/resources/FUNDING.yml" .github/FUNDING.yml
+    - run: walter conform-repository
+    - run: git add .github/CODEOWNERS.yml
     - run: git add .github/FUNDING.yml
     - run: git diff --staged --exit-code
       continue-on-error: true
       id: diff
-    - run: git commit --message "Update .github/FUNDING.yml"
+    - run: git commit --message "Conform repository"
       if: steps.diff.outcome == 'failure'
     - name: git push
       run: walter retry
@@ -59,17 +58,12 @@ jobs:
       env:
         WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git pull --rebase
-  conform-github-repository:
-    runs-on: ubuntu-latest
-    name: Conform GitHub repository
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter conform-repository
   sort-ns:
     runs-on: ubuntu-latest
     name: Sort namespace forms
     steps:
     - uses: piotr-yuxuan/walter-ci@main
+    - run: lein help
     - run: lein sort-ns
     - run: git add .
     - run: git diff --staged --exit-code
@@ -110,6 +104,31 @@ jobs:
       env:
         WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git pull --rebase
+  code-coverage:
+    runs-on: ubuntu-latest
+    name: Code coverage
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-perf-${{ hashFiles('**/project.clj') }}
+        restore-keys: ${{ runner.os }}-maven-
+    - run: git rm ./doc/code-coverage/
+      continue-on-error: true
+    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --cov-text --cov-html
+    - run: git add ./doc/code-coverage/**.{txt,css,html}
+    - run: git diff --staged --exit-code
+      continue-on-error: true
+      id: diff
+    - run: git commit --message "Update code coverage"
+      if: steps.diff.outcome == 'failure'
+    - name: git push
+      run: walter retry
+      if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git pull --rebase
   idiomatic-code:
     runs-on: ubuntu-latest
     name: Idiomatic code
@@ -121,26 +140,6 @@ jobs:
       continue-on-error: true
       id: diff
     - run: git commit --message "More idiomatic code"
-      if: steps.diff.outcome == 'failure'
-    - name: git push
-      run: walter retry
-      if: steps.diff.outcome == 'failure'
-      env:
-        WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git pull --rebase
-  conform-codeowners:
-    runs-on: ubuntu-latest
-    name: Conform GitHub repository
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: mkdir ./.github/
-      continue-on-error: true
-    - run: cp "${GITHUB_ACTION_PATH}/resources/CODEOWNERS.yml" .github/CODEOWNERS.yml
-    - run: git add .github/CODEOWNERS.yml
-    - run: git diff --staged --exit-code
-      continue-on-error: true
-      id: diff
-    - run: git commit --message "Update .github/CODEOWNERS.yml"
       if: steps.diff.outcome == 'failure'
     - name: git push
       run: walter retry
@@ -160,31 +159,6 @@ jobs:
       continue-on-error: true
       id: diff
     - run: git commit --message "Update dependency versions"
-      if: steps.diff.outcome == 'failure'
-    - name: git push
-      run: walter retry
-      if: steps.diff.outcome == 'failure'
-      env:
-        WALTER_TRY: git push
-        WALTER_BEFORE_RETRY: git pull --rebase
-  code-coverage:
-    runs-on: ubuntu-latest
-    name: Code coverage
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-perf-${{ hashFiles('**/project.clj') }}
-        restore-keys: ${{ runner.os }}-maven-
-    - run: git rm ./doc/code-coverage/
-      continue-on-error: true
-    - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --cov-text --cov-html
-    - run: git add ./doc/code-coverage/**.{txt,css,html}
-    - run: git diff --staged --exit-code
-      continue-on-error: true
-      id: diff
-    - run: git commit --message "Update code coverage"
       if: steps.diff.outcome == 'failure'
     - name: git push
       run: walter retry
