@@ -100,6 +100,7 @@
    [:walter-author-name [any? {:description "Different from the GIT_COMMITTER_NAME who made the commit. Here is the GIT_AUTHOR_NAME of the changes."
                                :env-var "WALTER_AUTHOR_NAME"
                                :default "Walter CI"}]]
+   [:walter-actor [string? {:env-var "WALTER_ACTOR"}]]
    [:walter-try [string? {:env-var "WALTER_TRY"}]]
    [:walter-before-retry [string? {:env-var "WALTER_BEFORE_RETRY"}]]])
 

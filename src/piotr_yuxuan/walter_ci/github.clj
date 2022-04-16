@@ -81,13 +81,13 @@
                 mt/strip-extra-keys-transformer))))
 
 (defn apply-settings
-  [{:keys [github-api-url github-actor github-repository walter-github-password]} {:github/keys [topics] :as settings}]
+  [{:keys [github-api-url walter-actor github-repository walter-github-password]} {:github/keys [topics] :as settings}]
   ;; Setting topics through the API is still in preview.
   (safely
     (http/request {:request-method :put
                    :url (str/join "/" [github-api-url "repos" github-repository "topics"])
                    :body (json/write-value-as-string {:names topics})
-                   :basic-auth [github-actor walter-github-password]
+                   :basic-auth [walter-actor walter-github-password]
                    :headers {"Content-Type" "application/json"
                              "Accept" "application/vnd.github.mercy-preview+json"}})
     :on-error
@@ -100,12 +100,16 @@
       (http/request {:request-method :patch
                      :url (str/join "/" [github-api-url "repos" github-repository])
                      :body (json/write-value-as-string json-settings)
-                     :basic-auth [github-actor walter-github-password]
+                     :basic-auth [walter-actor walter-github-password]
                      :headers {"Content-Type" "application/json"
                                "Accept" "application/vnd.github.v3+json"}})
       :on-error
       :max-retries 5)))
 
 (defn conform-repository
-  [config]
+  [{:keys [github-workspace] :as config}]
+  (doseq [github-file ["FUNDING.yml"
+                       "CODEOWNERS.yml"]]
+    (spit (doto (->file github-workspace ".github" github-file) io/make-parents)
+          (slurp (io/resource github-file))))
   (apply-settings config (expected-settings config)))
