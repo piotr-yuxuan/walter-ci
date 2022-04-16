@@ -49,9 +49,8 @@
        .getCanonicalFile)))
 
 (defn ^File ->tmp-file
-  ([] (->tmp-file nil nil nil))
-  ([suffix] (->tmp-file nil suffix nil))
-  ([prefix suffix] (->tmp-file prefix suffix nil))
+  ([] (->tmp-file ""))
+  ([suffix] (->tmp-file "" suffix))
   ([prefix suffix & file-attributes]
    (-> prefix
        ^Path (Files/createTempFile suffix (into-array FileAttribute file-attributes))
