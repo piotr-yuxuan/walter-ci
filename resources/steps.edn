@@ -6,7 +6,7 @@
  :cache/local-maven-repository {:name "Cache local Maven repository"
                                 :uses "actions/cache@v2"
                                 :with {:path "~/.m2/repository"
-                                       :key "${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}-${{ hashFiles('**/deps.edn') }}"
+                                       :key "${{ runner.os }}-maven-${{ hashFiles('**/project.clj') }}"
                                        :restore-keys "${{ runner.os }}-maven-"}}
  :install/clojure-cli {:name "Install Clojure CLI"
                        :uses "DeLaGuardo/setup-clojure@master"
@@ -20,15 +20,13 @@
                   :shell "bash"
                   :run "${{ github.action_path }}/bash/install.sh"}
  :deploy {:run "walter self-deploy"}
- :walter/report-vulnerabilities {:name "Scan and report vulnerabilities"
-                                 :run #line/join["git rm \"./doc/Known vulnerabilities.txt\"" ; Remove previous report output
-                                                "clojure -T:security/nvd nvd.task/check :classpath '\"'\"$(lein with-profile -user,-dev classpath)\"'\"'"
-                                                "cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv"
-                                                "git add ./doc/known-vulnerabilities.csv"
-                                                "git checkout -ff -- ." ; Clean untracked files.
-                                                "git clean -ff -- ." ; Clean unstaged files.
-                                                "git commit --message \"Update known vulnerabilities\""
-                                                #str/join["walter" "retry" "--" "git"
-                                                          ;; For this specific line, see https://github.com/actions/checkout/issues/162#issuecomment-590821598
-                                                          "-c" "http.https://github.com/.extraheader="
-                                                          "push"]]}}
+
+ :git/push {:name "git push"
+            :run "walter retry"
+            :if "steps.diff.outcome == 'failure'"
+            :env {:WALTER_TRY "git push"
+                  :WALTER_BEFORE_RETRY "git pull --rebase"}}
+
+ :git/diff {:run "git diff --staged --exit-code"
+            :continue-on-error true
+            :id "diff"}}

@@ -26,16 +26,6 @@
       (git/commit working-directory config (format "Update %s" workflow-file-name))
       (git/push working-directory config))))
 
-
-(defn walter-env
-  []
-  {:GIT_COMMITTER_NAME "${{ secrets.GITHUB_ACTOR }}"
-   :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
-   :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
-   :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
-   :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
-   :GIT_ASKPASS "$HOME/.walter-ci/bin/askpass.sh"})
-
 (defn cmd-retry
   [^String walter-try ^String walter-before-retry]
   (apply safely-fn
@@ -66,15 +56,20 @@
     {'step read-step
      'job/wrap wrap-in-job
      'cmd/retry cmd-retry
-     'walter/env (fn [{:keys [git]}]
-                   (merge {}
+     'walter/env (fn [{:keys [git walter]}]
+                   (merge (sorted-map)
                           (when git
-                            {:GIT_COMMITTER_NAME "${{ secrets.GITHUB_ACTOR }}"
+                            {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
                              :GIT_COMMITTER_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
                              :GIT_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
                              :GIT_AUTHOR_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"
                              :GIT_PASSWORD "${{ secrets.GITHUB_TOKEN }}"
-                             :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"})))
+                             :GIT_ASKPASS "${HOME}/.walter-ci/bin/askpass.sh"})
+                          (when walter
+                            {:WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
+                             :WALTER_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
+                             :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
+                             :WALTER_GIT_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"})))
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/deploy-jobs (fn [_]
@@ -88,14 +83,6 @@
                                                            (read-step [:deploy {:run (format "walter self-deploy --github-repository %s" github-repo)}])]})))
                                    (sorted-map)
                                    (sort managed-repositories)))}))
-
-(def source+targets
-  [["edn-sources/action.edn" "action.yml"]
-   ["edn-sources/workflows/deploy.edn" ".github/workflows/deploy.yml"]
-   ["edn-sources/workflows/generate.edn" ".github/workflows/generate.yml"]
-   ["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]
-   ["edn-sources/workflows/walter-ci.edn" ".github/workflows/walter-ci.yml"]
-   ["edn-sources/workflows/walter-perf.edn" ".github/workflows/walter-perf.yml"]])
 
 (def yml-header
   "# This file is maintained by Walter CI, and may be rewritten.\n# https://github.com/piotr-yuxuan/walter-ci\n#\n# You are free to remove this project from Walter CI realm by opening\n# a PR. You may also create another workflow besides this one.\n\n")
@@ -150,12 +137,21 @@
 ;; - Clojure CLI and clojure-deps-edn aliases and configuration
 ;; - Walter executable commands
 
+(def source+targets
+  [["edn-sources/action.edn" "action.yml"]
+   ["edn-sources/workflows/deploy.edn" ".github/workflows/deploy.yml"]
+   ["edn-sources/workflows/generate.edn" ".github/workflows/generate.yml"]
+   ["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]
+   ["edn-sources/workflows/walter-ci.edn" ".github/workflows/walter-ci.yml"]
+   ["edn-sources/workflows/walter-perf.edn" ".github/workflows/walter-perf.yml"]])
+
 (comment
   (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
                                           'str/join #(str/join \space %)}}
                                (slurp (io/resource "steps.edn")))
         managed-repositories (edn/read-string (slurp "managed-repositories.edn"))]
-    (doseq [[source-edn target-yml] [["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]]]
+    (doseq [[source-edn target-yml] source+targets]
+      (println :source-edn source-edn)
       (steps+edn->write-to-yml-file! steps managed-repositories source-edn target-yml))))
 
 (defmulti start :command)
