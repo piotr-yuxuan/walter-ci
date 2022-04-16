@@ -41,9 +41,9 @@
                   :env {:WALTER_TRY "git push"
                         :WALTER_BEFORE_RETRY "git pull --rebase"}}]}
 
-        :list-licences
+        :list-licenses
         {:runs-on "ubuntu-latest"
-         :name "List dependency licences"
+         :name "List dependency licenses"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:run "lein licenses :csv > ./doc/Licenses.csv"}
                  {:run "sort -o ./doc/Licenses.csv{,}"}
