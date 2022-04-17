@@ -10,7 +10,11 @@ name: Walter CD
   workflow_dispatch:
     inputs:
       walter-version:
-        description: Optional custom version
+        description: Walter version
+        required: false
+        type: string
+      version-to-release:
+        description: Version to release
         required: false
         type: string
   push:
@@ -25,6 +29,7 @@ env:
   GIT_COMMITTER_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
   GIT_COMMITTER_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  VERSION_TO_RELEASE: ${{ github.event.inputs.version-to-release }}
   WALTER_VERSION: ${{ github.event.inputs.walter-version }}
 jobs:
   run-tests:
