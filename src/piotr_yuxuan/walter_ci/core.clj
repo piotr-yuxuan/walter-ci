@@ -135,7 +135,7 @@
 
 (defn install-workflow
   [{:keys [source+target-pairs] :as config}]
-  (doseq [[source-edn target-yml] source+target-pairs]
+  (doseq [{:keys [source-edn target-yml]} source+target-pairs]
     (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
                                             'str/join #(str/join \space %)}}
                                  (slurp (io/resource "steps.edn")))]
