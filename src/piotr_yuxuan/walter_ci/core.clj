@@ -65,9 +65,9 @@
             :run (reduce (fn [acc [source-edn target-yml]]
                            (str/join unix-cli-line-breaker [acc (format "--source-edn \"%s\" --target-yml \"%s\"" source-edn target-yml)]))
                          "walter install-workflow"
-                         [["$HOME/.walter-ci/edn-sources/walter-ci.edn" "walter-ci.yml"]
-                          ["$HOME/.walter-ci/edn-sources/walter-cd.edn" "walter-cd.yml"]
-                          ["$HOME/.walter-ci/edn-sources/walter-perf.edn" "walter-perf.yml"]])}]})
+                         [["$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
+                          ["$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
+                          ["$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" "walter-perf.yml"]])}]})
 
 (deploy-job "youp")
 
