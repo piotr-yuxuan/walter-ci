@@ -87,7 +87,7 @@
     {'step read-step
      'job/wrap wrap-in-job
      'cmd/retry cmd-retry
-     'walter/env (fn [{:keys [git walter walter-version]}]
+     'walter/env (fn [{:keys [git walter walter-version version-to-release]}]
                    (merge (sorted-map)
                           (when git
                             {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
@@ -102,7 +102,9 @@
                              :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
                              :WALTER_GIT_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"})
                           (when walter-version
-                            {:WALTER_VERSION "${{ github.event.inputs.walter-version }}"})))
+                            {:WALTER_VERSION "${{ github.event.inputs.walter-version }}"})
+                          (when version-to-release
+                            {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"})))
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/deploy-jobs (fn [_]
@@ -175,7 +177,6 @@
                                (slurp (io/resource "steps.edn")))
         managed-repositories (edn/read-string (slurp "managed-repositories.edn"))]
     (doseq [[source-edn target-yml] source+targets]
-      (println :source-edn source-edn)
       (steps+edn->write-to-yml-file! steps managed-repositories source-edn target-yml))))
 
 (defmulti start :command)
