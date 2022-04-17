@@ -117,7 +117,7 @@
 
 (defn steps+edn->yml
   [steps managed-repositories source-edn]
-  (->> (slurp source-edn)
+  (->> source-edn
        (edn/read-string {:readers (walter-readers steps managed-repositories)})
        (#(yaml/generate-string % :dumper-options {:flow-style :block
                                                   :split-lines false
@@ -126,7 +126,7 @@
 
 (defn steps+edn->write-to-yml-file!
   [steps managed-repositories source-edn target-yml]
-  (spit target-yml (steps+edn->yml steps managed-repositories source-edn)))
+  (spit target-yml (steps+edn->yml steps managed-repositories (slurp source-edn))))
 
 (defn forward-secret
   [{:keys [secret-names] :as config}]
