@@ -87,7 +87,7 @@
     {'step read-step
      'job/wrap wrap-in-job
      'cmd/retry cmd-retry
-     'walter/env (fn [{:keys [git walter]}]
+     'walter/env (fn [{:keys [git walter walter-version]}]
                    (merge (sorted-map)
                           (when git
                             {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
@@ -100,7 +100,9 @@
                             {:WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
                              :WALTER_AUTHOR_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
                              :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
-                             :WALTER_GIT_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"})))
+                             :WALTER_GIT_EMAIL "${{ secrets.WALTER_GIT_EMAIL }}"})
+                          (when walter-version
+                            {:WALTER_VERSION "${{ github.event.inputs.walter-version }}"})))
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/deploy-jobs (fn [_]

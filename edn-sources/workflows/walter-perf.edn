@@ -1,11 +1,13 @@
 {:name "Walter Perf"
- :on {:workflow_dispatch nil
-      :repository_dispatch nil
+ :on {:repository_dispatch nil
+      :workflow_dispatch {:inputs {:walter-version {:description "Optional custom version"
+                                                    :required false
+                                                    :type :string}}}
       :schedule [;; Run only once a week, on Tuesday to save some money. Otherwise: "28 3 * * 2,5".
                  {:cron "28 3 * * 2"}]}
  :concurrency {:group "walter-perf"
                :cancel-in-progress true}
- :env #walter/env #{:git}
+ :env #walter/env #{:git :walter-version}
  :jobs {:run-perf-tests
         {:runs-on "ubuntu-latest"
          :name "Run tests"

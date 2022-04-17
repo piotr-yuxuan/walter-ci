@@ -1,9 +1,11 @@
 {:name "Walter CI"
  :on {:repository_dispatch nil
-      :workflow_dispatch nil
+      :workflow_dispatch {:inputs {:walter-version {:description "Optional custom version"
+                                                    :required false
+                                                    :type :string}}}
       :schedule [{:cron "28 6,18 * * *"}]}
  :concurrency {:group "walter-ci", :cancel-in-progress true}
- :env #walter/env #{:git}
+ :env #walter/env #{:git :walter-version}
  :jobs {:conform-repository
         {:runs-on "ubuntu-latest"
          :name "Conform GitHub repository"

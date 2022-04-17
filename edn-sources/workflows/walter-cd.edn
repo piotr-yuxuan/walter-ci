@@ -1,10 +1,12 @@
 {:name "Walter CD"
- :on {:workflow_dispatch nil
-      :repository_dispatch nil
+ :on {:repository_dispatch nil
+      :workflow_dispatch {:inputs {:walter-version {:description "Optional custom version"
+                                                    :required false
+                                                    :type :string}}}
       :push {:branches "*"}}
  :concurrency {:group "walter-cd"
                :cancel-in-progress true}
- :env #walter/env #{:git}
+ :env #walter/env #{:git :walter-version}
  :jobs {:run-tests
         {:runs-on "ubuntu-latest"
          :name "Run tests"
