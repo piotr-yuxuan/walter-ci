@@ -95,6 +95,7 @@ jobs:
       name: release
     steps:
     - uses: piotr-yuxuan/walter-ci@main
+    - run: lein uberjar
     - name: Set version to release
       run: |-
         VERSION_FILE=$(ls resources/*.version)
@@ -113,7 +114,6 @@ jobs:
       env:
         WALTER_TRY: git push --follow-tags
         WALTER_BEFORE_RETRY: git pull --rebase
-    - run: lein uberjar
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
       with:
         generate_release_notes: true
