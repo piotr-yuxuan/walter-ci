@@ -32,7 +32,7 @@ env:
   WALTER_AUTHOR_NAME: ${{ secrets.WALTER_AUTHOR_NAME }}
   WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
   WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
-  WALTER_VERSION=${{ github.event.inputs.walter-version }}
+  WALTER_VERSION: ${{ github.event.inputs.walter-version }}
 jobs:
   piotr-yuxuan-algo-calisthenics:
     runs-on: ubuntu-latest
