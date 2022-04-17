@@ -28,9 +28,12 @@ runs:
         chmod +x "$HOME/.walter-ci/walter"
         echo "$HOME/.walter-ci" >> $GITHUB_PATH
       shell: bash
-    - run: ls "$HOME/.walter-ci/walter"
-      shell: bash
-    - run: tree "$HOME/.walter-ci/walter" || true
+    - run: |
+        set +xe
+        echo "$HOME/"
+        tree "$HOME/.walter-ci" || true
+        ls "$HOME/.walter-ci/"
+        ls "$HOME/.walter-ci/edn-sources/"
       shell: bash
     - name: Cache local Maven repository
       uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
