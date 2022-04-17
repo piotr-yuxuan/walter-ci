@@ -54,20 +54,20 @@
                          :production)}
    :steps [{:uses "piotr-yuxuan/walter-ci@main"}
            {:env {:GITHUB_REPOSITORY github-repository}
-            :run (str/join \newline
-                           [(reduce (fn [acc secret-name]
-                                      (str/join unix-cli-line-breaker [acc (format "--secret-name \"%s\"" secret-name)]))
-                                    "walter forward-secret"
-                                    ["WALTER_ACTOR"
-                                     "WALTER_AUTHOR_NAME"
-                                     "WALTER_GITHUB_PASSWORD"
-                                     "WALTER_GIT_EMAIL"])
-                            (reduce (fn [acc [source-edn target-yml]]
-                                      (str/join unix-cli-line-breaker [acc (format "--source-edn \"%s\" --target-yml \"%s\"" source-edn target-yml)]))
-                                    "walter install-workflow"
-                                    [["$HOME/.walter-ci/edn-sources/walter-ci.edn" "walter-ci.yml"]
-                                     ["$HOME/.walter-ci/edn-sources/walter-cd.edn" "walter-cd.yml"]
-                                     ["$HOME/.walter-ci/edn-sources/walter-perf.edn" "walter-perf.yml"]])])}]})
+            :run (reduce (fn [acc secret-name]
+                           (str/join unix-cli-line-breaker [acc (format "--secret-name \"%s\"" secret-name)]))
+                         "walter forward-secret"
+                         ["WALTER_ACTOR"
+                          "WALTER_AUTHOR_NAME"
+                          "WALTER_GITHUB_PASSWORD"
+                          "WALTER_GIT_EMAIL"])}
+           {:env {:GITHUB_REPOSITORY github-repository}
+            :run (reduce (fn [acc [source-edn target-yml]]
+                           (str/join unix-cli-line-breaker [acc (format "--source-edn \"%s\" --target-yml \"%s\"" source-edn target-yml)]))
+                         "walter install-workflow"
+                         [["$HOME/.walter-ci/edn-sources/walter-ci.edn" "walter-ci.yml"]
+                          ["$HOME/.walter-ci/edn-sources/walter-cd.edn" "walter-cd.yml"]
+                          ["$HOME/.walter-ci/edn-sources/walter-perf.edn" "walter-perf.yml"]])}]})
 
 (deploy-job "youp")
 
@@ -125,14 +125,13 @@
   (spit target-yml (steps+edn->yml steps managed-repositories source-edn)))
 
 (defn forward-secret
-  [{:keys [secret-names github-repository] :as config}]
-  (let [config+github-repository (assoc config :github-repository github-repository)]
-    (doseq [s secret-names]
-      (let [s (csk/->kebab-case-keyword s)]
-        (assert (get config s) (format "Secret %s not found, looked up as %s." s s))
-        (secrets/upsert-value config+github-repository
-                              s
-                              (get config s))))))
+  [{:keys [secret-names] :as config}]
+  (doseq [s secret-names]
+    (let [s (csk/->kebab-case-keyword s)]
+      (assert (get config s) (format "Secret %s not found, looked up as %s." s s))
+      (secrets/upsert-value config
+                            s
+                            (get config s)))))
 
 (defn install-workflow
   [{:keys [source+target-pairs] :as config}]

@@ -42,6 +42,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/algo-calisthenics
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -60,6 +63,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/closeable-map
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -78,6 +84,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/dove
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -96,6 +105,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/ephemeral-server
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -114,6 +126,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/malli-cli
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -132,6 +147,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/nabab
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -150,6 +168,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/polygam
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -168,6 +189,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/poor-mans-distributed-cache
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -186,6 +210,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/security-mining
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -204,6 +231,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/slava
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -222,6 +252,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/slava-record
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -240,6 +273,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/tsv-processing
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -258,6 +294,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/walter-ci
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
@@ -276,6 +315,9 @@ jobs:
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
+    - env:
+        GITHUB_REPOSITORY: piotr-yuxuan/welcome-base-api
+      run: |-
         walter install-workflow \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml" \
