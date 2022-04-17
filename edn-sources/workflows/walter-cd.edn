@@ -62,8 +62,10 @@
                                   "git add ${VERSION_FILE}"]}
                  {:run "lein uberjar"}
                  #step :git/diff
-                 {:run #line/join["git commit -m \"Version ${VERSION_TO_RELEASE}\""
-                                  "git tag -a ${VERSION_TO_RELEASE}"]
+
+                 {:run "git commit -m \"Version ${VERSION_TO_RELEASE}\" -m \"[skip ci]\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 {:run "git tag -a ${VERSION_TO_RELEASE} -m \"Version ${VERSION_TO_RELEASE}\""
                   :if "steps.diff.outcome == 'failure'"}
                  {:name "git push --follow-tags"
                   :run "walter retry"
