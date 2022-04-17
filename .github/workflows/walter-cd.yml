@@ -89,17 +89,37 @@ jobs:
   release-artifacts:
     runs-on: ubuntu-latest
     name: Release artifacts
-    #if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ github.event.inputs.version-to-release != '' }}
     needs: run-tests
     environment:
       name: release
     steps:
     - uses: piotr-yuxuan/walter-ci@main
+    - name: Set version to release
+      run: |-
+        VERSION_FILE=$(ls resources/*.version)
+        echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}
+        git add ${VERSION_FILE}
+    - run: git diff --staged --exit-code
+      continue-on-error: true
+      id: diff
+    - run: |-
+        git commit --message "Version ${VERSION_TO_RELEASE}\n[skip ci]"
+        git tag -a ${VERSION_TO_RELEASE}
+      if: steps.diff.outcome == 'failure'
+    - name: git push --follow-tags
+      run: walter retry
+      if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push --follow-tags
+        WALTER_BEFORE_RETRY: git pull --rebase
     - run: lein uberjar
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
       with:
         generate_release_notes: true
         draft: true
+        tag_name: ${{ github.event.inputs.version-to-release }}
+        fail_on_unmatched_files: true
         files: target/*-standalone.jar
     - if: false
       name: lein deploy clojars
