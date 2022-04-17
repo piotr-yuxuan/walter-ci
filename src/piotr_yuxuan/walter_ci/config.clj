@@ -2,15 +2,13 @@
   (:require [piotr-yuxuan.malli-cli :as malli-cli]
             [piotr-yuxuan.malli-cli.utils :refer [deep-merge]]
             [piotr-yuxuan.walter-ci.files :refer [->dir]]
-            [clojure.string :as str]
             [malli.core :as m]
-            [malli.error :as me]
-            [malli.transform :as mt]
-            [malli.util :as mu])
+            [malli.transform :as mt])
   (:import (java.time ZonedDateTime)))
 
-(def config-env-vars
-  [:map
+(def EnvironmentVariables
+  "These options include all the possible environment variables from GitHub ([link](https://docs.github.com/en/actions/learn-github-actions/environment-variables)). The ones we don't need now are commented out."
+  [:map {:decode/args-transformer malli-cli/args-transformer}
    #_[:ci [boolean? {:description "Always set to true."
                      :env-var "CI"
                      :arg-number 0}]]
@@ -99,53 +97,43 @@
                            #(instance? ZonedDateTime %)]]
    [:walter-author-name [any? {:description "Different from the GIT_COMMITTER_NAME who made the commit. Here is the GIT_AUTHOR_NAME of the changes."
                                :env-var "WALTER_AUTHOR_NAME"
-                               :default "Walter CI"}]]
-   [:walter-actor [string? {:env-var "WALTER_ACTOR"}]]
-   [:walter-try [string? {:env-var "WALTER_TRY"}]]
-   [:walter-before-retry [string? {:env-var "WALTER_BEFORE_RETRY"}]]])
+                               :default "Walter CI"}]]])
 
-(def Config
-  "These options include all the possible environment variables from GitHub ([link](https://docs.github.com/en/actions/learn-github-actions/environment-variables)). The ones we don't need now are commented out."
-  (m/schema
-    (-> [:map {:closed true, :decode/args-transformer malli-cli/args-transformer}]
-        (mu/merge config-env-vars)
-        (mu/merge [:schema {:registry {::command [:and keyword? [:enum
-                                                                 :conform-repository
-                                                                 :retry
-                                                                 :self-deploy
-                                                                 :update-git-ignore]]
-                                       ::sub-command [:string]}}
-                   [:and
-                    [:map [:command ::command]]
-                    [:multi {:dispatch :command}
-                     [:retry [:map
-                              [:walter-try ::sub-command]
-                              [:walter-before-retry ::sub-command]]]
-                     [:self-deploy [:map [:github-repository string?]]]
-                     [::m/default :any]]]]))))
+(def command-schemas
+  {:forward-secret [:map {:decode/args-transformer malli-cli/args-transformer}
+                    [:secret-names [:sequential {:long-option "--secret-name"
+                                                 :update-fn (fn [options _ [secret-name]]
+                                                              (update options :secret-names (fnil conj []) secret-name))}
+                                    string?]]]
+   :retry [:map {:decode/args-transformer malli-cli/args-transformer}
+           [:walter-try [string? {:env-var "WALTER_TRY"}]]
+           [:walter-before-retry [string? {:env-var "WALTER_BEFORE_RETRY"}]]]
+
+   :install-workflow [:map {:decode/args-transformer malli-cli/args-transformer}
+                      [:source+target-pairs [:sequential [:map
+                                                          [:source-edn :string]
+                                                          [:target-yml :string]]]]
+                      [:source-edn [string? {:update-fn (fn [options _ [source-edn]]
+                                                          (update options :source+target-pairs (fnil conj []) {:source-edn source-edn}))}]]
+                      [:target-yml [string? {:update-fn (fn [options _ [target-workflow]]
+                                                          (update options :source+target-pairs (fn update-last [pairs]
+                                                                                                 (update pairs (dec (count pairs))
+                                                                                                   assoc :target-yml target-workflow))))}]]]})
+
+(def Command
+  [:and keyword? [:enum
+                  :conform-repository
+                  :forward-secret
+                  :install-workflow
+                  :retry
+                  :update-git-ignore]])
 
 ;; FIXME Validation is broken.
 (defn load-config
-  [args & [repl-overrides]]
-  (let [{::malli-cli/keys [operands after-option-operands] :as decoded} (m/decode Config args (mt/transformer malli-cli/args-transformer))]
-    (println :decoded decoded)
-    (as-> decoded $
-      (assoc $
-        :command (first operands)
-        :sub-command (str/join \space after-option-operands))
-      (m/decode
-        Config
-        $
-        (mt/transformer
-          (mt/string-transformer)
-          (mt/default-value-transformer {:key :env-var
-                                         :default-fn #(get (malli-cli/*system-get-env*) %2)})
-          (mt/default-value-transformer {:key :default})
-          ;; Doesn't work on multi schema.
-          ;(mt/strip-extra-keys-transformer)
-          ))
-      (deep-merge $ repl-overrides))))
-
-(comment
-  (load-config (str/split "retry -- git -c http.https://github.com/.extraheader= push" #"\s"))
-  (load-config (str/split "self-deploy --github-repository piotr-yuxuan/slava-record" #"\s")))
+  [[command & rest-args]]
+  (let [command (m/decode Command command (mt/string-transformer))]
+    (merge
+      {:command command}
+      (m/decode EnvironmentVariables rest-args (mt/transformer malli-cli/cli-transformer))
+      (when-let [schema (get command-schemas command)]
+        (m/decode schema rest-args (mt/transformer malli-cli/cli-transformer))))))

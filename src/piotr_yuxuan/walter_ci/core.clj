@@ -15,19 +15,19 @@
   (:import (java.io File)))
 
 (defn update-workflow
-  [config ^String workflow-file-name ^String yml]
+  [config ^String target-yml ^String yml]
   (with-delete! [working-directory (->tmp-dir "update-workflow")
                  yml-file (doto (->tmp-file) (spit yml))]
     (git/clone working-directory config)
-    (io/copy ^File yml-file (doto (->file working-directory ".github" "workflows" workflow-file-name)
+    (io/copy ^File yml-file (doto (->file working-directory ".github" "workflows" target-yml)
                               (io/make-parents)))
     (git/stage-all working-directory config)
     (when (git/need-commit? working-directory config)
-      (git/commit working-directory config (format "Update %s" workflow-file-name))
+      (git/commit working-directory config (format "Update %s" target-yml))
       (git/push working-directory config))))
 
 (defn cmd-retry
-  [^String walter-try ^String walter-before-retry]
+  [{:keys [^String walter-try ^String walter-before-retry]}]
   (apply safely-fn
          #(let [proc (process/process walter-try
                                       {:out :inherit
@@ -100,24 +100,25 @@
   [steps managed-repositories source-edn target-yml]
   (spit target-yml (steps+edn->yml steps managed-repositories source-edn)))
 
-(defn self-deploy
-  [{:keys [github-repository] :as config}]
-  (let [config+github-repository (assoc config :github-repository github-repository)
-        steps (edn/read-string {:readers {'line/join #(str/join \newline %)
-                                          'str/join #(str/join \space %)}}
-                               (slurp (io/resource "steps.edn")))]
-    (doseq [secret-name [:walter-author-name
-                         :walter-github-password
-                         :walter-git-email]]
-      (secrets/upsert-value config+github-repository
-                            (csk/->SCREAMING_SNAKE_CASE_STRING secret-name)
-                            (get config secret-name)))
-    (doseq [[source-edn workflow-file-name] [["edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
-                                             ["edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
-                                             ["edn-sources/workflows/walter-perf.edn" "walter-perf.yml"]]]
-      (->> source-edn
+(defn forward-secret
+  [{:keys [secret-names github-repository] :as config}]
+  (let [config+github-repository (assoc config :github-repository github-repository)]
+    (doseq [s secret-names]
+      (let [s (csk/->kebab-case-keyword s)]
+        (assert (get config s) (format "Secret %s not found, looked up as %s." s s))
+        (secrets/upsert-value config+github-repository
+                              s
+                              (get config s))))))
+
+(defn install-workflow
+  [{:keys [source+target-pairs] :as config}]
+  (doseq [[source-edn target-yml] source+target-pairs]
+    (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
+                                            'str/join #(str/join \space %)}}
+                                 (slurp (io/resource "steps.edn")))]
+      (->> (slurp source-edn)
            (steps+edn->yml steps nil)
-           (update-workflow config+github-repository workflow-file-name)))))
+           (update-workflow config target-yml)))))
 
 (defn update-git-ignore
   [{:keys [github-action-path github-workspace]}]
@@ -155,19 +156,8 @@
       (steps+edn->write-to-yml-file! steps managed-repositories source-edn target-yml))))
 
 (defmulti start :command)
-
-(defmethod start :conform-repository
-  [config]
-  (github/conform-repository config))
-
-(defmethod start :retry
-  [{:keys [walter-try walter-before-retry]}]
-  (cmd-retry walter-try walter-before-retry))
-
-(defmethod start :self-deploy
-  [config]
-  (self-deploy config))
-
-(defmethod start :update-git-ignore
-  [config]
-  (update-git-ignore config))
+(defmethod start :conform-repository [config] (github/conform-repository config))
+(defmethod start :retry [config] (cmd-retry config))
+(defmethod start :update-git-ignore [config] (update-git-ignore config))
+(defmethod start :forward-secret [config] (forward-secret config))
+(defmethod start :install-workflow [config] (install-workflow config))

@@ -10,9 +10,9 @@ name: Deploy Walter
   repository_dispatch: null
   push:
     branches:
-    - main
+      - main
     paths:
-    - .github/workflows/deploy.yml
+      - .github/workflows/deploy.yml
 concurrency:
   group: deploy-jobs
   cancel-in-progress: false
@@ -28,115 +28,172 @@ env:
   WALTER_GITHUB_PASSWORD: ${{ secrets.WALTER_GITHUB_PASSWORD }}
   WALTER_GIT_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
 jobs:
-  piotr-yuxuan-algo-calisthenics:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/algo-calisthenics
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/algo-calisthenics
-  piotr-yuxuan-closeable-map:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/closeable-map
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/closeable-map
-  piotr-yuxuan-dove:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/dove
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/dove
-  piotr-yuxuan-ephemeral-server:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/ephemeral-server
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/ephemeral-server
-  piotr-yuxuan-malli-cli:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/malli-cli
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/malli-cli
-  piotr-yuxuan-nabab:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/nabab
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/nabab
-  piotr-yuxuan-polygam:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/polygam
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/polygam
-  piotr-yuxuan-poor-mans-distributed-cache:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/poor-mans-distributed-cache
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/poor-mans-distributed-cache
-  piotr-yuxuan-security-mining:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/security-mining
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/security-mining
-  piotr-yuxuan-slava:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/slava
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/slava
-  piotr-yuxuan-slava-record:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/slava-record
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/slava-record
-  piotr-yuxuan-tsv-processing:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.github.com/piotr-yuxuan/tsv-processing
-    steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/tsv-processing
   piotr-yuxuan-walter-ci:
+    name: piotr-yuxuan/walter-ci
+    runs-on: ubuntu-latest
+    environment:
+      name: self
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/walter-ci"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+
+  piotr-yuxuan-algo-calisthenics:
+    name: piotr-yuxuan/algo-calisthenics
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://www.github.com/piotr-yuxuan/walter-ci
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/algo-calisthenics"
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/walter-ci
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-closeable-map:
+    name: piotr-yuxuan/closeable-map
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/closeable-map"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-dove:
+    name: piotr-yuxuan/dove
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "name: piotr-yuxuan/dove"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-ephemeral-server:
+    name: piotr-yuxuan/ephemeral-server
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/ephemeral-server"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-malli-cli:
+    name: piotr-yuxuan/malli-cli
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/malli-cli"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-nabab:
+    name: piotr-yuxuan/nabab
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "name: piotr-yuxuan/nabab"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-polygam:
+    name: piotr-yuxuan/polygam
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "name: piotr-yuxuan/polygam"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-poor-mans-distributed-cache:
+    name: piotr-yuxuan/poor-mans-distributed-cache
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/poor-mans-distributed-cache"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-security-mining:
+    name: piotr-yuxuan/security-mining
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/security-mining"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-slava:
+    name: piotr-yuxuan/slava
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "name: piotr-yuxuan/slava"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-slava-record:
+    name: piotr-yuxuan/slava-record
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/slava-record"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
+  piotr-yuxuan-tsv-processing:
+    name: piotr-yuxuan/tsv-processing
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/tsv-processing"
+    steps:
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"
   piotr-yuxuan-welcome-base-api:
+    name: piotr-yuxuan/welcome-base-api
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://www.github.com/piotr-yuxuan/welcome-base-api
+    env:
+      TARGET_REPOSITORY: "piotr-yuxuan/welcome-base-api"
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
-    - run: walter self-deploy --github-repository piotr-yuxuan/welcome-base-api
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-ci.edn" --target-yml "walter-ci.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-cd.edn" --target-yml "walter-cd.yml"
+      - run: walter install-workflow --source-edn "$HOME/.walter-ci/edn-sources/walter-perf.edn" --target-yml "walter-perf.yml"

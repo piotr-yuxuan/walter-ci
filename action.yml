@@ -5,7 +5,7 @@
 # a PR. You may also create another workflow besides this one.
 
 name: piotr-yuxuan/walter-ci
-description: Collection of `bash` utilities and helpers accessible from the comfort of your command line.
+description: Collection of utilities and helpers accessible from the comfort of your command line.
 inputs:
   github-token:
     description: >+
@@ -41,8 +41,6 @@ runs:
         WALTER_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
         wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
       shell: bash
-    - run: cp "${GITHUB_ACTION_PATH}/bash/walter-ci.sh" "$HOME/.walter-ci/walter"
-      shell: bash
     - run: chmod +x "$HOME/.walter-ci/walter"
       shell: bash
     - run: echo "$HOME/.walter-ci" >> $GITHUB_PATH
@@ -51,11 +49,14 @@ runs:
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
-    - run: cp "${GITHUB_ACTION_PATH}/bash/askpass.sh" "$HOME/.walter-ci/askpass.sh"
-      shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/settings.xml" "$HOME/.m2/settings.xml"
       shell: bash
-    - run: cp "${GITHUB_ACTION_PATH}/bash/cut-nvd.clj" "$HOME/.walter-ci/cut-nvd.clj"
+    - run: |
+        cp "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
+        mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
+      shell: bash
+    - name: Copy workflow edn definitions
+      run: cp "${GITHUB_ACTION_PATH}/edn-sources" "$HOME/.walter-ci/edn-sources"
       shell: bash
 
 author: Piotr Yuxuan
