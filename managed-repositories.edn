@@ -1,13 +1,14 @@
 ;; Repositories you add here will be conformed. If you do not publish
 ;; them by setting `:github/private?` to false then they will be
 ;; private.
-["piotr-yuxuan/algo-calisthenics"
+["piotr-yuxuan/walter-ci"
+
+ "piotr-yuxuan/algo-calisthenics"
  "piotr-yuxuan/closeable-map"
  "piotr-yuxuan/dove"
  "piotr-yuxuan/malli-cli"
  "piotr-yuxuan/slava"
  "piotr-yuxuan/slava-record"
- "piotr-yuxuan/walter-ci"
  ;"piotr-yuxuan/choose-a-new-phone"
  "piotr-yuxuan/ephemeral-server"
  ;"piotr-yuxuan/moving-average-clustering"

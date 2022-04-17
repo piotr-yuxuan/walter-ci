@@ -40,6 +40,37 @@
             (process/check proc))
          (mapcat vec {:max-retries 5})))
 
+(def unix-cli-line-breaker
+  (str \space \\ \newline \space \space))
+
+(def walter-ci-github-repository
+  "piotr-yuxuan/walter-ci")
+
+(defn deploy-job
+  [github-repository]
+  {:runs-on "ubuntu-latest"
+   :environment {:name (if (= walter-ci-github-repository github-repository)
+                         :self
+                         :production)}
+   :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+           {:env {:GITHUB_REPOSITORY github-repository}
+            :run (str/join \newline
+                           [(reduce (fn [acc secret-name]
+                                      (str/join unix-cli-line-breaker [acc (format "--secret-name \"%s\"" secret-name)]))
+                                    "walter forward-secret"
+                                    ["WALTER_ACTOR"
+                                     "WALTER_AUTHOR_NAME"
+                                     "WALTER_GITHUB_PASSWORD"
+                                     "WALTER_GIT_EMAIL"])
+                            (reduce (fn [acc [source-edn target-yml]]
+                                      (str/join unix-cli-line-breaker [acc (format "--source-edn \"%s\" --target-yml \"%s\"" source-edn target-yml)]))
+                                    "walter install-workflow"
+                                    [["$HOME/.walter-ci/edn-sources/walter-ci.edn" "walter-ci.yml"]
+                                     ["$HOME/.walter-ci/edn-sources/walter-cd.edn" "walter-cd.yml"]
+                                     ["$HOME/.walter-ci/edn-sources/walter-perf.edn" "walter-perf.yml"]])])}]})
+
+(deploy-job "youp")
+
 (defn walter-readers
   [steps managed-repositories]
   (letfn [(read-step [value]
@@ -73,14 +104,7 @@
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/deploy-jobs (fn [_]
-                           (reduce (fn [jobs github-repo]
-                                     (let [job-name (str/replace github-repo "/" "-")]
-                                       (assoc jobs
-                                         job-name {:runs-on "ubuntu-latest"
-                                                   :environment {:name :production
-                                                                 :url (format "https://www.github.com/%s" github-repo)}
-                                                   :steps [(read-step :walter/use)
-                                                           (read-step [:deploy {:run (format "walter self-deploy --github-repository %s" github-repo)}])]})))
+                           (reduce #(assoc %1 (str/replace %2 "/" "-") (deploy-job %2))
                                    (sorted-map)
                                    (sort managed-repositories)))}))
 
