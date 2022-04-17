@@ -20,6 +20,14 @@ runs:
       uses: actions/checkout@dcd71f646680f2efd8db4afa5ad64fdcba30e748
       with:
         submodules: recursive
+    - run: |
+        cp -r "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
+        ls "$HOME"
+        ls "$HOME/.walter-ci"
+        mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
+        chmod +x "$HOME/.walter-ci/walter"
+        echo "$HOME/.walter-ci" >> $GITHUB_PATH
+      shell: bash
     - name: Cache local Maven repository
       uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
       with:
@@ -35,26 +43,15 @@ runs:
         github-token: ${{ inputs.GITHUB_TOKEN }}
     - run: GIT_ASKPASS='' git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
       shell: bash
-    - run: mkdir "$HOME/.walter-ci"
-      shell: bash
     - run: |
         WALTER_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
         wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
-      shell: bash
-    - run: echo "$HOME/.walter-ci" >> $GITHUB_PATH
       shell: bash
     - run: env
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/settings.xml" "$HOME/.m2/settings.xml"
-      shell: bash
-    - run: |
-        cp -r "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
-        ls "$HOME"
-        ls "$HOME/.walter-ci"
-        mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
-        chmod +x "$HOME/.walter-ci/walter"
       shell: bash
     - name: Copy workflow edn definitions
       run: cp "${GITHUB_ACTION_PATH}/edn-sources" "$HOME/.walter-ci/edn-sources"
