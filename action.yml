@@ -51,6 +51,8 @@ runs:
       shell: bash
     - run: |
         cp -r "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
+        ls "$HOME"
+        ls "$HOME/.walter-ci"
         mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
         chmod +x "$HOME/.walter-ci/walter"
       shell: bash
