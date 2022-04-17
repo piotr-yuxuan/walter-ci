@@ -36,6 +36,9 @@
 
 (defn upsert-value
   [{:keys [github-repository github-api-url walter-actor walter-github-password] :as config} ^String secret-name ^String secret-value]
+  (println :secret-name secret-name)
+  (println :secret-value (type secret-value))
+  (assert secret-name (format "Secret %s not found, looked up as %s."))
   (let [public-key (repository-public-key config)
         sealed-box (public-key-sealed-box public-key secret-value)]
     (safely

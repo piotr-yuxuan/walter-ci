@@ -129,11 +129,9 @@
 (defn forward-secret
   [{:keys [secret-names] :as config}]
   (doseq [s secret-names]
-    (let [s (csk/->kebab-case-keyword s)]
-      (assert (get config s) (format "Secret %s not found, looked up as %s." s s))
-      (secrets/upsert-value config
-                            s
-                            (get config s)))))
+    (secrets/upsert-value config
+                          s
+                          (get config (csk/->kebab-case-keyword s)))))
 
 (defn install-workflow
   [{:keys [source+target-pairs] :as config}]
