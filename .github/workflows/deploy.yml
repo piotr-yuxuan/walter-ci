@@ -10,7 +10,7 @@ name: Deploy Walter
   workflow_dispatch:
     inputs:
       walter-version:
-        description: 'Optional custom version'
+        description: Optional custom version
         required: false
         type: string
   push:

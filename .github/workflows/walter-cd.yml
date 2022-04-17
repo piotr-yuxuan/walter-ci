@@ -10,7 +10,7 @@ name: Walter CD
   workflow_dispatch:
     inputs:
       walter-version:
-        description: 'Do you need to use a custom version?'
+        description: Optional custom version
         required: false
         type: string
   push:
@@ -32,7 +32,6 @@ jobs:
     name: Run tests
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - run: echo "github.ref=${{ startsWith(github.ref, 'refs/tags/') }}"
     - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
     runs-on: ubuntu-latest
