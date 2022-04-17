@@ -28,4 +28,12 @@
              :uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
                                   "-Dclojure.compiler.disable-locals-clearing=false"
-                                  "-Dclojure.compiler.elide-meta=[:doc :file :line :added]"]}})
+                                  "-Dclojure.compiler.elide-meta=[:doc :file :line :added]"]}}
+  :deploy-repositories [["clojars" {:sign-releases false
+                                    :url "https://clojars.org/repo"
+                                    :username :env/WALTER_CLOJARS_USERNAME
+                                    :password :env/WALTER_CLOJARS_PASSWORD}]
+                        ["github" {:sign-releases false
+                                   :url "https://maven.pkg.github.com/piotr-yuxuan/walter-ci"
+                                   :username :env/GITHUB_ACTOR
+                                   :password :env/WALTER_GITHUB_PASSWORD}]])
