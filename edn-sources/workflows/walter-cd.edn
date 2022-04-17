@@ -54,7 +54,6 @@
          :name "Release artifacts"
          :if "${{ github.event.inputs.version-to-release != '' }}"
          :needs :run-tests
-         :environment {:name "release"}
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:name "Set project version to ${{ github.event.inputs.version-to-release }}"
                   :run #line/join["VERSION_FILE=$(ls resources/*.version)"
