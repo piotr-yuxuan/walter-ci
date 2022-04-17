@@ -1,5 +1,3 @@
-#!/usr/bin/env bb
-
 (def csv-file-path (first *command-line-args*))
 
 (let [rows (slurp csv-file-path)]
