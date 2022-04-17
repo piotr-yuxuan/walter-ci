@@ -75,7 +75,7 @@
                   :with {:generate_release_notes true
                          :tag_name "${{ github.event.inputs.version-to-release }}"
                          :draft false
-                         :prerelease true
+                         :prerelease false
                          :fail_on_unmatched_files false
                          :files "target/*-standalone.jar"}}
                  {:name "Deploy on Clojars?"
