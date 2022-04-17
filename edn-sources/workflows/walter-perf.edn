@@ -10,7 +10,7 @@
  :env #walter/env #{:git :walter-version}
  :jobs {:run-perf-tests
         {:runs-on "ubuntu-latest"
-         :name "Run tests"
+         :name "Run performance tests"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:run "lein with-profile +walter/kaocha,+kaocha,+perf run -m kaocha.runner --focus-meta :perf"
                   :continue-on-error true}
