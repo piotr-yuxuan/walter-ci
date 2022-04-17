@@ -6,8 +6,13 @@
 
 name: Walter CI
 'on':
-  repository_dispatch: null
   workflow_dispatch: null
+  repository_dispatch:
+    inputs:
+      walter-version:
+        description: 'Do you need to use a custom version?'
+        required: false
+        type: string
   schedule:
   - cron: 28 6,18 * * *
 concurrency:

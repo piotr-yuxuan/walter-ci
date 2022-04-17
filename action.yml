@@ -44,7 +44,9 @@ runs:
     - run: GIT_ASKPASS='' git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
       shell: bash
     - run: |
-        WALTER_VERSION=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
+        WALTER_VERSION_CUSTOM=${{ github.event.inputs.logLevel }}
+        WALTER_VERSION_CURRENT=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
+        WALTER_VERSION=${WALTER_VERSION_CUSTOM:-WALTER_VERSION_CURRENT}
         wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
       shell: bash
     - run: env
