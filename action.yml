@@ -28,13 +28,6 @@ runs:
         chmod +x "$HOME/.walter-ci/walter"
         echo "$HOME/.walter-ci" >> $GITHUB_PATH
       shell: bash
-    - run: |
-        set +xe
-        echo "$HOME/"
-        tree "$HOME/.walter-ci" || true
-        ls "$HOME/.walter-ci/"
-        ls "$HOME/.walter-ci/edn-sources/"
-      shell: bash
     - name: Cache local Maven repository
       uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
       with:
@@ -51,19 +44,27 @@ runs:
     - run: GIT_ASKPASS='' git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
       shell: bash
     - run: |
-        echo "WALTER_VERSION=${WALTER_VERSION}"
+        echo "\$WALTER_VERSION=${WALTER_VERSION} initially"
         WALTER_VERSION_CURRENT=$(awk '{$1=$1};1' < "${GITHUB_ACTION_PATH}/resources/walter-ci.version")
-        echo "WALTER_VERSION_CURRENT=${WALTER_VERSION_CURRENT}"
+        echo "\$WALTER_VERSION_CURRENT=${WALTER_VERSION_CURRENT}"
         WALTER_VERSION=${WALTER_VERSION:-${WALTER_VERSION_CURRENT}}
-        echo "WALTER_VERSION=${WALTER_VERSION}"
+        echo "\$WALTER_VERSION=${WALTER_VERSION}"
         wget --quiet "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
-      shell: bash
-    - run: env
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/settings.xml" "$HOME/.m2/settings.xml"
       shell: bash
+    - name: Sanity checks, and first aid debug info
+      shell: bash
+      run: |
+        set +xe
+        echo "\$HOME=${HOME}"
+        echo "\$${LEIN_HOME}=${LEIN_HOME}"
+        tree -Chup "${HOME}/.walter-ci" || true
+        tree -Chup "${LEIN_HOME}" || true
+        env
+        true
 
 author: Piotr Yuxuan
 branding:
