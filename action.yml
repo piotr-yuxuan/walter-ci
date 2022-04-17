@@ -50,7 +50,8 @@ runs:
     - run: cp "${GITHUB_ACTION_PATH}/resources/settings.xml" "$HOME/.m2/settings.xml"
       shell: bash
     - run: |
-        cp -r "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
+        mkdir -p "$HOME/.walter-ci"
+        cp -r "${GITHUB_ACTION_PATH}/bash/*" "$HOME/.walter-ci/"
         mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
         chmod +x "$HOME/.walter-ci/walter"
       shell: bash
