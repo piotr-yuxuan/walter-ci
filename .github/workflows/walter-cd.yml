@@ -86,11 +86,11 @@ jobs:
   build-artifacts:
     runs-on: ubuntu-latest
     name: Build artifacts
-    if: ${{ github.event.inputs.version-to-release != '' }}
     steps:
       - uses: piotr-yuxuan/walter-ci@main
       - run: lein uberjar
       - uses: actions/upload-artifact@v3
+        if: ${{ github.event.inputs.version-to-release != '' }}
         with:
           name: jars
           path: target/*.jar
