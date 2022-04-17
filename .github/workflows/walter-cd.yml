@@ -105,7 +105,7 @@ jobs:
       continue-on-error: true
       id: diff
     - run: |-
-        git commit --message "Version ${VERSION_TO_RELEASE}" --message "[skip ci]"
+        git commit -m "Version ${VERSION_TO_RELEASE}"
         git tag -a ${VERSION_TO_RELEASE}
       if: steps.diff.outcome == 'failure'
     - name: git push --follow-tags
