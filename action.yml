@@ -22,8 +22,8 @@ runs:
         submodules: recursive
     - run: |
         cp -r "${GITHUB_ACTION_PATH}/bash" "$HOME/.walter-ci"
-        ls "$HOME"
-        ls "$HOME/.walter-ci"
+        cp -r "${GITHUB_ACTION_PATH}/edn-sources" "$HOME/.walter-ci/edn-sources"
+
         mv "$HOME/.walter-ci/walter-ci.sh" "$HOME/.walter-ci/walter"
         chmod +x "$HOME/.walter-ci/walter"
         echo "$HOME/.walter-ci" >> $GITHUB_PATH
@@ -52,9 +52,6 @@ runs:
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/settings.xml" "$HOME/.m2/settings.xml"
-      shell: bash
-    - name: Copy workflow edn definitions
-      run: cp "${GITHUB_ACTION_PATH}/edn-sources" "$HOME/.walter-ci/edn-sources"
       shell: bash
 
 author: Piotr Yuxuan
