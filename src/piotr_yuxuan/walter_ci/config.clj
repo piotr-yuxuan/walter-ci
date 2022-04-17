@@ -139,3 +139,15 @@
       (m/decode EnvironmentVariables rest-args (mt/transformer malli-cli/cli-transformer))
       (when-let [schema (get command-schemas command)]
         (m/decode schema rest-args (mt/transformer malli-cli/cli-transformer))))))
+
+(comment
+  (load-config (str/split "retry --walter-try \"git-push\" --walter-before-retry \"git-pull---rebase\"" #"\s"))
+  (load-config (str/split "self-deploy --github-repository piotr-yuxuan/slava-record" #"\s"))
+  (load-config (println ["forward-secret" "--github-repository" "piotr-yuxuan/slava-record" "--secret-name" "a" "--secret-name" "b"]))
+  (load-config ["conform-repository" "--github-repository" "piotr-yuxuan/slava-record"])
+  (load-config ["update-git-ignore" "--github-repository" "piotr-yuxuan/slava-record"])
+  (load-config ["install-workflow"
+                "--source-edn" "\"$HOME1/.walter-ci/edn-sources/walter-perf.edn\"" "--target-yml" "1walter-perf.yml"
+                "--source-edn" "\"$HOME2/.walter-ci/edn-sources/walter-perf.edn\"" "--target-yml" "2walter-perf.yml"
+                "--source-edn" "\"$HOME3/.walter-ci/edn-sources/walter-perf.edn\"" "--target-yml" "3walter-perf.yml"
+                "--github-repository" "%s"]))
