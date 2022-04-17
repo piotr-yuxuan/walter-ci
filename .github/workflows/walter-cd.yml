@@ -38,6 +38,7 @@ jobs:
   report-vulnerabilities:
     runs-on: ubuntu-latest
     name: Scan and report vulnerabilities
+    if: ${{ github.event.inputs.version-to-release == '' }}
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
@@ -66,6 +67,7 @@ jobs:
   list-licenses:
     runs-on: ubuntu-latest
     name: List dependency licenses
+    if: ${{ github.event.inputs.version-to-release == '' }}
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - run: lein licenses :csv > ./doc/Licenses.csv
