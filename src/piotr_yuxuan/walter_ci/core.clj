@@ -11,17 +11,17 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [safely.core :refer [safely-fn]]
-            [yaml.core :as yaml])
-  (:import (java.io File)))
+            [yaml.core :as yaml]))
 
 (defn update-workflow
   [config ^String target-yml ^String yml]
-  (with-delete! [working-directory (->tmp-dir "update-workflow")
-                 yml-file (doto (->tmp-file) (spit yml))]
+  (with-delete! [working-directory (->tmp-dir "update-workflow")]
     (git/clone working-directory config)
-    (io/copy ^File yml-file (doto (->file working-directory ".github" "workflows" target-yml)
-                              (io/make-parents)))
+    (doto (->file working-directory ".github" "workflows" target-yml)
+      (io/make-parents)
+      (spit yml))
     (git/stage-all working-directory config)
+    (println "git/need-commit?" (git/need-commit? working-directory config))
     (when (git/need-commit? working-directory config)
       (git/commit working-directory config (format "Update %s" target-yml))
       (git/push working-directory config))))
