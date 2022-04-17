@@ -86,11 +86,21 @@ jobs:
       env:
         WALTER_TRY: git push
         WALTER_BEFORE_RETRY: git pull --rebase
+  build-artifacts:
+    runs-on: ubuntu-latest
+    name: Build artifacts
+    if: ${{ github.event.inputs.version-to-release != '' }}
+    steps:
+      - run: lein uberjar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jars
+          path: target/*.jar
   release-artifacts:
     runs-on: ubuntu-latest
     name: Release artifacts
     if: ${{ github.event.inputs.version-to-release != '' }}
-    needs: run-tests
+    needs: [run-tests, build-artifacts]
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - name: Set project version to ${{ github.event.inputs.version-to-release }}
@@ -98,7 +108,11 @@ jobs:
         VERSION_FILE=$(ls resources/*.version)
         echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}
         git add ${VERSION_FILE}
-    - run: lein uberjar
+    - name: Retrieve artifacts
+      with:
+        name: jars
+        path: target
+    - run: tree -L 2 ./target
     - run: git diff --staged --exit-code
       continue-on-error: true
       id: diff
