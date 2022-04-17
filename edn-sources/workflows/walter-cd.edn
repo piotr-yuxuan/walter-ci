@@ -7,8 +7,6 @@
                                                         :required false
                                                         :type :string}}}
       :push {:branches "*"}}
- :concurrency {:group "walter-cd"
-               :cancel-in-progress true}
  :env #walter/env #{:git :walter-version :version-to-release}
  :jobs {:run-tests
         {:runs-on "ubuntu-latest"
@@ -66,11 +64,8 @@
                   :if "steps.diff.outcome == 'failure'"}
                  {:run "git tag -a ${VERSION_TO_RELEASE} -m \"Version ${VERSION_TO_RELEASE}\""
                   :if "steps.diff.outcome == 'failure'"}
-                 {:name "git push --follow-tags"
-                  :run "walter retry"
-                  :if "steps.diff.outcome == 'failure'"
-                  :env {:WALTER_TRY "git push --follow-tags"
-                        :WALTER_BEFORE_RETRY "git pull --rebase"}}
+                 {:run "git push --follow-tags" ; Don't try to rebase, we want to keep the tag.
+                  :if "steps.diff.outcome == 'failure'"}
                  {:uses "softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2"
                   :with {:generate_release_notes true
                          :tag_name "${{ github.event.inputs.version-to-release }}"

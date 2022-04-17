@@ -19,9 +19,6 @@ name: Walter CD
         type: string
   push:
     branches: '*'
-concurrency:
-  group: walter-cd
-  cancel-in-progress: true
 env:
   GIT_ASKPASS: ${HOME}/.walter-ci/bin/askpass.sh
   GIT_AUTHOR_EMAIL: ${{ secrets.WALTER_GIT_EMAIL }}
@@ -121,12 +118,8 @@ jobs:
       if: steps.diff.outcome == 'failure'
     - run: git tag -a ${VERSION_TO_RELEASE} -m "Version ${VERSION_TO_RELEASE}"
       if: steps.diff.outcome == 'failure'
-    - name: git push --follow-tags
-      run: walter retry
+    - run: git push --follow-tags
       if: steps.diff.outcome == 'failure'
-      env:
-        WALTER_TRY: git push --follow-tags
-        WALTER_BEFORE_RETRY: git pull --rebase
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
       with:
         generate_release_notes: true
