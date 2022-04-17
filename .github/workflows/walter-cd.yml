@@ -88,11 +88,11 @@ jobs:
     name: Build artifacts
     steps:
       - uses: piotr-yuxuan/walter-ci@main
-      - run: lein uberjar
       - name: Set artifact version to ${{ github.event.inputs.version-to-release }}
         run: |-
           VERSION_FILE=$(ls resources/*.version)
           echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}
+      - run: lein uberjar
       - uses: actions/upload-artifact@v3
         if: ${{ github.event.inputs.version-to-release != '' }}
         with:
