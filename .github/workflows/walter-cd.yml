@@ -117,17 +117,15 @@ jobs:
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
       with:
         generate_release_notes: true
-        draft: true
         tag_name: ${{ github.event.inputs.version-to-release }}
+        draft: true
         fail_on_unmatched_files: true
         files: target/*-standalone.jar
-    - if: false
-      name: lein deploy clojars
+    - name: lein deploy clojars
       run: walter retry
       env:
         WALTER_TRY: lein deploy clojars
-    - if: false
-      name: lein deploy github
+    - name: lein deploy github
       run: walter retry
       env:
         WALTER_TRY: lein deploy github
