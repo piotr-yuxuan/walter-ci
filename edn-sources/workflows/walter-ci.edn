@@ -78,7 +78,10 @@
                  {:uses "DeLaGuardo/clojure-lint-action@2d6013175031096ae07bc9b90a07173029ad7dc9"
                   :with {:clj-kondo-args "--lint src test"
                          :github_token "${{ secrets.GITHUB_TOKEN }}"}
-                  :continue-on-error true}]}
+                  :continue-on-error true}
+                 {:name "Ignore any error code"
+                  :if "always()"
+                  :run "echo 0"}]}
 
         :code-coverage
         {:runs-on "ubuntu-latest"
@@ -166,7 +169,7 @@
                   :with {:sarif_file "tfsec.sarif"
                          :wait-for-processing true}}]}
 
-        :security-trivy-fs
+        :security-sarif-trivy
         {:runs-on "ubuntu-latest"
          :name "General Trivy security scanner"
          :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
@@ -177,13 +180,10 @@
                   :uses "actions/download-artifact@v3"
                   :with {:name "jars"
                          :path "target"}}
-                 {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
-                  :with {:path "${TRIVY_CACHE_DIR}"
-                         :key "${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}"
-                         :restore-keys "${{ runner.os }}-trivy-"}}
                  {:uses "aquasecurity/trivy-action@master"
                   :continue-on-error true
                   :with {:scan-type "fs"
+                         :scan-ref "."
                          :cache-dir "${TRIVY_CACHE_DIR}"
                          :security-checks "vuln,config"
                          :output "trivy-results.sarif"
