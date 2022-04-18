@@ -7,5 +7,5 @@
              :paths [".github/workflows/deploy.yml"]}}
  :concurrency {:group "deploy-jobs"
                :cancel-in-progress false}
- :env #walter/env #{:git :walter :walter-version}
+ :env #walter/env #{:git :walter :walter-version :deploy-identities}
  :jobs #walter/install-jobs{}}

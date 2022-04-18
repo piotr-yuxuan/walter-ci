@@ -87,7 +87,7 @@
     {'step read-step
      'job/wrap wrap-in-job
      'cmd/retry cmd-retry
-     'walter/env (fn [{:keys [git walter walter-version version-to-release]}]
+     'walter/env (fn [{:keys [git walter walter-version version-to-release deploy-identities]}]
                    (merge (sorted-map)
                           (when git
                             {:GIT_COMMITTER_NAME "${{ secrets.WALTER_AUTHOR_NAME }}"
@@ -104,8 +104,9 @@
                           (when walter-version
                             {:WALTER_VERSION "${{ github.event.inputs.walter-version }}"})
                           (when version-to-release
-                            {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"
-                             :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
+                            {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"})
+                          (when deploy-identities
+                            {:WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
                              :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
                              :WALTER_CLOJARS_PASSWORD "${{ secrets.WALTER_CLOJARS_PASSWORD }}"
                              :WALTER_CLOJARS_USERNAME "${{ secrets.WALTER_CLOJARS_USERNAME }}"})))

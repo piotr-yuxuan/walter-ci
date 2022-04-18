@@ -7,7 +7,7 @@
                                                         :required false
                                                         :type :string}}}
       :push {:branches "*"}}
- :env #walter/env #{:git :walter-version :version-to-release}
+ :env #walter/env #{:git :walter-version :version-to-release :deploy-identities}
  :jobs {:run-tests
         {:runs-on "ubuntu-latest"
          :name "Run tests"
