@@ -105,7 +105,7 @@
                             {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"})))
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
-     'walter/deploy-jobs (fn [_]
+     'walter/install-jobs (fn [_]
                            (reduce #(assoc %1 (str/replace %2 "/" "-") (deploy-job %2))
                                    (sorted-map)
                                    (sort managed-repositories)))}))

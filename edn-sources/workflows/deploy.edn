@@ -1,4 +1,4 @@
-{:name "Deploy Walter"
+{:name "Install Walter workflows"
  :on {:repository_dispatch nil
       :workflow_dispatch {:inputs {:walter-version {:description "Walter bin version"
                                                     :required false
@@ -8,4 +8,4 @@
  :concurrency {:group "deploy-jobs"
                :cancel-in-progress false}
  :env #walter/env #{:git :walter :walter-version}
- :jobs #walter/deploy-jobs{}}
+ :jobs #walter/install-jobs{}}
