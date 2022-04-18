@@ -29,5 +29,5 @@ vulnerability can be exploited.
 
 ## Reporting a Vulnerability
 
-Open an issue, or contact the [code owners](.github/CODEOWNERS.yml) on
+Open an issue, or contact the [code owners](./CODEOWNERS.yml) on
 social media.
