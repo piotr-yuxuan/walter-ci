@@ -56,7 +56,7 @@ runs:
         echo "\$WALTER_VERSION_CURRENT=${WALTER_VERSION_CURRENT}"
         WALTER_VERSION=${WALTER_VERSION:-${WALTER_VERSION_CURRENT}}
         echo "\$WALTER_VERSION=${WALTER_VERSION}"
-        wget "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O /tmp/s.jar
+        wget "https://github.com/piotr-yuxuan/walter-ci/releases/download/${WALTER_VERSION}/walter-ci-${WALTER_VERSION}-standalone.jar" -O "$HOME/.walter-ci/walter-ci-standalone.jar"
       shell: bash
     - run: cp "${GITHUB_ACTION_PATH}/resources/profiles.clj" "${LEIN_HOME}/profiles.clj"
       shell: bash
