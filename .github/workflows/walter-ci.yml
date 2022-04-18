@@ -91,7 +91,7 @@ jobs:
       with:
         name: jars
         path: |-
-          target/**.jar
+          target/*.jar
           pom.xml
   clj-kondo:
     runs-on: ubuntu-latest
@@ -241,8 +241,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: jars
-        path: .
-    - run: tree -Chup .
+        path: target
     - uses: aquasecurity/trivy-action@master
       continue-on-error: true
       with:
