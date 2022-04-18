@@ -6,6 +6,7 @@
             [piotr-yuxuan.walter-ci.secrets :as secrets]
             [babashka.process :as process]
             [camel-snake-kebab.core :as csk]
+            [clostache.parser :as clostache]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.set :as set]
