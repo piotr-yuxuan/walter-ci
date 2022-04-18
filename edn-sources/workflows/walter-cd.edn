@@ -27,7 +27,7 @@
                  {:run "lein with-profile uberjar pom"}
                  {:uses "actions/upload-artifact@v3"
                   :with {:name "jars"
-                         :path #line/join["target/*.jar" "pom.xml"]}}]}
+                         :path #line/join["target/**.jar" "pom.xml"]}}]}
 
         :release-artifacts
         {:runs-on "ubuntu-latest"
@@ -43,8 +43,7 @@
                   :uses "actions/download-artifact@v3"
                   :if "${{ github.event.inputs.version-to-release != '' }}"
                   :with {:name "jars"
-                         :path "target"}}
-                 {:run "tree -L 1 -Chup ./target"}
+                         :path "."}}
                  #step :git/diff
                  {:run "git commit -m \"Version ${VERSION_TO_RELEASE}\" -m \"[skip ci]\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -52,13 +51,14 @@
                   :if "steps.diff.outcome == 'failure'"}
                  {:run "git push --follow-tags" ; Don't try to rebase, we want to keep the tag.
                   :if "steps.diff.outcome == 'failure'"}
+                 {:run "tree -Chup ."}
                  {:uses "softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2"
                   :with {:generate_release_notes true
                          :tag_name "${{ github.event.inputs.version-to-release }}"
                          :draft false
                          :prerelease false
-                         :fail_on_unmatched_files false
-                         :files "target/*-standalone.jar"}}
+                         :fail_on_unmatched_files true
+                         :files "./target/**-standalone.jar"}}
                  {:name "Deploy on Clojars?"
                   :id "target-clojars"
                   :run "lein pprint :deploy-repositories | bb --stream -I --eval '(System/exit (if (contains? (into {} *input*) (first *command-line-args*)) 0 1))' \"clojars\""
