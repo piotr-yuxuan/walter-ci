@@ -171,6 +171,17 @@
                (str/join (System/lineSeparator) missing-entries))
           :append false)))
 
+(defn security-policy
+  [{:keys [github-workspace current-version current-commit]}]
+  (let [security-policy-template (io/resource "SECURITY.md")
+        security-policy-file (doto (->file github-workspace ".github" "SECURITY.md") (io/make-parents))]
+    (when-not (and (.exists security-policy-file)
+                   (not (str/includes? (slurp security-policy-file) current-version)))
+      (as-> (slurp security-policy-template) $
+        (clostache/render $ {:current-version (str/trim current-version)
+                             :current-commit (str/trim current-commit)})
+        (spit security-policy-file $ :append false)))))
+
 ;; When install Walter, we should install clojure CLI, lein CLI, practicalli configs, and lein default profiles.
 ;; So Walter is just a bunch of helpers around basic Bash script:
 ;; - Lein and profiles
@@ -200,3 +211,4 @@
 (defmethod start :update-git-ignore [config] (update-git-ignore config))
 (defmethod start :forward-secret [config] (forward-secret config))
 (defmethod start :install-workflow [config] (install-workflow config))
+(defmethod start :security-policy [config] (security-policy config))

@@ -125,7 +125,11 @@
                       [:target-yml [string? {:update-fn (fn [options _ [target-workflow]]
                                                           (update options :source+target-pairs (fn update-last [pairs]
                                                                                                  (update pairs (dec (count pairs))
-                                                                                                   assoc :target-yml target-workflow))))}]]]})
+                                                                                                   assoc :target-yml target-workflow))))}]]]
+
+   :security-policy [:map {:decode/args-transformer malli-cli/args-transformer}
+                     [:current-version [string? {:env-var "CURRENT_VERSION"}]]
+                     [:current-commit [string? {:env-var "CURRENT_COMMIT"}]]]})
 
 (def Command
   [:and keyword? [:enum
@@ -133,7 +137,8 @@
                   :forward-secret
                   :install-workflow
                   :retry
-                  :update-git-ignore]])
+                  :update-git-ignore
+                  :security-policy]])
 
 ;; FIXME Validation is broken.
 (defn load-config
