@@ -37,7 +37,7 @@ jobs:
     - run: lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf
   report-vulnerabilities:
     runs-on: ubuntu-latest
-    name: Scan and report vulnerabilities
+    name: Clojure nvd vulnerabilities
     if: ${{ github.event.inputs.version-to-release == '' }}
     steps:
     - uses: piotr-yuxuan/walter-ci@main
@@ -67,31 +67,33 @@ jobs:
         WALTER_BEFORE_RETRY: git pull --rebase
   sarif-clojure:
     runs-on: ubuntu-latest
-    name: Scan and report Clojure vulnerabilities
+    name: Clojure clj-holmes vulnerabilities
+    if: ${{ github.event.inputs.version-to-release == '' }}
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - uses: clj-holmes/clj-holmes-action@200d2d03900917d7eb3c24fc691ab83579a87fcb
       with:
         output-type: sarif
-        output-file: ${{ github.workspace }}/tfsec.sarif
+        output-file: tfsec.sarif
         fail-on-result: 'false'
     - name: Upload analysis results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: ${{ github.workspace }}/tfsec.sarif
+        sarif_file: tfsec.sarif
         wait-for-processing: true
   sarif-terraform:
     runs-on: ubuntu-latest
-    name: Scan and report Terraform vulnerabilities
+    name: Terraform tfsec vulnerabilities
+    if: ${{ github.event.inputs.version-to-release == '' }}
     steps:
     - uses: piotr-yuxuan/walter-ci@main
     - uses: aquasecurity/tfsec-sarif-action@9b703869c5108700605056134506e274ef6e9bd3
       with:
-        sarif_file: ${{ github.workspace }}/tfsec.sarif
+        sarif_file: tfsec.sarif
     - name: Upload analysis results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: ${{ github.workspace }}/tfsec.sarif
+        sarif_file: tfsec.sarif
         wait-for-processing: true
   list-licenses:
     runs-on: ubuntu-latest
