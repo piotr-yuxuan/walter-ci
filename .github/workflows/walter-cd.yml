@@ -97,10 +97,7 @@ jobs:
         fail_on_unmatched_files: true
         files: |
           pom.xml
-          ./**jar
-          ./target/**jar
-          ./target/walter-ci-${VERSION_TO_RELEASE}.jar
-          ./target/walter-ci-${VERSION_TO_RELEASE}-standalone.jar
+          ./target/**.jar
     - name: Deploy on Clojars?
       id: target-clojars
       run: lein pprint :deploy-repositories | bb --stream -I --eval '(System/exit (if (contains? (into {} *input*) (first *command-line-args*)) 0 1))' "clojars"
