@@ -10,7 +10,7 @@ name: Deploy Walter
   workflow_dispatch:
     inputs:
       walter-version:
-        description: Walter version
+        description: Walter bin version
         required: false
         type: string
   push:
@@ -40,18 +40,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/algo-calisthenics
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/algo-calisthenics \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/algo-calisthenics
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/algo-calisthenics \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -61,18 +57,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/closeable-map
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/closeable-map \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/closeable-map
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/closeable-map \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -82,18 +74,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/dove
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/dove \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/dove
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/dove \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -103,18 +91,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/ephemeral-server
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/ephemeral-server \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/ephemeral-server
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/ephemeral-server \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -124,18 +108,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/malli-cli
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/malli-cli \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/malli-cli
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/malli-cli \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -145,18 +125,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/nabab
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/nabab \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/nabab
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/nabab \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -166,18 +142,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/polygam
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/polygam \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/polygam
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/polygam \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -187,18 +159,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/poor-mans-distributed-cache
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/poor-mans-distributed-cache \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/poor-mans-distributed-cache
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/poor-mans-distributed-cache \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -208,18 +176,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/security-mining
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/security-mining \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/security-mining
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/security-mining \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -229,18 +193,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/slava
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/slava \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/slava
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/slava \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -250,18 +210,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/slava-record
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/slava-record \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/slava-record
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/slava-record \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -271,18 +227,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/tsv-processing
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/tsv-processing \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/tsv-processing
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/tsv-processing \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -292,18 +244,14 @@ jobs:
       name: self
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/walter-ci
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/walter-ci \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/walter-ci
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/walter-ci \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
@@ -313,18 +261,14 @@ jobs:
       name: production
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/welcome-base-api
-      run: |-
-        walter forward-secret \
+    - run: |-
+        walter forward-secret --github-repository piotr-yuxuan/welcome-base-api \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
-    - env:
-        GITHUB_REPOSITORY: piotr-yuxuan/welcome-base-api
-      run: |-
-        walter install-workflow \
+    - run: |-
+        walter install-workflow --github-repository piotr-yuxuan/welcome-base-api \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" --target-yml "walter-ci.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" --target-yml "walter-cd.yml" \
           --source-edn "$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" --target-yml "walter-perf.yml"
