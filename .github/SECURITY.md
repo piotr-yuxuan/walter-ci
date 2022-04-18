@@ -13,8 +13,8 @@ enforces continuous vulnerability scans by the following tools:
 
 ## Supported Versions
 
-This message being present means that version `0.2.43`
-has been scrutinised on commit `f90db7bd91d3ee2c3bd75172776ebc1b4d133f7c`. See `git` log for
+This message being present means that version `0.2.44`
+has been scrutinised on commit `547b90d2ddf288c1d24adf4eb8b6e42c00c15a82`. See `git` log for
 history of supported versions.
 
 ## Known vulnerabilities
