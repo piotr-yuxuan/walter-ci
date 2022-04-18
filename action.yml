@@ -41,7 +41,7 @@ runs:
         lein: latest
         bb: latest
         github-token: ${{ inputs.GITHUB_TOKEN }}
-    - run: GIT_ASKPASS='' git clone https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
+    - run: GIT_ASKPASS='' git clone --depth 1 https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
       shell: bash
     - run: |
         echo "\$WALTER_VERSION=${WALTER_VERSION} initially"
