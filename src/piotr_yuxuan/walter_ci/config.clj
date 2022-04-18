@@ -2,9 +2,9 @@
   (:require [piotr-yuxuan.malli-cli :as malli-cli]
             [piotr-yuxuan.malli-cli.utils :refer [deep-merge]]
             [piotr-yuxuan.walter-ci.files :refer [->dir]]
+            [clojure.string :as str]
             [malli.core :as m]
-            [malli.transform :as mt]
-            [clojure.string :as str])
+            [malli.transform :as mt])
   (:import (java.time ZonedDateTime)))
 
 (def EnvironmentVariables
