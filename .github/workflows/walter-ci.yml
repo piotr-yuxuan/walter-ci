@@ -45,6 +45,32 @@ jobs:
       with:
         sarif_file: clj-holmes.sarif
         wait-for-processing: true
+  security-policy:
+    runs-on: ubuntu-latest
+    name: 'Security: policy'
+    needs:
+    - security-nvd
+    - security-sarif-clojure
+    - security-sarif-terraform
+    - security-sarif-trivy
+    steps:
+    - uses: piotr-yuxuan/walter-ci@main
+    - run: |-
+        walter security-policy \
+          --current-version $(awk '{$1=$1};1' < ./resources/*.version) \
+          --current-commit $(git rev-parse HEAD)
+    - run: git add .
+    - run: git diff --staged --exit-code
+      continue-on-error: true
+      id: diff
+    - run: git commit --message "Security policy for version $(awk '{$1=$1};1' < ./resources/*.version)"
+      if: steps.diff.outcome == 'failure'
+    - name: git push
+      run: walter retry
+      if: steps.diff.outcome == 'failure'
+      env:
+        WALTER_TRY: git push
+        WALTER_BEFORE_RETRY: git pull --rebase
   security-nvd:
     runs-on: ubuntu-latest
     name: 'Security: clojure,nvd'
