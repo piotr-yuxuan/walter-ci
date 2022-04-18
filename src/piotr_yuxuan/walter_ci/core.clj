@@ -146,13 +146,14 @@
            (update-workflow config target-yml)))))
 
 (defn update-git-ignore
-  [{:keys [github-action-path github-workspace]}]
-  (let [required-entries (set (line-seq (io/reader (->file github-action-path "resources" ".template-gitignore"))))
+  [{:keys [github-workspace]}]
+  (let [required-entries (set (line-seq (io/reader (io/resource ".template-gitignore"))))
         current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
         missing-entries (sort (set/difference required-entries current-entries))
-        gitignore (->file github-workspace ".gitignore")]
+        gitignore (->file github-workspace ".gitignore")
+        current-git-ignore (str/trim (slurp gitignore))]
     (spit gitignore
-          (str (str/trim (slurp gitignore))
+          (str current-git-ignore
                (System/lineSeparator) (System/lineSeparator)
                (str/join (System/lineSeparator) missing-entries))
           :append false)))
