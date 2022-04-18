@@ -14,17 +14,19 @@
             [yaml.core :as yaml]))
 
 (defn update-workflow
-  [config ^String target-yml ^String yml]
-  (with-delete! [working-directory (->tmp-dir "update-workflow")]
-    (git/clone working-directory config)
-    (doto (->file working-directory ".github" "workflows" target-yml)
-      (io/make-parents)
-      (spit yml))
-    (git/stage-all working-directory config)
-    (println "git/need-commit?" (git/need-commit? working-directory config))
-    (when (git/need-commit? working-directory config)
-      (git/commit working-directory config (format "Update %s" target-yml))
-      (git/push working-directory config))))
+  [{:keys [working-directory] :as config} ^String target-yml ^String yml]
+  (println "target-yml file" (->file working-directory ".github" "workflows" target-yml))
+  (println "yml string length" (count yml))
+  (println "target-yml before spit" (count (slurp (->file working-directory ".github" "workflows" target-yml))))
+  (doto (->file working-directory ".github" "workflows" target-yml)
+    (io/make-parents)
+    (spit yml))
+  (println "target-yml after spit" (count (slurp (->file working-directory ".github" "workflows" target-yml))))
+  (git/stage-all working-directory config)
+  (println "git/need-commit?" (git/need-commit? working-directory config))
+  (when (git/need-commit? working-directory config)
+    (git/commit working-directory config (format "Update %s" target-yml))
+    (git/push working-directory config)))
 
 (defn cmd-retry
   [{:keys [^String walter-try ^String walter-before-retry]}]
@@ -137,13 +139,16 @@
 
 (defn install-workflow
   [{:keys [source+target-pairs] :as config}]
-  (doseq [{:keys [source-edn target-yml]} source+target-pairs]
-    (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
-                                            'str/join #(str/join \space %)}}
-                                 (slurp (io/resource "steps.edn")))]
-      (->> (slurp source-edn)
-           (steps+edn->yml steps nil)
-           (update-workflow config target-yml)))))
+  (with-delete! [working-directory (->tmp-dir "update-workflow")]
+    (git/clone working-directory config)
+    (doseq [{:keys [source-edn target-yml]} source+target-pairs]
+      (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
+                                              'str/join #(str/join \space %)}}
+                                   (slurp (io/resource "steps.edn")))
+            config+working-directory (assoc config :working-directory working-directory)]
+        (->> (slurp source-edn)
+             (steps+edn->yml steps nil)
+             (update-workflow config+working-directory target-yml))))))
 
 (defn update-git-ignore
   [{:keys [github-workspace]}]
