@@ -189,7 +189,7 @@
                          :cache-dir "${TRIVY_CACHE_DIR}"
                          :security-checks "vuln,config"
                          :output "trivy-results.sarif"
-                         :ignore-unfixed true
+                         :ignore-unfixed false
                          :format "sarif"}}
                  {:run "cat trivy-results.sarif"}
                  {:name "Upload analysis results to GitHub Security tab"
