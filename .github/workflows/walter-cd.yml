@@ -4,7 +4,7 @@
 # You are free to remove this project from Walter CI realm by opening
 # a PR. You may also create another workflow besides this one.
 
-name: Walter CD ${{ github.event.inputs.walter-version }}
+name: Walter CD
 'on':
   repository_dispatch: null
   workflow_dispatch:
