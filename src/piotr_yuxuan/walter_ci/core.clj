@@ -60,6 +60,8 @@
                          (format "walter forward-secret --github-repository %s" github-repository)
                          ["WALTER_ACTOR"
                           "WALTER_AUTHOR_NAME"
+                          "WALTER_CLOJARS_PASSWORD"
+                          "WALTER_CLOJARS_USERNAME"
                           "WALTER_GITHUB_PASSWORD"
                           "WALTER_GIT_EMAIL"])}
            {:run (reduce (fn [acc [source-edn target-yml]]
@@ -102,13 +104,17 @@
                           (when walter-version
                             {:WALTER_VERSION "${{ github.event.inputs.walter-version }}"})
                           (when version-to-release
-                            {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"})))
+                            {:VERSION_TO_RELEASE "${{ github.event.inputs.version-to-release }}"
+                             :WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
+                             :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"
+                             :WALTER_CLOJARS_PASSWORD "${{ secrets.WALTER_CLOJARS_PASSWORD }}"
+                             :WALTER_CLOJARS_USERNAME "${{ secrets.WALTER_CLOJARS_USERNAME }}"})))
      'line/join #(str/join \newline %)
      'str/join #(str/join \space %)
      'walter/install-jobs (fn [_]
-                           (reduce #(assoc %1 (str/replace %2 "/" "-") (deploy-job %2))
-                                   (sorted-map)
-                                   (sort managed-repositories)))}))
+                            (reduce #(assoc %1 (str/replace %2 "/" "-") (deploy-job %2))
+                                    (sorted-map)
+                                    (sort managed-repositories)))}))
 
 (def yml-header
   "# This file is maintained by Walter CI, and may be rewritten.\n# https://github.com/piotr-yuxuan/walter-ci\n#\n# You are free to remove this project from Walter CI realm by opening\n# a PR. You may also create another workflow besides this one.\n\n")
@@ -168,9 +174,9 @@
 ;; - Walter executable commands
 
 (def source+targets
-  [["edn-sources/action.edn" "action.yml"]
+  [;["edn-sources/action.edn" "action.yml"]
    ["edn-sources/workflows/deploy.edn" ".github/workflows/deploy.yml"]
-   ["edn-sources/workflows/generate.edn" ".github/workflows/generate.yml"]
+   ;["edn-sources/workflows/generate.edn" ".github/workflows/generate.yml"]
    ["edn-sources/workflows/walter-cd.edn" ".github/workflows/walter-cd.yml"]
    ["edn-sources/workflows/walter-ci.edn" ".github/workflows/walter-ci.yml"]
    ["edn-sources/workflows/walter-perf.edn" ".github/workflows/walter-perf.yml"]])

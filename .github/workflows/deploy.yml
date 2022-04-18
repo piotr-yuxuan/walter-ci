@@ -44,6 +44,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/algo-calisthenics \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -61,6 +63,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/closeable-map \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -78,6 +82,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/dove \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -95,6 +101,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/ephemeral-server \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -112,6 +120,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/malli-cli \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -129,6 +139,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/nabab \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -146,6 +158,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/polygam \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -163,6 +177,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/poor-mans-distributed-cache \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -180,6 +196,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/security-mining \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -197,6 +215,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/slava \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -214,6 +234,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/slava-record \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -231,6 +253,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/tsv-processing \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -248,6 +272,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/walter-ci \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
@@ -265,6 +291,8 @@ jobs:
         walter forward-secret --github-repository piotr-yuxuan/welcome-base-api \
           --secret-name "WALTER_ACTOR" \
           --secret-name "WALTER_AUTHOR_NAME" \
+          --secret-name "WALTER_CLOJARS_PASSWORD" \
+          --secret-name "WALTER_CLOJARS_USERNAME" \
           --secret-name "WALTER_GITHUB_PASSWORD" \
           --secret-name "WALTER_GIT_EMAIL"
     - run: |-
