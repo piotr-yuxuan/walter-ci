@@ -14,7 +14,7 @@ enforces continuous vulnerability scans by the following tools:
 ## Supported Versions
 
 This message being present means that version `0.2.40`
-has been scrutinised on commit `54a54589b6d1cf5ecc3e552f53f8f1b462bed3a3`. See `git` log for
+has been scrutinised on commit `d533d49ce0d9e0e5331f2cfb0115957930d0cb47`. See `git` log for
 history of supported versions.
 
 ## Known vulnerabilities
