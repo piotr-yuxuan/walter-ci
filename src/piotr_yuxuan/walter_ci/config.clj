@@ -82,12 +82,15 @@
                              :env-var "WALTER_GIT_EMAIL"}]]
    [:walter-actor [any? {:description "Returns the API URL. For example: https://api.github.com."
                          :env-var "WALTER_ACTOR"}]]
-   [:walter-github-password {:optional true} [any? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
-                                                    :env-var "WALTER_GITHUB_PASSWORD"}]]
-   [:walter-clojars-password {:optional true} [string? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
-                                                        :env-var "WALTER_CLOJARS_PASSWORD"}]]
-   [:walter-clojars-username {:optional true} [string? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
-                                                        :env-var "WALTER_CLOJARS_USERNAME"}]]
+   [:walter-github-password [any? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
+                                   :env-var "WALTER_GITHUB_PASSWORD"}]]
+   [:walter-clojars-password [string? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
+                                       :env-var "WALTER_CLOJARS_PASSWORD"}]]
+   [:walter-clojars-username [string? {:description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
+                                       :env-var "WALTER_CLOJARS_USERNAME"}]]
+   [:walter-author-name [any? {:description "Different from the GIT_COMMITTER_NAME who made the commit. Here is the GIT_AUTHOR_NAME of the changes."
+                               :env-var "WALTER_AUTHOR_NAME"
+                               :default "Walter CI"}]]
    [:walter-version {:optional true} [string? {:env-var "WALTER_VERSION"}]]
    ;; Non-GitHub config keys
    [:show-config? {:optional true} [boolean? {:description "Print actual configuration value and exit."
@@ -101,10 +104,7 @@
                                 :description "Token as GITHUB_TOKEN, but you may give it more power like overriding workflow files."
                                 :env-var "NOW"
                                 :default-fn #(ZonedDateTime/now)}
-                           #(instance? ZonedDateTime %)]]
-   [:walter-author-name {:optional true} [any? {:description "Different from the GIT_COMMITTER_NAME who made the commit. Here is the GIT_AUTHOR_NAME of the changes."
-                                                :env-var "WALTER_AUTHOR_NAME"
-                                                :default "Walter CI"}]]])
+                           #(instance? ZonedDateTime %)]]])
 
 (def command-schemas
   {:forward-secret [:map {:decode/args-transformer malli-cli/args-transformer}
