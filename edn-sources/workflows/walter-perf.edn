@@ -1,6 +1,6 @@
 {:name "Walter Perf"
  :on {:repository_dispatch nil
-      :workflow_dispatch {:inputs {:walter-version {:description "Walter version"
+      :workflow_dispatch {:inputs {:walter-version {:description "Walter bin version"
                                                     :required false
                                                     :type :string}}}
       :schedule [;; Run only once a week, on Tuesday to save some money. Otherwise: "28 3 * * 2,5".

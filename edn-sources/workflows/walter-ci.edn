@@ -1,6 +1,6 @@
 {:name "Walter CI"
  :on {:repository_dispatch nil
-      :workflow_dispatch {:inputs {:walter-version {:description "Walter version"
+      :workflow_dispatch {:inputs {:walter-version {:description "Walter bin version"
                                                     :required false
                                                     :type :string}}}
       :schedule [{:cron "28 6,18 * * *"}]}
