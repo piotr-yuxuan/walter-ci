@@ -77,7 +77,7 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-	  # Hello 👋
+      # Hello 👋
       - uses: piotr-yuxuan/walter-ci@main
       - run: echo "Enjoy 👍"
 ```
