@@ -193,6 +193,23 @@
                   :with {:sarif_file "trivy-results.sarif"
                          :wait-for-processing true}}]}
 
+        :security-policy
+        {:runs-on "ubuntu-latest"
+         :name "Security: policy"
+         :needs [:security-nvd
+                 :security-sarif-clojure
+                 :security-sarif-terraform
+                 :security-sarif-trivy]
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:run #line/break["walter security-policy"
+                                   "--current-version $(awk '{$1=$1};1' < ./resources/*.version)"
+                                   "--current-commit $(git rev-parse HEAD)"]}
+                 {:run "git add ."}
+                 #step :git/diff
+                 {:run "git commit --message \"Security policy for version $(awk '{$1=$1};1' < ./resources/*.version)\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 #step :git/push]}
+
         :detect-secrets
         {:runs-on "ubuntu-latest"
          :name "Security: secrets"
