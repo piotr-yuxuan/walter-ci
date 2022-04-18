@@ -125,7 +125,7 @@
 
         :security-nvd
         {:runs-on "ubuntu-latest"
-         :name "Clojure nvd vulnerabilities"
+         :name "Security: clojure,nvd"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
                   :with {:path #line/join["~/.m2/repository"]
@@ -147,7 +147,7 @@
 
         :security-sarif-clojure
         {:runs-on "ubuntu-latest"
-         :name "Clojure clj-holmes vulnerabilities"
+         :name "Security: clojure,clj-holmes"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:uses "clj-holmes/clj-holmes-action@200d2d03900917d7eb3c24fc691ab83579a87fcb"
                   :with {:output-type "sarif"
@@ -160,7 +160,7 @@
 
         :security-sarif-terraform
         {:runs-on "ubuntu-latest"
-         :name "Terraform tfsec vulnerabilities"
+         :name "Security: tfsec"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:uses "aquasecurity/tfsec-sarif-action@9b703869c5108700605056134506e274ef6e9bd3"
                   :with {:sarif_file "tfsec.sarif"}}
@@ -171,7 +171,7 @@
 
         :security-sarif-trivy
         {:runs-on "ubuntu-latest"
-         :name "General Trivy security scanner"
+         :name "Security: general,clojure"
          :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
          :needs [:build-artifacts]
          :permissions {:security-events "write"}
@@ -196,12 +196,8 @@
 
         :detect-secrets
         {:runs-on "ubuntu-latest"
-         :name "Detect secrets on a repository"
+         :name "Security: secrets"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:uses "RobertFischer/detect-secrets-action@v2.0.0"}
-                 {:run "mv .secrets.baseline ./doc" :continue-on-error true}
-                 {:run "git add ./doc/.secrets.baseline" :continue-on-error true}
-                 #step :git/diff
-                 {:run "git commit --message \"Detected change in secrets\""
-                  :if "steps.diff.outcome == 'failure'"}
-                 #step :git/push]}}}
+                 {:uses "reviewdog/action-detect-secrets@c29dcff1bd0ac2e4ea528311abac6fdd2d8bb13a"
+                  :with {:github_token "${{ secrets.github_token }}"
+                         :fail_on_error false}}]}}}
