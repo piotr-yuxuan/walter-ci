@@ -13,20 +13,26 @@ fundamental law.`</scherz>`
 [![GitHub license](https://img.shields.io/github/license/piotr-yuxuan/walter-ci)](https://github.com/piotr-yuxuan/walter-ci/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/piotr-yuxuan/walter-ci)](https://github.com/piotr-yuxuan/walter-ci/issues)
 
-**Problem:** It's extremely tedious to maintain workflows on more than two
+##### Problem
+
+It's extremely tedious to maintain workflows on more than two
 repositories. What if you want to make a change? What if you have had
 a different idea to improve CI on some later project? I think that
 losing all my time propagating changes by replication and copy/paste
 is an hindrance. That's the job of a machine, so let a machine do it.
 
 
-**Goal:** The goal of Walter is to automate and standardise code
-grooming as much as possible so that an individual contributor can
-scale to more than two projects on GitHub.
+##### Goal
 
-**Solution:** Walter is an open-source Clojure-oriented CICD
-system. It intends to remove YAML boilerplate as much as possible
-while not impeding user freedom. It contains:
+The goal of Walter is to automate and standardise code grooming as
+much as possible so that an individual contributor can scale to more
+than two projects on GitHub.
+
+##### Solution
+
+Walter is an open-source Clojure-oriented CICD system. It intends to
+remove YAML boilerplate as much as possible while not impeding user
+freedom. It contains:
 
 - A GitHub action `"piotr-yuxuan/walter-ci@main"` that brings useful
   commands like `clojure` CLI, `leiningen`, Babashka, some Leiningen
@@ -58,6 +64,24 @@ It uses frugal means to yield vast power:
 - Favour `bash` as much as possible to express simple, composable
   steps.
 
+## Usage
+
+- To let Walter manage your repositories, fork this repository and
+  update `managed-repositories.edn`.
+
+- To use the action in your workflow:
+
+``` yml
+name: My simple workflow
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+	  # Hello 👋
+      - uses: piotr-yuxuan/walter-ci@main
+      - run: echo "Enjoy 👍"
+```
+
 ## Supported operations
 
 - Performance tests, unit tests with great expressive power
@@ -76,6 +100,24 @@ It uses frugal means to yield vast power:
 - Lint files
 - Sort namespace forms
 
-It doesn't require any addition to the project code, except the
-installation step. It is a goal of this project to stay free from any
-project-level configuration duplicate hell.
+It doesn't require any addition to code of the managed repository,
+except the installation step when workflow files are copied. It is a
+goal of this project to stay free from any project-level configuration
+duplicate hell. It is completely fine if some projects don't fit in
+it.
+
+## Toward version 1.0.0
+
+- Rewrite README.md, make it clearer, and better structured
+- Better explanation for each steps
+- Externalise `steps.edn` and make it support self-reference and
+  reader macros
+- Proper documentation and getting started
+- Add logging with custom level as a required argument with default
+  value
+- Reduce cache time, cache more at once and better
+- Write tests for each command
+- Enable release with pseudo version: `major`, `minor`, and `patch`
+  bumps the current version, or a tag or commit sha may be provided.
+- Custom walter jar version should accept `latest`, a tag, a branch
+  name or a commit sha.
