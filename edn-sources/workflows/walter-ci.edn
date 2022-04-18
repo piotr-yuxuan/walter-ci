@@ -48,10 +48,6 @@
         {:runs-on "ubuntu-latest"
          :name "Build artifacts"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:name "Set project version to ${{ github.event.inputs.version-to-release }}"
-                  :run #line/join["VERSION_FILE=$(ls resources/*.version)"
-                                  "echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}"
-                                  "git add ${VERSION_FILE}"]}
                  {:run "lein uberjar"}
                  {:run "lein with-profile uberjar pom"}
                  {:uses "actions/upload-artifact@v3"
