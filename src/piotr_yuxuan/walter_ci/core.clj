@@ -176,7 +176,7 @@
   (let [security-policy-template (io/resource "SECURITY.md")
         security-policy-file (doto (->file github-workspace ".github" "SECURITY.md") (io/make-parents))]
     (when-not (and (.exists security-policy-file)
-                   (not (str/includes? (slurp security-policy-file) current-version)))
+                   (str/includes? (slurp security-policy-file) current-version))
       (as-> (slurp security-policy-template) $
         (clostache/render $ {:current-version (str/trim current-version)
                              :current-commit (str/trim current-commit)})
