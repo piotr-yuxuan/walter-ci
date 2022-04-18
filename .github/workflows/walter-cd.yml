@@ -78,7 +78,6 @@ jobs:
       with:
         name: jars
         path: .
-    - run: tree -L 1 -Chup ./target
     - run: git diff --staged --exit-code
       continue-on-error: true
       id: diff
@@ -88,17 +87,20 @@ jobs:
       if: steps.diff.outcome == 'failure'
     - run: git push --follow-tags
       if: steps.diff.outcome == 'failure'
+    - run: tree -Chup .
     - uses: softprops/action-gh-release@fe9a9bd3295828558c7a3c004f23f3bf77d155b2
       with:
         generate_release_notes: true
         tag_name: ${{ github.event.inputs.version-to-release }}
         draft: false
         prerelease: false
-        fail_on_unmatched_files: false
+        fail_on_unmatched_files: true
         files: |
           pom.xml
-          target/walter-ci-${VERSION_TO_RELEASE}.jar
-          target/walter-ci-${VERSION_TO_RELEASE}-standalone.jar
+          ./**jar
+          ./target/**jar
+          ./target/walter-ci-${VERSION_TO_RELEASE}.jar
+          ./target/walter-ci-${VERSION_TO_RELEASE}-standalone.jar
     - name: Deploy on Clojars?
       id: target-clojars
       run: lein pprint :deploy-repositories | bb --stream -I --eval '(System/exit (if (contains? (into {} *input*) (first *command-line-args*)) 0 1))' "clojars"
