@@ -27,7 +27,8 @@
                   :continue-on-error true}
                  {:run "clojure -T:security/nvd nvd.task/check :classpath '\"'\"$(lein with-profile -user,-dev classpath)\"'\"'"
                   :continue-on-error true}
-                 {:run "bb \"$HOME/.walter-ci/cut-nvd.clj\" ./target/nvd/dependency-check-report.csv"}
+                 {:run "bb \"$HOME/.walter-ci/cut-nvd.clj\" ./target/nvd/dependency-check-report.csv"
+                  :continue-on-error true}
                  {:run "cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv"}
                  {:run "git add ./doc/known-vulnerabilities.csv"}
                  #step :git/diff
