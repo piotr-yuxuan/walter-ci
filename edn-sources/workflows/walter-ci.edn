@@ -43,7 +43,7 @@
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}
 
-        :report-vulnerabilities
+        :security-nvd
         {:runs-on "ubuntu-latest"
          :name "Clojure nvd vulnerabilities"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
@@ -65,7 +65,7 @@
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}
 
-        :sarif-clojure
+        :security-sarif-clojure
         {:runs-on "ubuntu-latest"
          :name "Clojure clj-holmes vulnerabilities"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
@@ -78,7 +78,7 @@
                   :with {:sarif_file "tfsec.sarif"
                          :wait-for-processing true}}]}
 
-        :sarif-terraform
+        :security-sarif-terraform
         {:runs-on "ubuntu-latest"
          :name "Terraform tfsec vulnerabilities"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}

@@ -14,7 +14,7 @@
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}]}
 
-        :report-vulnerabilities
+        :security-nvd
         {:runs-on "ubuntu-latest"
          :name "Clojure nvd vulnerabilities"
          :if "${{ github.event.inputs.version-to-release == '' }}"
@@ -37,7 +37,7 @@
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}
 
-        :sarif-clojure
+        :security-sarif-clojure
         {:runs-on "ubuntu-latest"
          :name "Clojure clj-holmes vulnerabilities"
          :if "${{ github.event.inputs.version-to-release == '' }}"
@@ -51,7 +51,7 @@
                   :with {:sarif_file "tfsec.sarif"
                          :wait-for-processing true}}]}
 
-        :sarif-terraform
+        :security-sarif-terraform
         {:runs-on "ubuntu-latest"
          :name "Terraform tfsec vulnerabilities"
          :if "${{ github.event.inputs.version-to-release == '' }}"
