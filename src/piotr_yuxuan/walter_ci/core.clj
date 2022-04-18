@@ -1,6 +1,6 @@
 (ns piotr-yuxuan.walter-ci.core
   (:require [piotr-yuxuan.malli-cli.utils :refer [deep-merge]]
-            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete! delete! copy!]]
+            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir with-delete!]]
             [piotr-yuxuan.walter-ci.git :as git]
             [piotr-yuxuan.walter-ci.github :as github]
             [piotr-yuxuan.walter-ci.secrets :as secrets]

@@ -1,1 +1,2 @@
-{:lint-as {piotr-yuxuan.walter-ci.files/with-delete! clojure.core/let}}
+{:lint-as {piotr-yuxuan.walter-ci.files/with-delete! clojure.core/let}
+ :linters {:cond-else {:level :off}}}

@@ -1,7 +1,6 @@
 (ns piotr-yuxuan.walter-ci.github
   "GitHub repository"
   (:require [piotr-yuxuan.walter-ci.files :refer [->file]]
-            [piotr-yuxuan.walter-ci.git :as git]
             [clj-http.client :as http]
             [clojure.data]
             [clojure.java.io :as io]

@@ -1,8 +1,6 @@
 (ns piotr-yuxuan.walter-ci.main
-  (:require [piotr-yuxuan.malli-cli :as malli-cli]
-            [piotr-yuxuan.walter-ci.config :refer [load-config]]
+  (:require [piotr-yuxuan.walter-ci.config :refer [load-config]]
             [piotr-yuxuan.walter-ci.core :as core]
-            [piotr-yuxuan.walter-ci.files :refer [->file ->tmp-dir ->tmp-file with-delete!]]
             [clojure.pprint])
   (:gen-class))
 

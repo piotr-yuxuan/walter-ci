@@ -8,10 +8,10 @@
            (java.nio.file.attribute FileAttribute))
   (:gen-class))
 
-(defn ^File ->file
+(defn ->file
   "Do-what-I-mean syntactic sugar that return the canonical file for its arguments. Return nil if not possible."
-  ([] (->file "."))
-  ([x & r]
+  (^File [] (->file "."))
+  (^File [x & r]
    (letfn [(join-seq [c]
              (->> (flatten c) ; Perhaps a legit use case of flatten?
                   (map path-elem)
@@ -32,26 +32,26 @@
        (when (instance? File $)
          (.getCanonicalFile ^File $))))))
 
-(defn ^File ->dir
+(defn ->dir
   "Do-what-I-mean syntactic sugar that return the canonical directory file for its arguments. Return nil if not possible."
-  ([& args]
-   (when-let [^File f (apply ->file args)]
-     (when (.isDirectory f)
-       f))))
+  ^File [& args]
+  (when-let [^File f (apply ->file args)]
+    (when (.isDirectory f)
+      f)))
 
-(defn ^File ->tmp-dir
-  ([] (->tmp-dir nil nil))
-  ([prefix] (->tmp-dir prefix nil))
-  ([prefix file-attributes]
+(defn ->tmp-dir
+  (^File [] (->tmp-dir nil nil))
+  (^File [prefix] (->tmp-dir prefix nil))
+  (^File [prefix file-attributes]
    (-> prefix
        ^Path (Files/createTempDirectory (into-array FileAttribute file-attributes))
        .toFile
        .getCanonicalFile)))
 
-(defn ^File ->tmp-file
-  ([] (->tmp-file ""))
-  ([suffix] (->tmp-file "" suffix))
-  ([prefix suffix & file-attributes]
+(defn ->tmp-file
+  (^File [] (->tmp-file ""))
+  (^File [suffix] (->tmp-file "" suffix))
+  (^File [prefix suffix & file-attributes]
    (-> prefix
        ^Path (Files/createTempFile suffix (into-array FileAttribute file-attributes))
        .toFile

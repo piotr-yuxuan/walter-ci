@@ -5,9 +5,9 @@
   (:import (java.io File)
            (java.nio.file.attribute PosixFilePermissions PosixFilePermission)))
 
-(defn ^File askpass
+(defn askpass
   "This is kind of a useless indirection. Perhaps ssh would be better?"
-  [secret-name]
+  ^File [secret-name]
   (doto (->tmp-file "askpass" "sh" (PosixFilePermissions/asFileAttribute
                                      #{PosixFilePermission/OWNER_READ
                                        PosixFilePermission/OWNER_WRITE
