@@ -46,7 +46,6 @@
         :report-vulnerabilities
         {:runs-on "ubuntu-latest"
          :name "Clojure nvd vulnerabilities"
-         :if "${{ github.event.inputs.version-to-release == '' }}"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
                  {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
                   :with {:path #line/join["~/.m2/repository"]
