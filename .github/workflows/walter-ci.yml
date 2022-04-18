@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Security: clojure,clj-holmes'
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/checkout@main
     - uses: clj-holmes/clj-holmes-action@200d2d03900917d7eb3c24fc691ab83579a87fcb
       with:
         output-type: sarif
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     name: clj-kondo, a linter for Clojure
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/checkout@main
     - uses: DeLaGuardo/clojure-lint-action@2d6013175031096ae07bc9b90a07173029ad7dc9
       with:
         clj-kondo-args: --lint src test
@@ -149,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Security: secrets'
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/checkout@main
     - uses: reviewdog/action-detect-secrets@c29dcff1bd0ac2e4ea528311abac6fdd2d8bb13a
       with:
         github_token: ${{ secrets.github_token }}
@@ -158,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Security: tfsec'
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/checkout@main
     - uses: aquasecurity/tfsec-sarif-action@9b703869c5108700605056134506e274ef6e9bd3
       with:
         sarif_file: tfsec.sarif
@@ -234,7 +234,7 @@ jobs:
     permissions:
       security-events: write
     steps:
-    - uses: piotr-yuxuan/walter-ci@main
+    - uses: actions/checkout@main
       with:
         no-cache: true
     - name: Retrieve artifacts
