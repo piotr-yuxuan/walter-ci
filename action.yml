@@ -46,7 +46,7 @@ runs:
         cli: latest
         lein: latest
         bb: latest
-        github-token: ${{ inputs.GITHUB_TOKEN }}
+        github_token: ${{ inputs.github-token }}
     - run: GIT_ASKPASS='' git clone --depth 1 https://github.com/practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
       shell: bash
     - run: |

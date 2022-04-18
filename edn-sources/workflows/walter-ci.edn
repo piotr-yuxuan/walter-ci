@@ -12,7 +12,8 @@
          :name "Conform GitHub repository"
          :env {:WALTER_ACTOR "${{ secrets.WALTER_ACTOR }}"
                :WALTER_GITHUB_PASSWORD "${{ secrets.WALTER_GITHUB_PASSWORD }}"}
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "walter conform-repository"}
                  {:run "git add .github/CODEOWNERS.yml"}
                  {:run "git add .github/FUNDING.yml"}
@@ -24,7 +25,8 @@
         :update-gitignore
         {:runs-on "ubuntu-latest"
          :name "Update .gitignore"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "walter update-git-ignore"}
                  {:run "git add .gitignore"}
                  #step :git/diff
@@ -35,7 +37,8 @@
         :ns-sort
         {:runs-on "ubuntu-latest"
          :name "Sort namespace forms"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein help"}
                  {:run "lein ns-sort"}
                  {:run "git add ."}
@@ -47,7 +50,8 @@
         :build-artifacts
         {:runs-on "ubuntu-latest"
          :name "Build artifacts"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein uberjar"}
                  {:run "lein with-profile uberjar pom"}
                  {:uses "actions/upload-artifact@v3"
@@ -57,7 +61,8 @@
         :list-licenses
         {:runs-on "ubuntu-latest"
          :name "List dependency licenses"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein licenses :csv > ./doc/Licenses.csv"}
                  {:run "sort -o ./doc/Licenses.csv{,}"}
                  {:run "awk -i inplace 'BEGINFILE{print \"Library name,Version,License name\"}{print}' ./doc/Licenses.csv"}
@@ -82,7 +87,8 @@
         :code-coverage
         {:runs-on "ubuntu-latest"
          :name "Code coverage"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
                   :with {:path #line/join["~/.m2/repository"]
                          :key "${{ runner.os }}-perf-${{ hashFiles('**/project.clj') }}"
@@ -99,7 +105,8 @@
         :idiomatic-code
         {:runs-on "ubuntu-latest"
          :name "Idiomatic code"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "clojure -M:lint/idiom -- --replace"}
                  {:run "git add ."}
                  #step :git/diff
@@ -110,7 +117,8 @@
         :update-dependencies
         {:runs-on "ubuntu-latest"
          :name "Update dependency versions"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified"}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}
                  {:run "git add ."}
@@ -122,7 +130,8 @@
         :security-nvd
         {:runs-on "ubuntu-latest"
          :name "Security: clojure,nvd"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
                   :with {:path #line/join["~/.m2/repository"]
                          :key "${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}"
@@ -200,7 +209,8 @@
                  :security-sarif-clojure
                  :security-sarif-terraform
                  :security-sarif-trivy]
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run #line/break["walter security-policy"
                                    "--current-version $(awk '{$1=$1};1' < ./resources/*.version)"
                                    "--current-commit $(git rev-parse HEAD)"]}

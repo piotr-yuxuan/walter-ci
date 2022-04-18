@@ -11,14 +11,16 @@
  :jobs {:run-tests
         {:runs-on "ubuntu-latest"
          :name "Run tests"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}]}
 
         :build-artifacts
         {:runs-on "ubuntu-latest"
          :name "Build artifacts"
          :if "${{ github.event.inputs.version-to-release != '' }}"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:name "Set project version to ${{ github.event.inputs.version-to-release }}"
                   :run #line/join["VERSION_FILE=$(ls resources/*.version)"
                                   "echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}"
@@ -34,7 +36,8 @@
          :name "Release artifacts"
          :if "${{ github.event.inputs.version-to-release != '' }}"
          :needs [:run-tests :build-artifacts]
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:name "Set project version to ${{ github.event.inputs.version-to-release }}"
                   :run #line/join["VERSION_FILE=$(ls resources/*.version)"
                                   "echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}"
