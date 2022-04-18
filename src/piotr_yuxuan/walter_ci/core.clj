@@ -148,9 +148,9 @@
 
 (defn update-git-ignore
   [{:keys [github-workspace]}]
-  (println "exists? .template-gitignore" (boolean (io/resource ".template-gitignore")))
+  (println "exists? template-gitignore" (boolean (io/resource "template-gitignore")))
   (println "exists? .gitignore" (.exists (->file github-workspace ".gitignore")))
-  (let [required-entries (set (line-seq (io/reader (io/resource ".template-gitignore"))))
+  (let [required-entries (set (line-seq (io/reader (io/resource "template-gitignore"))))
         current-entries (set (line-seq (io/reader (->file github-workspace ".gitignore"))))
         missing-entries (sort (set/difference required-entries current-entries))
         gitignore (->file github-workspace ".gitignore")
