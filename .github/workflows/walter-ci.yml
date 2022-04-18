@@ -97,8 +97,9 @@ jobs:
     name: clj-kondo, a linter for Clojure
     steps:
     - uses: piotr-yuxuan/walter-ci@main
-    - uses: nnichols/clojure-lint-action@24c52d8575c07d2aabec5b05d5f7956ab3dbd140
+    - uses: DeLaGuardo/clojure-lint-action@2d6013175031096ae07bc9b90a07173029ad7dc9
       with:
+        clj-kondo-args: --lint src test
         github_token: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
     - name: Ignore any error code
