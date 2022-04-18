@@ -3,6 +3,7 @@
       :workflow_dispatch {:inputs {:walter-version {:description "Walter bin version"
                                                     :required false
                                                     :type :string}}}
+      :push {:branches "**"}
       :schedule [{:cron "28 6,18 * * *"}]}
  :concurrency {:group "walter-ci", :cancel-in-progress true}
  :env #walter/env #{:git :walter-version}
@@ -40,6 +41,82 @@
                  {:run "git add ."}
                  #step :git/diff
                  {:run "git commit --message \"Sort namespace forms\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 #step :git/push]}
+
+        :build-artifacts
+        {:runs-on "ubuntu-latest"
+         :name "Build artifacts"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:name "Set project version to ${{ github.event.inputs.version-to-release }}"
+                  :run #line/join["VERSION_FILE=$(ls resources/*.version)"
+                                  "echo ${VERSION_TO_RELEASE} > ${VERSION_FILE}"
+                                  "git add ${VERSION_FILE}"]}
+                 {:run "lein uberjar"}
+                 {:run "lein with-profile uberjar pom"}
+                 {:uses "actions/upload-artifact@v3"
+                  :with {:name "jars"
+                         :path #line/join["target/*.jar" "pom.xml"]}}]}
+
+        :list-licenses
+        {:runs-on "ubuntu-latest"
+         :name "List dependency licenses"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:run "lein licenses :csv > ./doc/Licenses.csv"}
+                 {:run "sort -o ./doc/Licenses.csv{,}"}
+                 {:run "awk -i inplace 'BEGINFILE{print \"Library name,Version,License name\"}{print}' ./doc/Licenses.csv"}
+                 {:run "git add ./doc/Licenses.csv"}
+                 #step :git/diff
+                 {:run "git commit --message \"List dependency licenses\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 #step :git/push]}
+
+        :clj-kondo
+        {:runs-on "ubuntu-latest"
+         :name "clj-kondo, a linter for Clojure"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:uses "DeLaGuardo/clojure-lint-action@2d6013175031096ae07bc9b90a07173029ad7dc9"
+                  :with {:clj-kondo-args "--lint src test"
+                         :github_token "${{ secrets.GITHUB_TOKEN }}"}
+                  :continue-on-error true}]}
+
+        :code-coverage
+        {:runs-on "ubuntu-latest"
+         :name "Code coverage"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
+                  :with {:path #line/join["~/.m2/repository"]
+                         :key "${{ runner.os }}-perf-${{ hashFiles('**/project.clj') }}"
+                         :restore-keys "${{ runner.os }}-maven-"}}
+                 {:run "git rm ./doc/code-coverage/"
+                  :continue-on-error true}
+                 {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --skip-meta :perf --cov-text --cov-html"}
+                 {:run "git add ./doc/code-coverage/**.{txt,css,html}"}
+                 #step :git/diff
+                 {:run "git commit --message \"Update code coverage\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 #step :git/push]}
+
+        :idiomatic-code
+        {:runs-on "ubuntu-latest"
+         :name "Idiomatic code"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:run "clojure -M:lint/idiom -- --replace"}
+                 {:run "git add ."}
+                 #step :git/diff
+                 {:run "git commit --message \"More idiomatic code\""
+                  :if "steps.diff.outcome == 'failure'"}
+                 #step :git/push]}
+
+        :update-dependencies
+        {:runs-on "ubuntu-latest"
+         :name "Update dependency versions"
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:run "lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified"}
+                 {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}
+                 {:run "git add ."}
+                 #step :git/diff
+                 {:run "git commit --message \"Update dependency versions\""
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}
 
@@ -89,43 +166,42 @@
                   :with {:sarif_file "tfsec.sarif"
                          :wait-for-processing true}}]}
 
-
-        :code-coverage
+        :security-trivy-fs
         {:runs-on "ubuntu-latest"
-         :name "Code coverage"
+         :name "General Trivy security scanner"
+         :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
+         :needs [:build-artifacts]
+         :permissions {:security-events "write"}
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+                 {:name "Retrieve artifacts"
+                  :uses "actions/download-artifact@v3"
+                  :with {:name "jars"
+                         :path "target"}}
                  {:uses "actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a"
-                  :with {:path #line/join["~/.m2/repository"]
-                         :key "${{ runner.os }}-perf-${{ hashFiles('**/project.clj') }}"
-                         :restore-keys "${{ runner.os }}-maven-"}}
-                 {:run "git rm ./doc/code-coverage/"
-                  :continue-on-error true}
-                 {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --skip-meta :perf --cov-text --cov-html"}
-                 {:run "git add ./doc/code-coverage/**.{txt,css,html}"}
-                 #step :git/diff
-                 {:run "git commit --message \"Update code coverage\""
-                  :if "steps.diff.outcome == 'failure'"}
-                 #step :git/push]}
+                  :with {:path "${TRIVY_CACHE_DIR}"
+                         :key "${{ runner.os }}-nvd-${{ hashFiles('**/project.clj') }}"
+                         :restore-keys "${{ runner.os }}-trivy-"}}
+                 {:uses "aquasecurity/trivy-action@master"
+                  :continue-on-error true
+                  :with {:scan-type "fs"
+                         :cache-dir "${TRIVY_CACHE_DIR}"
+                         :security-checks "vuln,config"
+                         :output "trivy-results.sarif"
+                         :ignore-unfixed true
+                         :format "sarif"}}
+                 {:name "Upload analysis results to GitHub Security tab"
+                  :uses "github/codeql-action/upload-sarif@v2"
+                  :with {:sarif_file "trivy-results.sarif"
+                         :wait-for-processing true}}]}
 
-        :idiomatic-code
+        :detect-secrets
         {:runs-on "ubuntu-latest"
-         :name "Idiomatic code"
+         :name "Detect secrets on a repository"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "clojure -M:lint/idiom -- --replace"}
-                 {:run "git add ."}
+                 {:uses "RobertFischer/detect-secrets-action@v2.0.0"}
+                 {:run "mv .secrets.baseline ./doc" :continue-on-error true}
+                 {:run "git add ./doc/.secrets.baseline" :continue-on-error true}
                  #step :git/diff
-                 {:run "git commit --message \"More idiomatic code\""
-                  :if "steps.diff.outcome == 'failure'"}
-                 #step :git/push]}
-
-        :update-dependencies
-        {:runs-on "ubuntu-latest"
-         :name "Update dependency versions"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-                 {:run "lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified"}
-                 {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}
-                 {:run "git add ."}
-                 #step :git/diff
-                 {:run "git commit --message \"Update dependency versions\""
+                 {:run "git commit --message \"Detected change in secrets\""
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}}}
