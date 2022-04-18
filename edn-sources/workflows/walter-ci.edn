@@ -151,11 +151,12 @@
          :steps [{:uses "actions/checkout@main"}
                  {:uses "clj-holmes/clj-holmes-action@200d2d03900917d7eb3c24fc691ab83579a87fcb"
                   :with {:output-type "sarif"
-                         :output-file "tfsec.sarif"
+                         :output-file "clj-holmes.sarif"
                          :fail-on-result "false"}}
+                 {:run "cat clj-holmes.sarif"}
                  {:name "Upload analysis results to GitHub Security tab"
                   :uses "github/codeql-action/upload-sarif@v2"
-                  :with {:sarif_file "tfsec.sarif"
+                  :with {:sarif_file "clj-holmes.sarif"
                          :wait-for-processing true}}]}
 
         :security-sarif-terraform
@@ -164,6 +165,7 @@
          :steps [{:uses "actions/checkout@main"}
                  {:uses "aquasecurity/tfsec-sarif-action@9b703869c5108700605056134506e274ef6e9bd3"
                   :with {:sarif_file "tfsec.sarif"}}
+                 {:run "cat tfsec.sarif"}
                  {:name "Upload analysis results to GitHub Security tab"
                   :uses "github/codeql-action/upload-sarif@v2"
                   :with {:sarif_file "tfsec.sarif"
@@ -175,8 +177,7 @@
          :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
          :needs [:build-artifacts]
          :permissions {:security-events "write"}
-         :steps [{:uses "actions/checkout@main"
-                  :with {:no-cache true}}
+         :steps [{:uses "actions/checkout@main"}
                  {:name "Retrieve artifacts"
                   :uses "actions/download-artifact@v3"
                   :with {:name "jars"
@@ -190,6 +191,7 @@
                          :output "trivy-results.sarif"
                          :ignore-unfixed true
                          :format "sarif"}}
+                 {:run "cat trivy-results.sarif"}
                  {:name "Upload analysis results to GitHub Security tab"
                   :uses "github/codeql-action/upload-sarif@v2"
                   :with {:sarif_file "trivy-results.sarif"
