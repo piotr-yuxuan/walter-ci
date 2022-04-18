@@ -13,6 +13,10 @@ inputs:
       More info: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
     default: ${{ github.token }}
     required: false
+  no-cache:
+    description: Disable cache when need be
+    default: 'false'
+    required: false
 runs:
   using: composite
   steps:
@@ -30,6 +34,7 @@ runs:
         echo "$HOME/.walter-ci" >> $GITHUB_PATH
       shell: bash
     - name: Cache local Maven repository
+      if: ${{ inputs.no-cache != 'true' }}
       uses: actions/cache@8f1e2e02865c42348f9baddbbaafb1841dce610a
       with:
         path: ~/.m2/repository

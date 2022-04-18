@@ -175,7 +175,8 @@
          :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
          :needs [:build-artifacts]
          :permissions {:security-events "write"}
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:no-cache true}}
                  {:name "Retrieve artifacts"
                   :uses "actions/download-artifact@v3"
                   :with {:name "jars"
