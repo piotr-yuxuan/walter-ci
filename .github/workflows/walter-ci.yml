@@ -235,6 +235,8 @@ jobs:
       security-events: write
     steps:
     - uses: piotr-yuxuan/walter-ci@main
+      with:
+        no-cache: true
     - name: Retrieve artifacts
       uses: actions/download-artifact@v3
       with:
