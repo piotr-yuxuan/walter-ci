@@ -111,6 +111,7 @@
                              :WALTER_CLOJARS_PASSWORD "${{ secrets.WALTER_CLOJARS_PASSWORD }}"
                              :WALTER_CLOJARS_USERNAME "${{ secrets.WALTER_CLOJARS_USERNAME }}"})))
      'line/join #(str/join \newline %)
+     'line/break #(str/join unix-cli-line-breaker %)
      'str/join #(str/join \space %)
      'walter/install-jobs (fn [_]
                             (reduce #(assoc %1 (str/replace %2 "/" "-") (deploy-job %2))
@@ -146,6 +147,7 @@
     (git/clone working-directory config)
     (doseq [{:keys [source-edn target-yml]} source+target-pairs]
       (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
+                                              'line/break #(str/join unix-cli-line-breaker %)
                                               'str/join #(str/join \space %)}}
                                    (slurp (io/resource "steps.edn")))
             config+working-directory (assoc config :working-directory working-directory)]
@@ -184,6 +186,7 @@
 
 (comment
   (let [steps (edn/read-string {:readers {'line/join #(str/join \newline %)
+                                          'line/break #(str/join unix-cli-line-breaker %)
                                           'str/join #(str/join \space %)}}
                                (slurp (io/resource "steps.edn")))
         managed-repositories (edn/read-string (slurp "managed-repositories.edn"))]
