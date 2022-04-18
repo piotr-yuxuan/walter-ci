@@ -21,7 +21,7 @@ runs:
   using: composite
   steps:
     - name: Checkout repository
-      uses: actions/checkout@dcd71f646680f2efd8db4afa5ad64fdcba30e748
+      uses: actions/checkout@main
       with:
         submodules: recursive
     - run: |
