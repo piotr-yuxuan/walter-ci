@@ -55,23 +55,19 @@
                          :self
                          :production)}
    :steps [{:uses "piotr-yuxuan/walter-ci@main"}
-           {:env {:GITHUB_REPOSITORY github-repository}
-            :run (reduce (fn [acc secret-name]
+           {:run (reduce (fn [acc secret-name]
                            (str/join unix-cli-line-breaker [acc (format "--secret-name \"%s\"" secret-name)]))
-                         "walter forward-secret"
+                         (format "walter forward-secret --github-repository %s" github-repository)
                          ["WALTER_ACTOR"
                           "WALTER_AUTHOR_NAME"
                           "WALTER_GITHUB_PASSWORD"
                           "WALTER_GIT_EMAIL"])}
-           {:env {:GITHUB_REPOSITORY github-repository}
-            :run (reduce (fn [acc [source-edn target-yml]]
+           {:run (reduce (fn [acc [source-edn target-yml]]
                            (str/join unix-cli-line-breaker [acc (format "--source-edn \"%s\" --target-yml \"%s\"" source-edn target-yml)]))
-                         "walter install-workflow"
+                         (format "walter install-workflow --github-repository %s" github-repository)
                          [["$HOME/.walter-ci/edn-sources/workflows/walter-ci.edn" "walter-ci.yml"]
                           ["$HOME/.walter-ci/edn-sources/workflows/walter-cd.edn" "walter-cd.yml"]
                           ["$HOME/.walter-ci/edn-sources/workflows/walter-perf.edn" "walter-perf.yml"]])}]})
-
-(deploy-job "youp")
 
 (defn walter-readers
   [steps managed-repositories]
