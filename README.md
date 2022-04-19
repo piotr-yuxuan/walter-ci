@@ -124,3 +124,4 @@ it.
 - Support at least one other codebase type so that the abstraction is
   here and may later be expanded to other codebases like Rust, KDB,
   stream processing jobs, libs, cli, and so on :-)
+- Sign commits from Walter with a special key.
