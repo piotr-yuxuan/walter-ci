@@ -215,12 +215,12 @@ jobs:
     - run: sort -o ./doc/licences.csv{,}
       continue-on-error: true
     - run: awk -i inplace 'BEGINFILE{print "Library name,Version,License name"}{print}' ./doc/licences.csv
-    - run: git add ./doc/licenses.csv
+    - run: git add ./doc/licences.csv
       continue-on-error: true
     - run: git diff --staged --exit-code
       continue-on-error: true
       id: diff
-    - run: git commit --message "List dependency licenses"
+    - run: git commit --message "List dependency licences"
       if: steps.diff.outcome == 'failure'
     - name: git push
       run: walter retry
