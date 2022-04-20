@@ -15,8 +15,10 @@
          :steps [{:uses "piotr-yuxuan/walter-ci@main"
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "walter conform-repository"}
-                 {:run "git add .github/CODEOWNERS.yml"}
-                 {:run "git add .github/FUNDING.yml"}
+                 {:run "git add .github/CODEOWNERS.yml"
+                  :continue-on-error true}
+                 {:run "git add .github/FUNDING.yml"
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Conform repository\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -28,7 +30,8 @@
          :steps [{:uses "piotr-yuxuan/walter-ci@main"
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "walter update-git-ignore"}
-                 {:run "git add .gitignore"}
+                 {:run "git add .gitignore"
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Update .gitignore\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -41,7 +44,8 @@
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein help"}
                  {:run "lein ns-sort"}
-                 {:run "git add ."}
+                 {:run "git add ."
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Sort namespace forms\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -61,12 +65,15 @@
         :list-licenses
         {:runs-on "ubuntu-latest"
          :name "List dependency licenses"
-         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+         :steps [{:run "git rm \"./doc/Licenses.csv\""
+                  :continue-on-error true}
+                 {:uses "piotr-yuxuan/walter-ci@main"
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
-                 {:run "lein licenses :csv > ./doc/Licenses.csv"}
+                 {:run "lein with-profile uberjar licenses :csv > ./doc/licences.csv"}
                  {:run "sort -o ./doc/Licenses.csv{,}"}
-                 {:run "awk -i inplace 'BEGINFILE{print \"Library name,Version,License name\"}{print}' ./doc/Licenses.csv"}
-                 {:run "git add ./doc/Licenses.csv"}
+                 {:run "awk -i inplace 'BEGINFILE{print \"Library name,Version,License name\"}{print}' ./doc/licences.csv"}
+                 {:run "git add ./doc/Licenses.csv"
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"List dependency licenses\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -96,7 +103,8 @@
                  {:run "git rm ./doc/code-coverage/"
                   :continue-on-error true}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --plugin cloverage --cov-output ./doc/code-coverage --skip-meta :slow --skip-meta :perf --cov-text --cov-html"}
-                 {:run "git add ./doc/code-coverage/**.{txt,css,html}"}
+                 {:run "git add ./doc/code-coverage/**.{txt,css,html}"
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Update code coverage\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -108,7 +116,8 @@
          :steps [{:uses "piotr-yuxuan/walter-ci@main"
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "clojure -M:lint/idiom -- --replace"}
-                 {:run "git add ."}
+                 {:run "git add ."
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"More idiomatic code\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -121,7 +130,8 @@
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
                  {:run "lein ancient upgrade :no-tests :all :recursive :check-clojure :allow-qualified"}
                  {:run "lein with-profile +walter/kaocha,+kaocha run -m kaocha.runner --skip-meta :slow --skip-meta :perf"}
-                 {:run "git add ."}
+                 {:run "git add ."
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Update dependency versions\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -144,7 +154,8 @@
                  {:run "bb \"$HOME/.walter-ci/cut-nvd.clj\" ./target/nvd/dependency-check-report.csv"
                   :continue-on-error true}
                  {:run "cp ./target/nvd/dependency-check-report.csv ./doc/known-vulnerabilities.csv"}
-                 {:run "git add ./doc/known-vulnerabilities.csv"}
+                 {:run "git add ./doc/known-vulnerabilities.csv"
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Update known vulnerabilities\""
                   :if "steps.diff.outcome == 'failure'"}
@@ -214,7 +225,8 @@
                  {:run #line/break["walter security-policy"
                                    "--current-version $(awk '{$1=$1};1' < ./resources/*.version)"
                                    "--current-commit $(git rev-parse HEAD)"]}
-                 {:run "git add ."}
+                 {:run "git add ."
+                  :continue-on-error true}
                  #step :git/diff
                  {:run "git commit --message \"Security policy for version $(awk '{$1=$1};1' < ./resources/*.version)\""
                   :if "steps.diff.outcome == 'failure'"}
