@@ -83,13 +83,17 @@
         {:runs-on "ubuntu-latest"
          :name "clj-kondo, a linter for Clojure"
          :steps [{:uses "actions/checkout@main"}
-                 {:uses "DeLaGuardo/clojure-lint-action@2d6013175031096ae07bc9b90a07173029ad7dc9"
-                  :with {:clj-kondo-args "--lint src test" ; --fail-level error
-                         :github_token "${{ secrets.GITHUB_TOKEN }}"}
-                  :continue-on-error true}
-                 {:name "Ignore any error code"
-                  :if "always()"
-                  :run "echo 0"}]}
+                 {:uses "DeLaGuardo/setup-clj-kondo@afc83dbbf4e7e32e04649e29dbf30668d30e9e3e"
+                  :with {:version "2022.04.08"}}
+                 {;; This is a reality check: not many of managed
+                  ;; projects have clj-kondo config, and we don't want
+                  ;; to get accustomed to seeing errors as results of
+                  ;; clj-kondo errors, so that an error stays
+                  ;; something important that should be checked, and
+                  ;; not ignored. As a result here `{{level}}` is
+                  ;; replaced with hard-coded `warning`.
+                  :run "clj-kondo --lint src --config '{:output {:pattern \"::warning file={{filename}},line={{row}},col={{col}}::{{message}}\"}}'"
+                  :continue-on-error true}]}
 
         :code-coverage
         {:runs-on "ubuntu-latest"
