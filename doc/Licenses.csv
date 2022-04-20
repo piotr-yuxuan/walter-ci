@@ -1,4 +1,3 @@
-Library name,Version,License name
 "amalloy/ring-buffer","1.3.1","Eclipse Public License"
 "babashka/fs","0.1.2","Eclipse Public License 1.0"
 "babashka/process","0.1.1","EPL-1.0"
@@ -111,3 +110,4 @@ Library name,Version,License name
 "slingshot","0.12.2","Eclipse Public License 1.0"
 "stencil","0.5.0","unknown"
 "timofreiberg/bultitude","0.3.0","Eclipse Public License 1.0"
+Library name,Version,License name
