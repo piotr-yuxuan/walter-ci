@@ -1,8 +1,8 @@
 (defproject com.github.piotr-yuxuan/walter-ci (-> "./resources/walter-ci.version" slurp .trim)
   :description "A Clojure CICD atop community tools and GitHub Actions, with conventions and no configuration"
   :url "https://github.com/piotr-yuxuan/walter-ci"
-  :license {:name "European Union Public License 1.2 or later"
-            :url "https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12"
+  :license {:name "GNU General Public License v3.0 or later"
+            :url "https://www.gnu.org/licenses/gpl-3.0.en.html"
             :distribution :repo}
   :scm {:name "git"
         :url "https://github.com/piotr-yuxuan/walter-ci"}
