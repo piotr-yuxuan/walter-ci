@@ -51,8 +51,9 @@
                   :if "steps.diff.outcome == 'failure'"}
                  #step :git/push]}
 
-        :build-artifacts
-        {:runs-on "ubuntu-latest"
+        ;; Building jars and uploading artifacts in parallel is faster but cost money.
+        #_:build-artifacts
+        #_{:runs-on "ubuntu-latest"
          :name "Build artifacts"
          :steps [{:uses "piotr-yuxuan/walter-ci@main"
                   :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
@@ -196,13 +197,12 @@
         {:runs-on "ubuntu-latest"
          :name "Security: general,clojure"
          :env {"TRIVY_CACHE_DIR" "${HOME}/.trivy-cache-dir"}
-         :needs [:build-artifacts]
+         :needs [#_:build-artifacts]
          :permissions {:security-events "write"}
-         :steps [{:uses "actions/checkout@main"}
-                 {:name "Retrieve artifacts"
-                  :uses "actions/download-artifact@v3"
-                  :with {:name "jars"
-                         :path "target"}}
+         :steps [{:uses "piotr-yuxuan/walter-ci@main"
+                  :with {:github-token "${{ secrets.GITHUB_TOKEN }}"}}
+                 {:run "lein uberjar"}
+                 {:run "lein with-profile uberjar pom"}
                  {:uses "aquasecurity/trivy-action@master"
                   :continue-on-error true
                   :with {:scan-type "fs"
