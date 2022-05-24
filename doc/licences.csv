@@ -6,7 +6,7 @@ Library name,Version,License name
 "borkdude/edamame","0.0.19","Eclipse Public License 1.0"
 "byte-streams","0.2.4","MIT License"
 "caesium","0.14.0","Eclipse Public License"
-"camel-snake-kebab","0.4.2","Eclipse Public License"
+"camel-snake-kebab","0.4.3","Eclipse Public License 1.0"
 "clj-commons/pomegranate","1.2.1","Eclipse Public License"
 "clj-http","3.12.3","The MIT License"
 "clj-tuple","0.2.2","MIT License"
