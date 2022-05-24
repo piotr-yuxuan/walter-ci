@@ -16,7 +16,7 @@
                  [clj-http "3.12.3" :exclusions [riddley]]
                  [com.github.piotr-yuxuan/malli-cli "2.0.0"] ; Configuration value from the command-line
                  [babashka/process "0.1.2"]
-                 [camel-snake-kebab "0.4.2"]
+                 [camel-snake-kebab "0.4.3"]
                  [de.ubercode.clostache/clostache "1.4.0"] ; Templating engine Clojure wrapper.
                  [metosin/malli "0.8.4"]
                  [io.forward/yaml "1.0.11"] ; No sane person would wilfully accept to write YAML by hand.
