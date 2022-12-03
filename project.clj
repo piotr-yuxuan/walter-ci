@@ -21,7 +21,7 @@
                  [metosin/malli "0.9.2"]
                  [io.forward/yaml "1.0.11"] ; No sane person would wilfully accept to write YAML by hand.
                  [caesium "0.15.0"]
-                 [metosin/jsonista "0.3.6"]]
+                 [metosin/jsonista "0.3.7"]]
   :main piotr-yuxuan.walter-ci.main
   :profiles {:github {:github/topics ["github" "actions" "automation" "clojure"]
                       :github/private? false}
