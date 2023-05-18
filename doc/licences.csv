@@ -1,7 +1,7 @@
 Library name,Version,License name
 "amalloy/ring-buffer","1.3.1","Eclipse Public License"
 "babashka/fs","0.2.12","Eclipse Public License 1.0"
-"babashka/process","0.5.19","EPL-1.0"
+"babashka/process","0.5.20","EPL-1.0"
 "borkdude/dynaload","0.3.5","Eclipse Public License 1.0"
 "borkdude/edamame","1.3.20","Eclipse Public License 1.0"
 "byte-streams","0.2.4","MIT License"
