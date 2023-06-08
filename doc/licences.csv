@@ -21,7 +21,7 @@ Library name,Version,License name
 "com.github.jnr/jnr-a64asm","1.0.0","The Apache Software License, Version 2.0"
 "com.github.jnr/jnr-ffi","2.2.12","The Apache Software License, Version 2.0"
 "com.github.jnr/jnr-x86asm","1.0.2","MIT License"
-"com.github.piotr-yuxuan/malli-cli","2.0.0","European Union Public License 1.2 or later"
+"com.github.piotr-yuxuan/malli-cli","2.1.2","European Union Public License 1.2 or later"
 "com.hypirion/io","0.3.1","Eclipse Public License"
 "com.taoensso/encore","3.21.0","Eclipse Public License"
 "com.taoensso/timbre","5.2.1","Eclipse Public License"
