@@ -72,7 +72,7 @@ Library name,Version,License name
 "org.apache.maven/maven-repository-metadata","3.6.1","Apache License, Version 2.0"
 "org.apache.maven/maven-resolver-provider","3.6.1","Apache License, Version 2.0"
 "org.clojars.trptcolin/sjacket","0.1.1.1","Eclipse Public License 1.0"
-"org.clojure/clojure","1.12.0-alpha5","Eclipse Public License 1.0"
+"org.clojure/clojure","1.12.0-alpha7","Eclipse Public License 1.0"
 "org.clojure/core.incubator","0.1.2","Eclipse Public License 1.0"
 "org.clojure/core.match","1.0.0","Eclipse Public License 1.0"
 "org.clojure/core.rrb-vector","0.1.2","Eclipse Public License 1.0"
