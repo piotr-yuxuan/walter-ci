@@ -15,7 +15,7 @@
                  [com.brunobonacci/safely "0.7.0-alpha3"]
                  [clj-http "3.12.3" :exclusions [riddley]]
                  [com.github.piotr-yuxuan/malli-cli "2.1.2"] ; Configuration value from the command-line
-                 [babashka/process "0.5.21"]
+                 [babashka/process "0.5.22"]
                  [camel-snake-kebab "0.4.3"]
                  [de.ubercode.clostache/clostache "1.4.0"] ; Templating engine Clojure wrapper.
                  [metosin/malli "0.14.0"]
