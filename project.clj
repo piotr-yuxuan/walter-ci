@@ -9,7 +9,7 @@
   :pom-addition [:developers [:developer
                               [:name "胡雨軒 Петр"]
                               [:url "https://github.com/piotr-yuxuan"]]]
-  :dependencies [[org.clojure/clojure "1.12.0-alpha9"]
+  :dependencies [[org.clojure/clojure "1.12.0-alpha10"]
                  [leiningen "2.9.6" :upgrade false :exclusions [org.apache.httpcomponents/httpcore]]
                  [leiningen-core "2.9.6" :upgrade false]
                  [com.brunobonacci/safely "0.7.0-alpha3"]
