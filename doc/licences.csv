@@ -41,7 +41,7 @@ Library name,Version,License name
 "leiningen-core","2.9.6","Eclipse Public License"
 "manifold","0.1.8","MIT License"
 "medley","1.4.0","Eclipse Public License"
-"metosin/jsonista","0.3.10","Eclipse Public License"
+"metosin/jsonista","0.3.11","Eclipse Public License"
 "metosin/malli","0.16.4","Eclipse Public License 2.0"
 "mvxcvi/arrangement","2.1.0","Public Domain"
 "net.cgrand/parsley","0.9.3","Eclipse Public License 1.0"
