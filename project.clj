@@ -12,7 +12,7 @@
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [leiningen "2.9.6" :upgrade false :exclusions [org.apache.httpcomponents/httpcore]]
                  [leiningen-core "2.9.6" :upgrade false]
-                 [com.brunobonacci/safely "0.7.0-alpha3"]
+                 [com.brunobonacci/safely "1.0.0"]
                  [clj-http "3.13.0" :exclusions [riddley]]
                  [com.github.piotr-yuxuan/malli-cli "2.1.2"] ; Configuration value from the command-line
                  [babashka/process "0.5.22"]
