@@ -8,7 +8,7 @@ Library name,Version,License name
 "caesium","0.15.0","Eclipse Public License"
 "camel-snake-kebab","0.4.3","Eclipse Public License 1.0"
 "clj-commons/pomegranate","1.2.1","Eclipse Public License"
-"clj-http","3.13.0","The MIT License"
+"clj-http","3.13.1","The MIT License"
 "clj-tuple","0.2.2","MIT License"
 "com.brunobonacci/mulog","0.9.0","Apache License 2.0"
 "com.brunobonacci/safely","1.0.0","Apache License 2.0"
