@@ -18,7 +18,7 @@
                  [babashka/process "0.6.25"]
                  [camel-snake-kebab "0.4.3"]
                  [de.ubercode.clostache/clostache "1.4.0"] ; Templating engine Clojure wrapper.
-                 [metosin/malli "0.20.2"]
+                 [metosin/malli "0.20.3"]
                  [io.forward/yaml "1.0.11"] ; No sane person would wilfully accept to write YAML by hand.
                  [caesium "0.15.0"]
                  [metosin/jsonista "1.0.2"]]
